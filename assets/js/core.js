@@ -72,27 +72,33 @@ subbly.core = (function()
 				$userNavTrigger = $userNav.find('h3'),
 				$userNavList    = $userNav.find('ul'); 
 
+			$userNav.outside({
+				callback: function()
+				{
+					if($userNavTrigger.attr('data-toggle') == 'open')
+					{
+						$userNavTrigger.trigger('click');					
+					}
+				},
+				once: false
+			});
+
+			var outsideApi = $userNav.data('outside-api');
+
 			$userNavTrigger.click(function()
 			{
-				var $this = $(this),
-					attr  = $this.attr('data-toggle');
+				var $this      = $(this),
+					attr       = $this.attr('data-toggle');
 
 				if(attr == 'close')
-				{
 					$this.attr('data-toggle', 'open');
-
-					$userNav.outside(function()
-					{
-						$userNavTrigger.trigger('click');
-					})
-				}
 				else
-					$this.attr('data-toggle', 'close')
-				
+					$this.attr('data-toggle', 'close');
+
 				$userNavList.slideToggle(200)
 			})
 		}
-		else
+		else // ipad
 		{
 			var $popover        = $('#subnav-popover'),
 				$popoverContent = $popover.find('ul');
