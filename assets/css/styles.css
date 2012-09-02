@@ -15,6 +15,11 @@
 
 @import "layout.css";
 @import "artpack.css";
+@import "form.css";
+@import "button.css";
+
+@import "dashboard.css";
+@import "product.css";
 
 /*@import "font-awesome.css";
 @import "font-awesome-ie7.css";*/

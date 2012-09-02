@@ -1,16 +1,23 @@
 
 /* Global
 -------------------------------------------------- */
+/* apply a natural box layout model to all elements */
+* { 
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+}
 
 html,
 body {
 	background : #f2f3f5;
+	color: #737479;
 	font-family : 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 15px;
 	height : 100%;
 	line-height:18px;
 	min-height: 660px;
-	min-width : 980px;
+	min-width : 1000px;
 	overflow : hidden;
 	width : 100%;
 }
@@ -19,6 +26,7 @@ body {
 ------------------------- */
 
 a {
+	color: #737479;
 	text-decoration : none
 }
 
@@ -48,7 +56,7 @@ ol {
 
 #global {
 	bottom: 0;
-	min-width: 980px;
+	min-width: 1000px;
 	overflow: hidden;
 	position: fixed;
 	top: 0;
@@ -76,7 +84,7 @@ ol {
 
 /** initial setup **/
 .nano {
-	position : relative;
+/*	position : relative;*/
 	
 	width    : 100%;
 	height   : 100%;
@@ -156,7 +164,7 @@ ol {
 	        box-shadow: 0 0 5px rgba(33,34,32,.28);
 
 	left:0;
-	min-height: 660px;
+/*	min-height: 660px;*/
 	width:20.5%;
 }
 
@@ -383,10 +391,19 @@ ol {
 ----------------------- */
 
 #developper-tool-switch {
-	bottom: 20px;
+	background: #202124; 
+	bottom:0;
 	left: 0;
-	margin: 0 8.5%;
+	padding: 10px 8.5% 20px;
 	position: absolute;
+	text-align: center;
+	width: 100%
+}
+
+#developper-tool-switch > div {
+	margin: 0 auto;
+	text-align: left;
+	width: 160px;
 }
 
 #developper-tool-switch .label {
@@ -475,4 +492,40 @@ ol {
 #content {
 	left:20.5%;
 	width:79.5%;
+}
+
+/* Breadcrumb
+----------------------- */
+
+#breadcrumb {
+	border-bottom: 1px solid #c5c8ce;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+}
+
+#breadcrumb li {
+	display: inline-block;
+	font-size: 15px; 
+	text-shadow: 0 1px #fff;
+}
+
+#breadcrumb li:after {
+	color: #767676;
+	content: '-';
+	display: inline-block;
+	padding-left: 5px;
+	padding-right: 0;
+}
+
+#breadcrumb a {
+	color: #767676;
+}
+
+#breadcrumb li.active {
+	font-weight: bold; 
+	color: #2a2a2a;
+}
+
+#breadcrumb li.active:after {
+	content: '';
 }
