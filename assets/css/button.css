@@ -1,0 +1,141 @@
+
+.button {
+	background-color: #fdfdfd; 
+	background-image: -webkit-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: -moz-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: -o-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: -ms-linear-gradient(bottom, #f8f8f8, #fdfdfd);
+	background-image: linear-gradient(to top, #f8f8f8, #fdfdfd);
+	border: solid 1px #c6c6c6;
+
+	-webkit-box-shadow: inset 0 1px rgba(236,219,239,.17); 
+	   -moz-box-shadow: inset 0 1px rgba(236,219,239,.17); 
+	        box-shadow: inset 0 1px rgba(236,219,239,.17);
+
+	display: inline-block;
+	height: 32px;
+	line-height: 32px;
+	padding: 0 8px;
+	text-align: center;
+}
+
+.button:hover,
+.button.active,
+.button-select:hover select {
+	background-color: #f7f8f8; 
+	background-image: -webkit-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: -moz-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: -o-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: -ms-linear-gradient(bottom, #e6e8e9, #f7f8f8);
+	background-image: linear-gradient(to top, #e6e8e9, #f7f8f8);
+}
+
+.group-button {
+	border: solid 1px #c6c6c6;
+	display: inline-block;
+	height: 32px;
+
+}
+
+.group-button .button,
+.group-button .button-select {
+	border: 0;
+	border-right: solid 1px #c6c6c6;
+
+	-webkit-border-radius: 0;
+	   -moz-border-radius: 0;
+	        border-radius: 0;
+	
+	height: 30px;
+	margin-left: -4px;
+}
+
+.group-button .button:first-child,
+.group-button .button-select:first-child {
+	margin-left: 0;
+}
+
+.group-button .button:last-child,
+.group-button .button-select:last-child {
+	border: 0;
+}
+
+
+
+.button-select {
+    position: relative;
+    display: inline-block;
+}
+
+.button-select select {
+	-webkit-box-shadow: inset 1px 1px 2px rgba(33,34,32,0); 
+	   -moz-box-shadow: inset 1px 1px 2px rgba(33,34,32,0); 
+	        box-shadow: inset 1px 1px 2px rgba(33,34,32,0); 
+	display: inline-block;
+	padding: 4px 3px 3px 5px;
+	margin: 0;
+	font: inherit;
+	height: 32px;
+	outline:none; /* remove focus ring from Webkit */
+	line-height: 1.2;
+
+	-webkit-appearance:none; /* remove the strong OSX influence from Webkit */
+}
+
+/* for Webkit's CSS-only solution */
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+	.button-select select {
+		padding-right:30px;
+	}
+}
+
+.subbly-form .button-select select:focus {
+	border: solid 1px #c6c6c6;
+}
+    
+/* Select arrow styling */
+.button-select:after {
+	bottom: 0;
+	background-color: #fdfdfd; 
+	background-image: url(../img/artpack.png), -webkit-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: url(../img/artpack.png), -moz-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: url(../img/artpack.png), -o-linear-gradient(bottom, #f8f8f8, #fdfdfd); 
+	background-image: url(../img/artpack.png), -ms-linear-gradient(bottom, #f8f8f8, #fdfdfd);
+	background-image: url(../img/artpack.png), linear-gradient(to top, #f8f8f8, #fdfdfd);
+	background-repeat: no-repeat;
+	background-position: -57px -43px;
+	border: solid 1px #c6c6c6;
+	border-left: 0;
+	content: '';
+	font-size: 60%;
+	padding: 0 5px;
+	pointer-events:none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 8px;
+
+	-webkit-border-radius: 0 4px 4px 0;
+	   -moz-border-radius: 0 4px 4px 0;
+	        border-radius: 0 4px 4px 0;
+}
+
+.button-select:hover:after {
+	background-color: #f7f8f8; 
+	background-image: url(../img/artpack.png), -webkit-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: url(../img/artpack.png), -moz-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: url(../img/artpack.png), -o-linear-gradient(bottom, #e6e8e9, #f7f8f8); 
+	background-image: url(../img/artpack.png), -ms-linear-gradient(bottom, #e6e8e9, #f7f8f8);
+	background-image: url(../img/artpack.png), linear-gradient(to top, #e6e8e9, #f7f8f8);
+}
+
+
+.no-pointer-events .buttom-select:after {
+	content: none;
+}
+
+.group-button .button-select:after,
+.group-button .button-select select:focus {
+	border: 0
+}
+

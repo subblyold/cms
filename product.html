@@ -1,0 +1,270 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie ie6 oldie" lang="fr"> <![endif]-->
+<!--[if IE 7]>    <html class="ie ie7 oldie" lang="fr"> <![endif]-->
+<!--[if IE 8]>    <html class="ie ie8 oldie" lang="fr"> <![endif]-->
+<!--[if IE 9]>    <html class="ie ie9" lang="fr"> <![endif]-->
+<!--[if gt IE 9]><!--> <html lang="fr"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>Subbly - GUI</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<link rel="stylesheet" href="assets/css/styles.css">
+	<link rel="stylesheet" href="assets/css/ipad.css" media="only screen and (min-device-width : 768px) and (max-device-width : 1024px)">
+</head>
+<body>
+
+<div id="global">
+	<div id="sidebar" class="pane nano">
+		<div class="pane-content">
+
+			<h1 id="logo-subbly">
+				<a href="#" class="artpack text-replace">Subbly</a>
+			</h1>
+
+			<nav id="user-nav">
+				<div class="br">
+					<h3 data-toggle="close">Hello <strong>Benjamin</strong></h3>
+					<ul>
+						<li>
+							<a href="#">Users</a>
+						</li>
+						<li>
+							<a href="#">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</nav><!-- /#user-nav -->
+
+			<a href="#" id="shop-direct-link">Visit your shop</a>
+
+			<ul id="main-nav">
+				<li>
+					<a href="#" class="main-nav-section" id="nav-dashboard">Dashboard</a>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section" id="nav-orders">
+						Orders
+						<span class="section-highlight br">3</span>
+					</a>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section has-subnav" id="nav-customers">Customers</a>
+					<ul class="sub-nav">
+						<li>
+							<a href="#">Products</a>
+						</li>
+						<li>
+							<a href="#">Attributes</a>
+						</li>
+						<li>
+							<a href="#">Products</a>
+						</li>
+						<li>
+							<a href="#">Attributes</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section has-subnav active" id="nav-catalog">Catalog</a>
+					<ul class="sub-nav open">
+						<li class="active visible">
+							<a href="#">Products</a>
+						</li>
+						<li class="visible">
+							<a href="#">Attributes</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section" id="nav-shipping">Shipping &amp; Tax</a>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section" id="nav-settings">General Settings</a>
+				</li>
+				<li>
+					<a href="#" class="main-nav-section" id="nav-hangar">Hangar</a>
+				</li>
+			</ul><!-- /#main-nav -->
+		</div><!-- /.pane-content -->
+
+		<div id="developper-tool-switch">
+			<span class="label">Developer tool</span>
+			<a href="javascript:;" class="br">
+				<span class="br"><i class="icon-tool"></i></span>
+			</a>
+		</div><!-- /#developper-tool-switch -->
+	</div><!-- /#sidebar -->
+	<div id="content" class="pane nano">
+
+		<div id="page-product" class="pane-content">
+			<form class="subbly-form">
+
+				<ul id="breadcrumb">
+					<li><a href="#">Product</a></li>
+					<li><a href="#">Teeshirt</a></li>
+					<li class="active">Woman</li>
+				</ul><!-- /#breadcrumb -->
+
+				<h1 class="title">Add a new product</h1>
+
+				<div id="page-product-form" class="br">
+					<nav id="page-product-form-nav" class="br-t">
+						<a href="javascript:;" class="active br-tl">General</a>
+						<a href="javascript:;">Shipping</a>
+						<a href="javascript:;">Attributes</a>
+					</nav><!-- /#page-product-form-nav -->
+					<div id="page-product-form-content">
+
+						<div class="control-group large">
+							<label>Title of product</label>
+							<input type="text">
+						</div>
+
+						<div class="control-group label-inline sku">
+							<label class="inline">ref</label>
+							<input type="text" class="br">
+						</div>
+
+						<div class="control-group small">
+							<label>Status</label>
+							<span class="checkbox switch br">
+								<span class="br">ON</span>
+							</span>
+						</div>
+
+						<div class="control-group full">
+							<span class="toolbar">
+
+								<span class="group-button">
+									<span class="button-select">
+										<select class="button">
+											<option>va1</option>
+											<option>va2</option>
+										</select>
+									</span>
+									<span class="button-select">
+										<select class="button">
+											<option>va1</option>
+											<option>va2</option>
+										</select>
+									</span>
+								</span>
+
+								<span class="group-button">
+									<a href="javascript:;" class="button">
+										<i class="icon-bold"></i>
+									</a>
+									<a href="javascript:;" class="button">
+										<i class="icon-italic"></i>
+									</a>
+									<a href="javascript:;" class="button">
+										<i class="icon-underline"></i>
+									</a>
+								</span>
+
+								<a href="javascript:;" class="button">
+									<i class="icon-img-small"></i>
+								</a>
+								<a href="javascript:;" class="button">
+									<i class="icon-color"></i>
+								</a>
+								<a href="javascript:;" class="button">
+									<i class="icon-underline"></i>
+								</a>
+							</span><!-- /.toolbar -->
+							<textarea cols="5" rows="3"></textarea>
+						</div>
+
+						<div class="control-group medium">
+							<label>Price ($)</label>
+							<input type="text">
+						</div>
+
+						<div class="control-group medium">
+							<label>Quantity</label>
+							<input type="text">
+						</div>
+
+						<div class="control-group medium">
+							<label>Size (LxWxH)</label>
+							<input type="text" class="small">
+							<input type="text" class="small">
+							<input type="text" class="small">
+						</div>
+
+						<div class="control-group medium">
+							<label>Sales Price ($)</label>
+							<div class="input-prepend br">
+								<a href="javascript:;" class="br">off</a>
+								<input type="text" class="br-r">
+							</div>
+						</div>
+
+						<div class="control-group medium">
+							<label>Weight (Kg)</label>
+							<input type="text">
+						</div>
+
+					</div><!-- /#page-product-form-content -->
+					<div id="page-product-form-action" class="br-b">
+						<button type="submit">Save</button>
+						<button type="button" class="important">Publish</button>
+					</div>
+				</div><!-- /#page-product-form -->
+			</form><!-- /.subbly-form -->
+
+			<div id="product-img">
+				<h3 class="sub-title">Photos (3)</h3>
+
+				<a href="javascript:;" class="br add-img">
+					<i class="icon-img-large"></i>
+					Add
+				</a>
+
+				<span class="img br">
+					<span class="img-hover br">
+						<span>
+							<a href="javascript:;">Edit</a>
+							<a href="javascript:;">Delete</a>
+						</span>
+					</span>
+					<img src="tmp/catalog/item-thumb-1.jpg" alt="">
+				</span>
+
+				<span class="img br">
+					<span class="img-hover br">
+						<span>
+							<a href="javascript:;">Edit</a>
+							<a href="javascript:;">Delete</a>
+						</span>
+					</span>
+					<img src="tmp/catalog/item-thumb-1.jpg" alt="">
+				</span>
+			</div><!-- /#product-img -->
+
+		</div><!-- /#page-product -->
+
+	</div><!-- /#content -->
+</div><!-- /#global -->
+<div id="subnav-popover" class="br">
+	<div class="arrow"></div>
+	<div class="menu-arrow"></div>
+	<ul></ul>
+</div>
+<script src="assets/lib/jquery/jquery-1.7.2.js"></script>
+<script src="assets/lib/bootstrap/bootstrap-tooltip.js"></script>
+<script src="assets/lib/nanoscroller/jquery.nanoscroller.js"></script>
+<script src="assets/lib/outside/jquery.outside.js"></script>
+<script src="assets/lib/categorizr/categorizr.js"></script>
+
+<script src="assets/js/kickstarter.js"></script>
+<script src="assets/js/core.js"></script>
+
+</body>
+</html>

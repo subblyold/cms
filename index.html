@@ -28,7 +28,7 @@
 			</h1>
 
 			<nav id="user-nav">
-				<div class="border-radius">
+				<div class="br">
 					<h3 data-toggle="close">Hello <strong>Benjamin</strong></h3>
 					<ul>
 						<li>
@@ -50,7 +50,7 @@
 				<li>
 					<a href="#" class="main-nav-section" id="nav-orders">
 						Orders
-						<span class="section-highlight border-radius">3</span>
+						<span class="section-highlight br">3</span>
 					</a>
 				</li>
 				<li>
@@ -91,32 +91,114 @@
 					<a href="#" class="main-nav-section" id="nav-hangar">Hangar</a>
 				</li>
 			</ul><!-- /#main-nav -->
-
-			<div id="developper-tool-switch">
-				<span class="label">Developer tool</span>
-				<a href="javascript:;" class="border-radius">
-					<span class="border-radius"><i class="icon-tool"></i></span>
-				</a>
-			</div><!-- /#developper-tool-switch -->
 		</div><!-- /.pane-content -->
+
+		<div id="developper-tool-switch">
+			<div>
+				<span class="label">Developer tool</span>
+				<a href="javascript:;" class="br">
+					<span class="br"><i class="icon-tool"></i></span>
+				</a>
+			</div>
+		</div><!-- /#developper-tool-switch -->
 	</div><!-- /#sidebar -->
-	<div id="content" class="pane">
+	<div id="content" class="pane nano">
+
+		<div class="pane-content">
+			<div id="dashboard-summary">
+test
+			</div>
+			<div id="dashboard-order">
+
+				<nav id="dashboard-shortcuts" class="br">
+					<ul>
+						<li>
+							<a href="#">
+								<span class="br-l"><i class="icon-add-large"></i></span>
+								<strong>Add</strong>
+								product
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<span><i class="icon-edit-large"></i></span>
+								<strong>Edit</strong>
+								settings
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<span class="br-r"><i class="icon-help-large"></i></span>
+								<strong>How</strong>
+								to start
+							</a>
+						</li>
+					</ul>
+				</nav>
+
+				<h3 class="title">Last 5 orders</h3>
+
+				<div id="last-order" class="br">
+					<table>
+						<colgroup>
+							<col width="20%">
+							<col width="20%">
+							<col width="20%">
+							<col width="20%">
+							<col width="20%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<td>
+									<a href="#">35 min ago</a>
+								</td>
+								<td>
+									<a href="#"><strong>$36523.00</strong></a>
+								</td>
+								<td>
+									<a href="#">John H.</a>
+								</td>
+								<td>
+									<a href="#">5 items</a>
+								</td>
+								<td>
+									<span class="status done" rel="tooltip" title="done"></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="#">35 min ago</a>
+								</td>
+								<td>
+									<a href="#"><strong>$36523.00</strong></a>
+								</td>
+								<td>
+									<a href="#">John H.</a>
+								</td>
+								<td>
+									<a href="#">5 items</a>
+								</td>
+								<td>
+									<span class="status waiting" rel="tooltip" title="waiting"></span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!-- /#last-order -->
+
+				<a href="#" class="button">View all orders</a>
+			</div><!-- /#dashboard-order -->
+		</div><!-- /.pane-content -->
 
 	</div><!-- /#content -->
 </div><!-- /#global -->
-<div id="subnav-popover" class="border-radius">
+<div id="subnav-popover" class="br">
 	<div class="arrow"></div>
 	<div class="menu-arrow"></div>
-	<ul>
-<!-- 		<li>
-			<a href="#">Products</a>
-		</li>
-		<li>
-			<a href="#">Attributes</a>
-		</li> -->
-	</ul>
+	<ul></ul>
 </div>
 <script src="assets/lib/jquery/jquery-1.7.2.js"></script>
+<script src="assets/lib/bootstrap/bootstrap-tooltip.js"></script>
 <script src="assets/lib/nanoscroller/jquery.nanoscroller.js"></script>
 <script src="assets/lib/outside/jquery.outside.js"></script>
 <script src="assets/lib/categorizr/categorizr.js"></script>

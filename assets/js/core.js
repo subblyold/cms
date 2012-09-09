@@ -142,6 +142,7 @@ subbly.core = (function()
 	var init = function()
 	{
 		sidebar();
+		$('#content').find('[rel="tooltip"]').tooltip();
 	}
 
 	return {
