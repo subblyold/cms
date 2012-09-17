@@ -157,7 +157,7 @@ ol {
 -------------------------------------------------- */
 
 #sidebar {
-	background: #202124; 
+	background: #202124;
 
 	-webkit-box-shadow: 0 0 5px rgba(33,34,32,.28); 
 	   -moz-box-shadow: 0 0 5px rgba(33,34,32,.28); 
@@ -166,6 +166,10 @@ ol {
 	left:0;
 /*	min-height: 660px;*/
 	width:20.5%;
+}
+
+#sidebar.nano .pane-content {
+	bottom:58px;
 }
 
 
@@ -492,6 +496,19 @@ ol {
 #content {
 	left:20.5%;
 	width:79.5%;
+}
+
+.content-column {
+	float: left;
+	height: 100%;
+	padding: 25px;
+	position: relative;
+}
+
+.content-column-left {
+	background: #fff;
+	border-right: 1px solid #d8d9db;
+	float: left;
 }
 
 /* Breadcrumb

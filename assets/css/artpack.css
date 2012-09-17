@@ -1,4 +1,15 @@
 
+.font-black {
+	color: #2a2a2a
+}
+
+.font-large {
+	font-size: 16px;
+}
+
+.font-small {
+	font-size: 12px
+}
 
 /* Icons sprite
 ------------------------------------- */
@@ -231,6 +242,33 @@
 	margin-top: 1px;
 	vertical-align: text-top;
 	width: 16px;
+}
+
+.icon-invoce {
+	background-position: -100px -30px;
+}
+
+.icon-arrow-down {
+	background-position: -40px -50px;
+}
+
+.icon-note {
+	background-position: -160px 0;
+	height: 18px;
+	width: 22px;
+}
+
+.icon-email {
+	background-position: -190px 0;
+	width: 21px;
+}
+
+.icon-edit-big {
+	background-position: -160px -50px;
+}
+
+.icon-edit-big-red {
+	background-position: -140px -50px;
 }
 
 .icon-tool {

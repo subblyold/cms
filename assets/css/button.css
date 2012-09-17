@@ -30,11 +30,18 @@
 	background-image: linear-gradient(to top, #e6e8e9, #f7f8f8);
 }
 
+.button.strong {
+	color: #2d2f34;
+}
+
+.button i {
+	margin-right: 5px;
+}
+
 .group-button {
 	border: solid 1px #c6c6c6;
 	display: inline-block;
 	height: 32px;
-
 }
 
 .group-button .button,

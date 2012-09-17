@@ -1,19 +1,9 @@
 
-#dashboard-summary,
-#dashboard-order {
-	height: 100%;
-	padding: 25px;
-}
-
 #dashboard-summary {
-	background: #fff;
-	border-right: 1px solid #d8d9db;
-	float: left;
 	width: 52.77%;
 }
 
 #dashboard-order {
-	float: left;
 	width: 47.23%;
 }
 

@@ -22,8 +22,8 @@
 {
 	// Prepare our Variables
 	var History		= window.History,
-		$			= window.jQuery,
-		document	= window.document;
+		document	= window.document,
+		$			= window.jQuery;
 
 
 	// Default object properties
@@ -194,7 +194,7 @@
 	////// FLUX ////////////////////////////////////////////
 
 	// Check to see if History.js is enabled for our Browser
-	if( !History.enabled )
+	if( typeof History == 'undefined' ||  !History.enabled )
 	{
 		return;
 	}

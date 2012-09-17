@@ -276,3 +276,35 @@
 .switch.checked span {
 	left: 50%
 }
+
+/* Search form
+----------------------------- */
+
+.subbly-form input[type="search"] {
+	border: solid 1px #cdcdcd;
+
+	-webkit-box-shadow: inset 1px 2px 3px rgba(56,52,44,.12); 
+	   -moz-box-shadow: inset 1px 2px 3px rgba(56,52,44,.12); 
+	        box-shadow: inset 1px 2px 3px rgba(56,52,44,.12);
+
+	font-size: 12px;
+	height: 30px;
+	padding-left: 25px;
+	width: 93%;
+}
+
+.subbly-form p.search-holder {
+	position: relative;
+}
+
+.subbly-form p.search-holder:before {
+	background: url(../img/artpack.png) no-repeat -40px -30px;
+	content: '';
+	display: block;
+	height: 18px;
+	left: 6px;
+	position: absolute;
+	top: 8px;
+	width: 18px;
+	z-index: 10;
+}
