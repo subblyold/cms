@@ -150,3 +150,16 @@ subbly.core = (function()
 		'finalize': finalize
 	};
 })();
+
+$.extend($.easing,{
+	easeOut:function (x, t, b, c, d) {
+		return -c *(t/=d)*(t-2) + b;
+	},
+	easeOutCubic: function (x, t, b, c, d) {
+		return c*((t=t/d-1)*t*t + 1) + b;
+	},
+	easeInOutQuad: function (x, t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t + b;
+		return -c/2 * ((--t)*(t-2) - 1) + b;
+	}
+});

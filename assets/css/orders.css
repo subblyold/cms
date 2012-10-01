@@ -208,6 +208,7 @@
 /* Customer Details
 ------------------------------ */
 
+#order-details,
 #customer-details {
 	width: 67%;
 }
@@ -357,10 +358,6 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	font-style: normal;
 }
 
-.customer-addresses {
-	border: 1px solid #cfd2d7;
-	margin: 20px 0;
-}
 
 .customer-addresses h3 {
 	background: #fcfcfc;
@@ -370,14 +367,6 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	font-weight: 500;
 	margin: 0;
 	padding: 30px
-}
-
-.customer-addresses li {
-	background: #fff;
-	border-bottom: 1px solid #cfd2d7;
-	font-size: 12px;
-	overflow: hidden;
-	padding: 20px;
 }
 
 .address-edit,
@@ -421,12 +410,6 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	width: 50%;
 }
 
-.customer-addresses li:last-child {
-	border-bottom: 0;
-	-webkit-border-radius: 0 0 4px 4px;
-	   -moz-border-radius: 0 0 4px 4px;
-	        border-radius: 0 0 4px 4px;
-}
 
 #delete-customer {
 
@@ -475,9 +458,7 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 }
 
 #customer-orders-summary a.button {
-	color: #737479;
 	float: right;
-	font-weight: bold;
 	margin-right: 20px;
 }
 
@@ -502,14 +483,202 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	width: 20%;
 }
 
-#customer-orders-total {
-	background: #fffbed;
+.orders-total {
 	color: #222326;
 	font-size: 30px;
+	float: right;
 	font-weight: 500;
+	line-height: 40px;
 	text-align: right;
-	padding: 30px 20px;
-	-webkit-border-radius: 0 0 4px 4px;
-	   -moz-border-radius: 0 0 4px 4px;
-	        border-radius: 0 0 4px 4px;
+}
+
+/* Orders Destails
+----------------------------- */
+
+#order-details .pane-content {
+	left: 25px;
+	padding-right: 25px;
+}
+
+#order-details-header {
+	padding-top: 25px;
+}
+
+.order-id {
+	background: #dddfe3;
+	color: #535e63;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: 500;
+	margin-right: 10px;
+	margin-top: 4px;
+	padding: 4px 8px;
+}
+
+.order-header {
+	background: #fcfcfc;
+	padding: 30px;
+}
+
+.order-header time {
+	color: #676767;
+	font-size: 12px;
+}
+
+.order-header .payement {
+	color:#2a2a2a;
+	font-weight: 500;
+}
+
+.order .table-head li {
+	text-align: center;
+	width: 19.16%
+}
+
+.order .table-head li:first-child {
+	text-align: left;
+	width: 42.5%;
+}
+
+.order .table-body li {
+	overflow: hidden;
+}
+
+.order .table-body span,
+.order .table-body img {
+	display: block;
+	float: left;
+}
+
+.order .table-body span,
+.order .product-desc strong {
+	color: #202124;
+	font-weight: bold;
+	text-align: center
+}
+
+.order .table-body img {
+	margin-right: 2.5%;
+	width: 10%
+}
+
+.order .table-body span {
+	padding-top: 20px;
+	width: 19.16%
+}
+
+.order span.product-desc {
+	color: #a2a2a6;
+	font-weight: normal;
+	padding-top: 0;
+	text-align: left;
+	width: 30%;
+}
+
+.order .product-desc strong {
+	display: block;
+	text-align: left;
+}
+
+.order-weight,
+.order-delevry-mode,
+.order-delevry-price {
+	color: #796a5f;
+	font-size: 14px;
+}
+
+.order-weight {
+	font-weight: bold;
+}
+
+.order-delevry-price {
+	color: #9a2cb1;
+}
+
+.order-addresses {
+	color: #838383;
+	font-size: 16px;
+}
+
+.order-addresses strong {
+	color: #2a2a2a;
+	font-weight: 500;
+}
+
+.order-addresses {
+	background: #fff;
+	border-top: 1px solid #CFD2D7;
+	overflow: hidden;
+	padding: 20px 40px;
+}
+
+.order-address {
+	float: left;
+	width: 50%;
+}
+
+.order-address h3 {
+	color: #2a2a2a;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.order-address p {
+	font-size: 12px;
+}
+
+#order-status {
+	float: right;
+	position: relative;
+	top: -7px;
+}
+
+#order-status-label {
+	background: #73af1e;
+	color: #fff;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 14px;
+	padding: 10px;
+	padding-right: 25px;
+	position: relative;
+	z-index: 10;
+}
+
+#order-status-label:after {
+	background: url(../img/artpack.png) 0 -50px;
+	content: '';
+	display: inline-block;
+	position: absolute;
+	right: 10px;
+	top: 15px;
+	height: 7px;
+	width: 12px;
+}
+
+#order-status-label i.icon-sent {
+	margin-right: 5px;
+}
+
+#order-status ul {
+	background: #fff;
+	border: 1px solid #CFD2D7;
+	display: none;
+	left: 0;
+	padding-top: 10px;
+	position: absolute;
+	top: 20px;
+	width: 100%;
+	z-index: 1;
+}
+
+#order-status li {
+	border-bottom: 1px solid #CFD2D7;
+	font-size: 13px;
+	padding: 10px;
+}
+
+#order-status li:last-child {
+	border-bottom: 0;
 }

@@ -3,6 +3,190 @@
 	width: 52.77%;
 }
 
+
+#incomes-summary {
+	margin-bottom: 20px;
+	position: relative;
+}
+
+#incomes-summary h3 {
+	color: #a0a4af;
+	font-size: 20px;
+	font-weight: 500;
+	height: 18px;
+	text-align: center;
+	margin: 20px 0 10px;
+	padding: 0;
+}
+
+#incomes-summary-wrapper {
+	height: 65px;
+	overflow: hidden;
+}
+
+#incomes-summary li:first-child {
+	background: rgba(255, 0, 0, .3);
+}
+
+#incomes-summary li {
+	color: #272727;
+	float: left;
+	font-size: 65px;
+	font-weight: 500;
+	text-align: center;
+	line-height: 65px;
+	width: 100%;
+}
+
+#incomes-summary .nav {
+	cursor: pointer;
+	height: 53px;
+	position: absolute;
+	top: 35px;
+	width: 33px; 
+}
+
+#incomes-summary .nav-prev {
+	background-position: -180px -270px;
+	left: 0;
+}
+
+#incomes-summary .nav-next {
+	background-position: -240px -270px;
+	right: 0;
+}
+
+#global-total {
+	background: #f2f3f5;
+	border: 1px solid #cfd3da;
+	padding: 30px 0;
+	position: relative;
+	text-align: center;
+}
+
+#global-total:after {
+	background: url(../img/dashboard-total.png) repeat-x;
+	bottom: -4px;
+	content: '';
+	height: 8px;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+#global-total h3 {
+	font-size: 30px;
+	line-height: 40px;
+	margin: 0
+}
+
+#total-orders {
+	color: #232323;
+	font-weight: 500;
+}
+
+#total-customers {
+	color: #a0a4af;
+	font-weight: 300;
+}
+
+#dashboard-statistics {
+	overflow: hidden;
+	margin: 0 auto;
+	padding: 30px 0 0;
+	width: 390px;
+}
+
+#dashboard-statistics li {
+	float: left;
+	font-size: 13px;
+	font-weight: 300;
+	margin-bottom: 30px;
+	width: 50%;
+}
+
+#dashboard-statistics strong {
+	display: block;
+	font-size: 26px;
+	font-weight: 500;
+	margin-bottom: 5px;
+	margin-top: 15px;
+}
+
+#dashboard-statistics span.icon {
+	display: inline-block;
+	height: 65px;
+	float: left;
+	margin-right: 10px;
+	margin-top: 0;
+	position: relative;
+	width: 65px;
+}
+
+#dashboard-statistics span.icon-green {
+	background: #15c86e;
+}
+
+#dashboard-statistics span.icon-purple {
+	background: #8e76c6;
+}
+
+#dashboard-statistics span.icon-yellow {
+	background: #ffcc00;
+}
+
+#dashboard-statistics span.icon-blue {
+	background: #23c7f0;
+}
+
+
+#dashboard-statistics span.icon i {
+	display: block;
+	margin: 10px auto 0;
+}
+
+#dashboard-statistics span.icon i.icon-views-large,
+#dashboard-statistics span.icon i.icon-visitors-large {
+	margin-top: 15px;
+}
+
+#view-more-stat {
+	border-bottom: 1px solid #cfd3da;
+	border-top: 1px solid #cfd3da;
+	display: block;
+	font-size: 13px;
+	font-weight: 500;
+	margin-bottom: 20px;
+	padding: 15px 0;
+	text-align: center;
+}
+
+#hangar-ads {
+	border: 1px solid #c5c8ce;
+	display: block;
+	font-size: 24px;
+	font-weight: 300;
+	overflow: hidden;
+	padding: 40px;
+}
+
+#hangar-ads i {
+	float: left;
+	margin-right: 20px;
+}
+
+#hangar-ads span {
+	display: block;
+	font-size: 18px;
+	font-weight: 500;
+	margin: 10px 0;
+}
+
+#hangar-ads strong {
+	font-weight: 500;
+}
+
+
 #dashboard-order {
 	width: 47.23%;
 }

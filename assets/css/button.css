@@ -38,6 +38,11 @@
 	margin-right: 5px;
 }
 
+a.button-big {
+	color: #737479;
+	font-weight: bold;
+}
+
 .group-button {
 	border: solid 1px #c6c6c6;
 	display: inline-block;

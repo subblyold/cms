@@ -1,5 +1,5 @@
 
-subbly.orders = (function()
+subbly.customers = (function()
 {
 	var $filters,
 		$filtersLabel,

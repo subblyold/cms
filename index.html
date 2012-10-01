@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="assets/css/styles.css">
 	<link rel="stylesheet" href="assets/css/ipad.css" media="only screen and (min-device-width : 768px) and (max-device-width : 1024px)">
 </head>
-<body>
+<body data-controller="dashboard">
 
 <div id="global">
 	<div id="sidebar" class="pane nano">
@@ -106,8 +106,66 @@
 
 		<div class="pane-content">
 			<div id="dashboard-summary" class="content-column content-column-left">
-test
-			</div>
+
+				<div id="incomes-summary">
+					<h3>Today's income</h3>
+					<div id="incomes-summary-wrapper">
+						<ul>
+							<li data-title="Today's income">$209.00</li>
+							<li data-title="Yesterday's income">$178.00</li>
+							<li data-title="This week's income">$1 309.00</li>
+							<li data-title="This month's income">$11 684.00</li>
+						</ul>
+					</div><!-- /#incomes-summary-wrapper -->
+					<span class="artpack nav nav-prev"></span>
+					<span class="artpack nav nav-next"></span>
+				</div><!-- /#incomes-summary -->
+
+				<div id="global-total">
+					<h3 id="total-orders">96 orders</h3>
+					<h3 id="total-customers">189 customers</h3>
+				</div>
+
+				<ul id="dashboard-statistics">
+					<li>
+						<span class="icon icon-green br">
+							<i class="icon-cart-large"></i>
+						</span>
+						<strong>$69.00</strong>
+						Average basket
+					</li>
+					<li>
+						<span class="icon icon-purple br">
+							<i class="icon-catalogue-large"></i>
+						</span>
+						<strong>22</strong>
+						Products
+					</li>
+					<li>
+						<span class="icon icon-yellow br">
+							<i class="icon-views-large"></i>
+						</span>
+						<strong>6963</strong>
+						Products views
+					</li>
+					<li>
+						<span class="icon icon-blue br">
+							<i class="icon-visitors-large"></i>
+						</span>
+						<strong>7322</strong>
+						Visitors
+					</li>
+				</ul>
+
+				<a href="#" id="view-more-stat">View more statistics</a>
+
+				<a href="#" id="hangar-ads" class="br">
+					<i class="icon-hangar-large"></i>
+					<span>Need plugins &amp; themes?</span>
+					Discover the <strong>Hangar</strong>
+				</a>
+
+			</div><!-- /#dashboard-summary -->
 			<div id="dashboard-order" class="content-column content-column-right">
 
 				<nav id="dashboard-shortcuts" class="br">
@@ -141,11 +199,11 @@ test
 				<div id="last-order" class="br">
 					<table>
 						<colgroup>
-							<col width="20%">
-							<col width="20%">
-							<col width="20%">
-							<col width="20%">
-							<col width="20%">
+							<col width="25%">
+							<col width="25%">
+							<col width="25%">
+							<col width="15%">
+							<col width="10%">
 						</colgroup>
 						<tbody>
 							<tr>
@@ -205,6 +263,7 @@ test
 
 <script src="assets/js/kickstarter.js"></script>
 <script src="assets/js/core.js"></script>
-
+<script src="assets/js/customers.js"></script>
+<script src="assets/js/dashboard.js"></script>
 </body>
 </html>

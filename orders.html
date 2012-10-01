@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="assets/css/styles.css">
 	<link rel="stylesheet" href="assets/css/ipad.css" media="only screen and (min-device-width : 768px) and (max-device-width : 1024px)">
 </head>
-<body data-controller="customers">
+<body data-controller="order">
 
 <div id="global">
 	<div id="sidebar" class="pane nano">
@@ -272,149 +272,132 @@
 
 			</div><!-- /.pane-content -->
 		</div><!-- /#orders-list-holder -->
-		<div id="customer-details" class="content-column content-column-right nano">
+		<div id="order-details" class="content-column content-column-right nano">
 			<div class="pane-content">
 
-				<div id="customer-tabs">
-					<a href="javascript:;" class="tab-trigger tab-trigger-profile active br-t">Profile</a>
-					<a href="javascript:;" class="tab-trigger tab-trigger-order br-t">Orders <small>(12)</small></a>
-					<div class="customer-tab show">
-						<div class="customer-tab-content customer-general-details">
-							<div class="float-fixer">
-								<div class="float-left">
-									<strong class="font-black font-large">David Bow</strong> n°63<br>
-									<em class="font-small">davidblow@gmail.com</em>
-								</div>
-								<div class="float-right">
-									<a href="#" class="button strong">
-										<i class="icon-email"></i>
-										send
-									</a>
-									<a href="#" class="button strong">
-										<i class="icon-edit-big"></i>
-										edit
-									</a>
-								</div>
-							</div>
-							<hr>
-							<div class="float-fixer font-small">
-								<div class="float-left">
-									<strong class="font-black">Newsletter</strong>: Yes
-								</div>
-								<div class="float-right">
-									<strong class="font-black">Subscription date</strong>: 04/02/2012 19:10:51<br>
-									<strong class="font-black">Last visit</strong>: 04/03/2012 13:14:13
-								</div>
-							</div>
+				<header id="order-details-header">
+					<span class="order-id br">n°537</span>
+					<a href="javascript:print();">
+						<i class="icon-print"></i>
+					</a>
+					<a href="#" class="button button-big float-right">
+						<i class="icon-invoce"></i>
+						invoice
+					</a>
+				</header>
 
-							<div class="customer-notes br">
-								<time><strong>12/09/12</strong> - 12:32</time>
-								<em>Don’t forget to send gift card</em>
-							</div>
+				<div class="table order br">
+					
+					<div class="order-header br-t">
+						<time>17/10/2011 20:15:08</time><br>
+						<strong class="payement">Paypal</strong>
 
-							<form id="add-customer-note">
-								<span class="label"><i class="icon-note"></i></span>
-								<input type="text" placeholder="Type text here">
-							</form>
-						</div><!-- /.customer-tab-content -->
-
-						<div class="table customer-addresses br">
-							<h3 class="br-t">Addresses</h3>
-
-							<ul class="table-body table-body-no-footer">
-								<li>
-									<span class="address-id">1</span>
-									<span class="address-name">David Bow</span>
-									<span class="address-details">12 allées fleurs<br>93340 LE RAINCY</span>
-									<a href="#" class="address-edit"><i class="icon-edit-big-red"></i></a>
-								</li>
-								<li>
-									<span class="address-id">2</span>
-									<span class="address-name">Jean-Christophe Blazetroplong</span>
-									<span class="address-details">12 allées fleurs<br>93340 LE RAINCY</span>
-									<a href="#" class="address-edit"><i class="icon-edit-big-red"></i></a>
-								</li>
+						<div id="order-status">
+							<span id="order-status-label" class="br">
+								<i class="icon-sent"></i>
+								Sent
+							</span>
+							<ul class="br">
+								<li>waiting</li>
+								<li>sent</li>
 							</ul>
-						</div><!-- /.customer-addresses -->
+						</div>
 
-						<a href="#" class="br" id="delete-customer">Delete this customer</a>
 					</div>
-					<div class="customer-tab">
-						<div class="customer-tab-content order">
-							<ul id="customer-orders-summary">
-								<li>
-									<span class="order-details-id">
-										<span class="status waiting" rel="tooltip" title="waiting"></span>
-										n°23
-									</span>
-									<time class="order-details-date">
-										17/10/2011<br>
-										20:15:08
-									</time>
-									<span class="order-details-amount">
-										<strong>$36523.00</strong><br>
-										Paypal
-									</span>
-									<span class="order-details-items">
-										<strong>5 items</strong><br>
-										Colissimo Express
-									</span>
-									<a href="#" class="button button-big">
-										<i class="icon-invoce"></i>
-										invoice
-									</a>
-								</li>
-								<li>
-									<span class="order-details-id">
-										<span class="status waiting" rel="tooltip" title="waiting"></span>
-										n°23
-									</span>
-									<time class="order-details-date">
-										17/10/2011<br>
-										20:15:08
-									</time>
-									<span class="order-details-amount">
-										<strong>$36523.00</strong><br>
-										Paypal
-									</span>
-									<span class="order-details-items">
-										<strong>5 items</strong><br>
-										Colissimo Express
-									</span>
-									<a href="#" class="button button-big">
-										<i class="icon-invoce"></i>
-										invoice
-									</a>
-								</li>
-								<li>
-									<span class="order-details-id">
-										<span class="status waiting" rel="tooltip" title="waiting"></span>
-										n°23
-									</span>
-									<time class="order-details-date">
-										17/10/2011<br>
-										20:15:08
-									</time>
-									<span class="order-details-amount">
-										<strong>$36523.00</strong><br>
-										Paypal
-									</span>
-									<span class="order-details-items">
-										<strong>5 items</strong><br>
-										Colissimo Express
-									</span>
-									<a href="#" class="button button-big">
-										<i class="icon-invoce"></i>
-										invoice
-									</a>
-								</li>
-							</ul>
-							<div id="customer-orders-total" class="table-footer">
-								<strong class="orders-total">$236.00</strong>
-							</div>
+					<ul class="table-head">
+						<li>
+							Product
+						</li>
+						<li>
+							UP
+						</li>
+						<li>
+							Qty
+						</li>
+						<li>
+							Total
+						</li>
+					</ul>
+					<ul class="table-body">
+						<li>
+							<img src="tmp/order/product-01.jpg" alt="">
+							<span class="product-desc">
+								<strong>Nixon Swatch</strong>
+								Taille S
+							</span>
+							<span class="product-price">
+								$139.00
+							</span>
+							<span class="product-qty">
+								1
+							</span>
+							<span class="product-price">
+								$139.00
+							</span>
+						</li>
+						<li>
+							<img src="tmp/order/product-01.jpg" alt="">
+							<span class="product-desc">
+								<strong>Nixon Swatch</strong>
+								Taille S
+							</span>
+							<span class="product-price">
+								$139.00
+							</span>
+							<span class="product-qty">
+								1
+							</span>
+							<span class="product-price">
+								$139.00
+							</span>
+						</li>
+					</ul>
+					<div id="_customer-orders-total" class="table-footer">
+						<strong class="orders-total">$236.00</strong>
+						<span class="order-weight">360 gr</span><br>
+						<span class="order-delevry-mode">Colissimo Express -</span> 
+						<strong class="order-delevry-price">$8,99</strong>
+					</div>
+				</div><!-- /.order -->
+
+				<div class="table br">
+					
+					<div class="order-header br-t">
+						<i class="icon-email"></i>
+						<strong>Benjamin Guedj</strong> n°523
+					</div>
+					<div class="order-addresses br-b">
+						<div class="order-address">
+							<h3>
+								Delivery adress
+								<a href="#">
+									<i class="icon-edit-big-red"></i>
+								</a>
+							</h3>
+							<p>
+								Benjamin Guedj<br>
+								16 bis allee du jardin anglais<br>
+								93340 LE RAINCY<br>
+								FRANCE
+							</p>
+						</div>
+						<div class="order-address">
+							<h3>
+								Billing adress
+								<a href="#">
+									<i class="icon-edit-big-red"></i>
+								</a>
+							</h3>
+							<p>
+								Benjamin Guedj<br>
+								16 bis allee du jardin anglais<br>
+								93340 LE RAINCY<br>
+								FRANCE
+							</p>
 						</div>
 					</div>
-				</div><!-- /#customer-tabs -->
+				</div>
+
 			</div><!-- /.pane-content -->
 		</div><!-- /#customer-details -->
 	</div><!-- /#content -->
@@ -433,5 +416,6 @@
 <script src="assets/js/kickstarter.js"></script>
 <script src="assets/js/core.js"></script>
 <script src="assets/js/customers.js"></script>
+<script src="assets/js/order.js"></script>
 </body>
 </html>

@@ -227,6 +227,57 @@
 	font-size: 16px;
 }
 
+/* TABLES
+------------------------------------- */
+
+.table {
+	border: 1px solid #cfd2d7;
+	margin: 20px 0;
+}
+
+
+.table-body li {
+	background: #fff;
+	border-bottom: 1px solid #cfd2d7;
+	clear: left;
+	font-size: 12px;
+	overflow: hidden;
+	padding: 20px;
+}
+
+
+.table-body-no-footer li:last-child {
+	border-bottom: 0;
+	-webkit-border-radius: 0 0 4px 4px;
+	   -moz-border-radius: 0 0 4px 4px;
+	        border-radius: 0 0 4px 4px;
+}
+
+.table-head {
+	background: #f2f3f5;
+	border-top: 1px solid #cfd2d7;
+	color: #6b6b6b;
+	font-size: 12px;
+	height: 40px;
+	padding: 10px 20px;
+}
+
+.table-head li {
+	display: block;
+	float: left;
+}
+
+.table-footer {
+	background: #fffbed;
+	overflow: hidden;
+	padding: 20px;
+	-webkit-border-radius: 0 0 4px 4px;
+	   -moz-border-radius: 0 0 4px 4px;
+	        border-radius: 0 0 4px 4px;
+
+}
+
+
 /* ICONS
 ------------------------------------- */
 
@@ -242,6 +293,24 @@
 	margin-top: 1px;
 	vertical-align: text-top;
 	width: 16px;
+}
+
+.icon-arrow-down-white {
+	background-position: 0 -50px;
+	height: 7px;
+	width: 12px;
+}
+
+.icon-sent {
+	background-position: -120px -70px;
+	height: 15px;
+	width: 19px;
+}
+
+.icon-print {
+	background-position: -80px -30px;	
+	height: 19px;
+	width: 20px;
 }
 
 .icon-invoce {
@@ -328,4 +397,34 @@
 	background-position: -60px -270px;
 	height: 55px;
 	width: 55px;
+}
+
+.icon-cart-large {
+	background-position: 0 -90px;
+	height: 45px;
+	width: 45px;
+}
+
+.icon-catalogue-large {
+	background-position: -50px -87px;
+	height: 40px;
+	width: 26px;	
+}
+
+.icon-views-large {
+	background-position: -100px -87px;
+	height: 30px;
+	width: 41px;	
+}
+
+.icon-visitors-large {
+	background-position: -150px -90px;
+	height: 35px;
+	width: 39px;	
+}
+
+.icon-hangar-large {
+	background-position: -300px -270px;
+	height: 60px;
+	width: 57px;
 }
