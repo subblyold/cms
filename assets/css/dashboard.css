@@ -32,7 +32,7 @@
 	color: #272727;
 	float: left;
 	font-size: 65px;
-	font-weight: 500;
+	font-weight: bold;
 	text-align: center;
 	line-height: 65px;
 	width: 100%;
@@ -76,7 +76,7 @@
 
 #global-total h3 {
 	font-size: 30px;
-	line-height: 40px;
+	line-height: 35px;
 	margin: 0
 }
 
@@ -102,7 +102,13 @@
 	font-size: 13px;
 	font-weight: 300;
 	margin-bottom: 30px;
+	margin-left: 10%;
 	width: 50%;
+}
+
+#dashboard-statistics li:nth-child(even) {
+	margin-left: 0;
+	width: 40%
 }
 
 #dashboard-statistics strong {
@@ -167,7 +173,15 @@
 	font-size: 24px;
 	font-weight: 300;
 	overflow: hidden;
+
+}
+
+#hangar-ads-content {
+	display: block;
+	margin: 0 auto;
 	padding: 40px;
+	width: 379px;
+
 }
 
 #hangar-ads i {
@@ -175,7 +189,7 @@
 	margin-right: 20px;
 }
 
-#hangar-ads span {
+#hangar-ads span.hangar-ads-question {
 	display: block;
 	font-size: 18px;
 	font-weight: 500;
@@ -293,6 +307,12 @@
 	color: #000;
 }
 
+#last-order .time-ago {
+	color: #A2A2A6;
+	font-size: 11px;
+	font-style: italic;
+}
+
 #dashboard-order .button {
 
 	background-color: #fff; 
@@ -313,4 +333,8 @@
 	line-height: 57px;
 	height: 57px; 
 	width: 100%; 
+}
+
+#dashboard-order .button:hover {
+	background-color: #f7f7f7;
 }

@@ -40,7 +40,10 @@
 
 a.button-big {
 	color: #737479;
+	font-size: 13px;
 	font-weight: bold;
+	height: 36px;
+	line-height: 36px;
 }
 
 .group-button {

@@ -141,7 +141,7 @@
 	color: #737479;
 	cursor: pointer;
 	display: block;
-	float: left
+	float: left;
 	font-size: 16px;
 	font-weight: 500;
 	height: 41px;
@@ -196,7 +196,7 @@
 	font-size: 20px;
 	font-weight: 500;
 	margin-right: 15px;
-	padding: 0 15px;
+	padding: 0 30px;
 }
 
 .subbly-form button:last-child {

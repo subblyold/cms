@@ -214,8 +214,8 @@
 }
 
 #customer-details .button {
-	height: 37px;
-	line-height: 37px;
+	height: 36px;
+	line-height: 36px;
 	padding: 0 11px;
 }
 
@@ -245,11 +245,11 @@
 
 
 /* hack chrome, side effects on safari */
-body:nth-of-type(1) #customer-tabs a.tab-trigger-profile.active {
+.chrome #customer-tabs a.tab-trigger-profile.active {
 	padding: 10px 30px 11px;
 }
 
-body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
+.chrome #customer-tabs a.tab-trigger-order.active {
 	padding: 10px 30px 9px;
 }
 
@@ -354,8 +354,13 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	width: 95%;
 }
 
+.safari #add-customer-note input {
+	height: 38px;
+}
+
 #add-customer-note input:focus {
 	font-style: normal;
+	outline: none;
 }
 
 
@@ -430,11 +435,20 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 
 #customer-orders-summary {}
 
+#customer-orders-summary li a {
+	display: block;
+	overflow: hidden;
+	padding: 15px 0;
+}
+
+#customer-orders-summary li a:hover {
+
+	background: #f6f7f8;
+}
+
 #customer-orders-summary li {
 	border-bottom: 1px solid #cfd2d7;
 	font-size: 13px;
-	overflow: hidden;
-	padding: 15px 0;
 }
 
 #customer-orders-summary li:first-child {
@@ -457,7 +471,7 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	font-size: 18px;
 }
 
-#customer-orders-summary a.button {
+#customer-orders-summary .button {
 	float: right;
 	margin-right: 20px;
 }
@@ -508,11 +522,11 @@ body:nth-of-type(1) #customer-tabs a.tab-trigger-order.active {
 	background: #dddfe3;
 	color: #535e63;
 	display: inline-block;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 500;
 	margin-right: 10px;
-	margin-top: 4px;
-	padding: 4px 8px;
+	margin-top: 2px;
+	padding: 8px 10px;
 }
 
 .order-header {
