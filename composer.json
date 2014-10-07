@@ -1,0 +1,70 @@
+{
+    "name":              "subbly"
+  , "version":           "0.1.0"
+  , "type":              "project"
+  , "keywords":          ["e-commerce", "cms"]
+  , "license":           "MIT"
+  , "minimum-stability": "stable"
+  , "authors": [
+        {
+            "name":     "Benjamin Guedj"
+          , "email":    "benjamin@subbly.com"
+          , "role":     "Designer - founder"
+        }
+      , {
+            "name":     "Michael Lefebvre"
+          , "email":    "michael@subbly.com"
+          , "role":     "Developer"
+        }
+      , {
+            "name":     "Sebastien Penet"
+          , "email":    "sebastion@subbly.com"
+          , "role":     "Developer"
+        }
+    ]
+  , "config": {
+        "vendor-dir":      "vendor"
+      , "discard-changes": true
+    }
+  , "require": {
+        "php":                         ">=5.4"
+      , "ext-mcrypt":                  "*"
+      , "laravel/framework":           "4.2.*"
+      , "cartalyst/sentry":            "2.0.*"
+      , "yohang/finite":               "1.0.3"
+    }
+  , "autoload": 
+    {
+      "classmap": 
+      [
+          "app/commands"
+        , "app/controllers"
+        , "app/models"
+        , "app/subbly"
+        , "app/database/migrations"
+        , "app/database/seeds"
+        , "app/tests/TestCase.php"
+      ]
+    , "psr-0": 
+      {
+        "Subbly": "app/subbly"
+      }
+    }
+  , "scripts": 
+    {
+        "post-install-cmd": 
+        [
+            "php artisan clear-compiled"
+          , "php artisan optimize"
+        ]
+      , "post-update-cmd": 
+        [
+            "php artisan clear-compiled"
+          , "php artisan optimize"
+        ]
+      , "post-create-project-cmd": 
+        [
+            "php artisan key:generate"
+        ]
+    }
+}
