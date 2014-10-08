@@ -1,14 +1,28 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
+* Register Backend routes before all user routes.
 */
+App::before(function($request) 
+{
+  /*
+   * Other pages
+   */
+  Route::group( [ 'prefix' => Config::get( 'subbly.backendUri', 'backend' ) ], function() 
+  {
+    Route::any( '{slug}', 'TestController@showWelcome' );
+    // echo 'ok';
+    // Route::any( '{slug}', 'Backend\Classes\BackendController@run' )->where( 'slug', '(.*)?' );
+  });
 
-Route::get('/', 'HomeController@showWelcome');
+  /*
+   * Entry point
+   */
+  // Route::any( Config::get( 'subbly.backendUri', 'backend' ), 'Backend\Classes\BackendController@run' );
+});
+
+// Route::get('/', 'HomeController@showWelcome');
+
+// Route::get('/auth', 'AuthController@askPermission');
+
+
