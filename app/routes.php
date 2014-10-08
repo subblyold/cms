@@ -1,8 +1,8 @@
 <?php
 
 /*
-* Register Backend routes before all user routes.
-*/
+ * Register Backend routes before public routes.
+ */
 App::before(function($request) 
 {
   /*
@@ -21,8 +21,22 @@ App::before(function($request)
   // Route::any( Config::get( 'subbly.backendUri', 'backend' ), 'Backend\Classes\BackendController@run' );
 });
 
-// Route::get('/', 'HomeController@showWelcome');
+/*
+ * Register template driven Frontend
+ * Comment this part if you want to user 
+ * your own controller
+ */
 
-// Route::get('/auth', 'AuthController@askPermission');
+// Route::any('.*', 'AutoController@run');
+
+Route::any('{url}', 'AutoController@run')->where('url', '.*');
+
+/*
+ * You can set you own route bellow
+ * see Laravel's doc form more information:
+ * http://laravel.com/docs/4.2/routing
+ */
+
+// Route::get('/your-route', 'YourRoute@yourMethod');
 
 
