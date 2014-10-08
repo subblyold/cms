@@ -1,3 +1,5 @@
+/app/config/local
+/app/storage/debugbar
 /bootstrap/compiled.php
 /vendor
 composer.phar
