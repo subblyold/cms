@@ -1,0 +1,2 @@
+
+catalog #<?php echo htmlspecialchars($page, ENT_QUOTES, 'UTF-8') ?> - <?php echo htmlspecialchars($category, ENT_QUOTES, 'UTF-8') ?> - <?php echo htmlspecialchars($subcategory, ENT_QUOTES, 'UTF-8') ?>

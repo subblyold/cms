@@ -34,11 +34,11 @@ return array(
     */
 
   , 'frontendUri' => array(
-        '/'                                       => 'Home'
-      , '/products'                               => 'Catalog'
-      , '/products/:id/:slug'                     => 'product'
-      , '/products/?page/:category'               => 'CatalogCategory'
-      , '/products/?page/:category/:subcategory'  => 'CatalogSubCategory'
+        '/'                                          => 'home'
+      , '/products/{id}/{slug}'                      => 'product'
+      , '/products/{page}/{category}/{subcategory}'  => 'catalog'
+      , '/products/{page}/{category}'                => 'catalog'
+      , '/products'                                  => 'catalog'
       // , '/add-to-cart'                            => 'AddToCart'
       // , '/best-seller-2014/:cat_1'                => 'best-seller'
       // , '/best-seller-2014'                       => 'best-seller'

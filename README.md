@@ -3,6 +3,7 @@ cms
 
 
 ## base models
+Shop
 Products  
 Addresses  
 Inventory  
@@ -14,6 +15,7 @@ Taxation
 Pricing  
 Promotions  
 Users and Groups  
+Customer
 Currencies  
 Locales  
 Content  
