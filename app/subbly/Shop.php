@@ -14,6 +14,9 @@ class Shop
     static protected $optionDefaults;
     static protected $groupedOptions;
 
+    /**
+     * Initializes shop options
+     */
     static public function initialize()
     {
         Shop\OptionForm::registerDefaultInputTypes();
@@ -22,6 +25,13 @@ class Shop
         self::$groupedOptions = array();
     }
 
+    /**
+     * Registers a new option
+     *
+     * @param string $option
+     * @param array $config Optional configuration
+     * @throws Shop\Exception
+     */
     static public function registerOption($option, array $config = array())
     {
         if( isset(self::$options[$option]) )
@@ -53,11 +63,23 @@ class Shop
         }
     }
 
+    /**
+     * Checks whether a given option exists in database or has a default value set
+     *
+     * @param string $option
+     * @return bool
+     */
     static public function hasOption($option)
     {
         return isset(self::$optionDefaults[$option]) || isset(self::$optionValues[$option]);
     }
 
+    /**
+     * Error-free getter for option value
+     *
+     * @param string $option
+     * @return null|string
+     */
     static public function getOptionOrNull($option)
     {
         if( self::hasOption($option) )
@@ -68,6 +90,13 @@ class Shop
         return null;
     }
 
+    /**
+     * Option value getter
+     *
+     * @param string $option
+     * @return string
+     * @throws Shop\Exception
+     */
     static public function getOption($option)
     {
         if( !self::hasOption($option) )
@@ -85,12 +114,25 @@ class Shop
         }
     }
 
+    /**
+     * Stores a new value in database for a given option
+     *
+     * @param string $option
+     * @param string $value
+     */
     static public function setOption($option, $value)
     {
         Shop\OptionModel::replaceValues([$option => $value]);
         self::$optionValues[ $option ] = $value;
     }
 
+    /**
+     * Returns configuration for a registered option
+     *
+     * @param string $option
+     * @return array
+     * @throws Shop\Exception
+     */
     static public function getOptionConfig($option)
     {
         if( isset(self::$options[$option]) )
@@ -103,16 +145,30 @@ class Shop
         }
     }
 
+    /**
+     * Returns all known options and their configuration
+     *
+     * @return array
+     */
     static public function getFlatOptions()
     {
         return self::$options;
     }
 
+    /**
+     * Returns an associative array of option configurations, organized by groups and subgroups
+     * @return mixed
+     */
     static public function getGroupedOptions()
     {
         return self::$groupedOptions;
     }
 
+    /**
+     * Updates option values in batch
+     *
+     * @param array $options
+     */
     static public function setOptions($options)
     {
         Shop\OptionModel::replaceValues($options);
