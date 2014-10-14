@@ -5,10 +5,11 @@
  */
 App::before(function($request) 
 {
+
   /*
    * Other pages
    */
-  Route::group( [ 'prefix' => Config::get( 'subbly.backendUri', 'backend' ) ], function() 
+  Route::group( [ 'prefix' => Config::get( 'subbly.backendUri', 'backend' ) ], function()
   {
     Route::any( '{slug}', 'TestController@showWelcome' );
     // echo 'ok';
@@ -28,6 +29,9 @@ App::before(function($request)
  */
 
 // Route::any('.*', 'AutoController@run');
+
+Route::get('/test-option', 'TestOptionController@index');
+Route::post('/test-option', 'TestOptionController@save');
 
 Route::any('{url}', 'AutoController@run')->where('url', '.*');
 
