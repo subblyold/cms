@@ -5,10 +5,11 @@
  */
 App::before(function($request) 
 {
+
   /*
    * Other pages
    */
-  Route::group( [ 'prefix' => Config::get( 'subbly.backendUri', 'backend' ) ], function() 
+  Route::group( [ 'prefix' => Config::get( 'subbly.backendUri', 'backend' ) ], function()
   {
     Route::any( '{slug}', 'TestController@showWelcome' );
     // echo 'ok';
@@ -20,6 +21,10 @@ App::before(function($request)
    */
   // Route::any( Config::get( 'subbly.backendUri', 'backend' ), 'Backend\Classes\BackendController@run' );
 });
+
+
+Route::get('/test-option', 'TestOptionController@index');
+Route::post('/test-option', 'TestOptionController@save');
 
 /*
  * You can set you own route bellow
