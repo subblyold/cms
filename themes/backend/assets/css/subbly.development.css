@@ -342,4 +342,9 @@ h6 {
 .c-blk {
   color: #202124;
 }
+.hr {
+  border: 0;
+  border-top: 1px solid #a9a9a9;
+  height: 0;
+}
 /*# sourceMappingURL=subbly.development.css.map */
