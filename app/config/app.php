@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Barryvdh\Debugbar\ServiceProvider',
+		'Subbly\Front\FrontServiceProvider'
 
 	),
 
