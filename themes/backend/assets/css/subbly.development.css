@@ -319,11 +319,15 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
+  background-color: #ffffff;
+  color: #878787;
   font-family: 'LatoLatin', sans-serif;
   font-size: 14px;
+  letter-spacing: .02em;
   line-height: 1.28571429;
-  color: #c1c1c1;
-  background-color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
 }
 h1,
 h2,
@@ -346,5 +350,65 @@ h6 {
   border: 0;
   border-top: 1px solid #a9a9a9;
   height: 0;
+}
+.form {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+}
+.form label {
+  display: block;
+  font-weight: bold;
+  line-height: 14px;
+  margin-bottom: 12px;
+}
+.form-group {
+  margin-bottom: 16px;
+}
+.input {
+  background-color: #ffffff;
+  background-image: none;
+  border-radius: 2px;
+  border: 1px solid #c7c7c7;
+  color: #878787;
+  display: block;
+  font-size: 14px;
+  height: 42px;
+  line-height: 1.28571429;
+  padding: 6px 12px;
+  width: 100%;
+  -webkit-transition: border-color ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s;
+  transition: border-color ease-in-out .15s;
+}
+.input:focus,
+.input:hover {
+  border-color: #a9a9a9;
+  outline: 0;
+}
+.input::-moz-placeholder {
+  color: #fafafa;
+  opacity: 1;
+}
+.input:-ms-input-placeholder {
+  color: #fafafa;
+}
+.input::-webkit-input-placeholder {
+  color: #fafafa;
+}
+.input[disabled],
+.input[readonly],
+fieldset[disabled] .input {
+  cursor: not-allowed;
+  background-color: #fafafa;
+  opacity: 1;
+}
+textarea.input {
+  height: auto;
+}
+.input-12 {
+  width: 100%;
 }
 /*# sourceMappingURL=subbly.development.css.map */

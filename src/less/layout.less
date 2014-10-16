@@ -25,9 +25,13 @@ html {
 }
 
 body {
+  background-color: @body-bg;
+  color: @text-color;
   font-family: @font-family-base;
   font-size: @font-size-base;
+  letter-spacing: .02em;
   line-height: @line-height-base;
-  color: @text-color;
-  background-color: @body-bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }

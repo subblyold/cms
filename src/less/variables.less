@@ -7,7 +7,7 @@
 @black:                 #202124;//
 @gray-darker:           #a9a9a9;// input border active
 @gray-dark:             #a6a6a7;//
-@gray:                  #c1c1c1;//
+@gray:                  #878787;//
 @gray-active:           #e3e3e3;
 @gray-light:            #bbbbbb;//
 @gray-lighter:          #fafafa;// bkgd
@@ -199,17 +199,13 @@
 //** `<input>` border radius
 @input-border-radius:            @border-radius-base;
 //** Border color for inputs on focus
-@input-border-focus:             @gray-darker;
+@input-border-focus:             #a9a9a9;
 
 //** Placeholder text color
 @input-color-placeholder:        @gray-lighter;
 
 //** Default `.form-control` height
-@input-height-base:              (@line-height-computed + (@padding-base-vertical * 2) + 2);
-//** Large `.form-control` height
-@input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 2);
-//** Small `.form-control` height
-@input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 2);
+@input-height-base:              42px;
 
 @legend-color:                   @gray-dark;
 @legend-border-color:            #e5e5e5;
