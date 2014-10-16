@@ -1,6 +1,6 @@
 <?php
 
-namespace Subbly\Core\Model;
+namespace Subbly\Model;
 
 abstract class Model extends Eloquent
 {

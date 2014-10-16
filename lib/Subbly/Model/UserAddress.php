@@ -1,8 +1,10 @@
 <?php
 
+namespace Subbly\Model;
+
 class UserAddress extends Model
 {
-    use Traits\AddressTrait;
+    use Trait\AddressTrait;
 
     /**
      * The database table used by the model.

@@ -1,10 +1,10 @@
 <?php
 
-namespace Subbly\Core\Model;
+namespace Subbly\Model;
 
 class OrderAddress extends Model
 {
-    use Traits\AddressTrait;
+    use Trait\AddressTrait;
 
     /**
      * The database table used by the model.

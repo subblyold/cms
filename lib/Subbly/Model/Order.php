@@ -1,6 +1,6 @@
 <?php
 
-namespace Subbly\Core\Model;
+namespace Subbly\Model;
 
 class Order extends Model
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Subbly\Core\Model;
+namespace Subbly\Model;
 
 use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;

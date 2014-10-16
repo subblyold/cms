@@ -1,6 +1,6 @@
 <?php
 
-namespace Traits;
+namespace Subbly\Model\Trait;
 
 trait AddressTrait
 {
