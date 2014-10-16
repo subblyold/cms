@@ -1,7 +1,5 @@
 
 .form {
-  .flex-display;
-
   label {
     display: block;
     font-weight: bold;
@@ -10,8 +8,17 @@
   }
 }
 
+@form-input-margin: 9px;
+
+.form-row {
+  .flex-display;
+  margin-left: -@form-input-margin;
+  margin-right: -@form-input-margin;
+}
+
 .form-group {
-  margin-bottom: 16px;
+  .flex;
+  margin: 0 @form-input-margin 16px;
 }
 
 
@@ -54,17 +61,14 @@
   }
 }
 
-@grid-columns: 12;
+@margin-combined: (@form-input-margin*2);
 
-.inputColLoop (@index) when (@index > 0) {
-  .input-@{index} {
-    width: percentage((@index / @grid-columns));
+.input-columns(12);
+
+.input-columns(@n, @i: 1) when (@i =< @n) {
+  @calc: (@i * 100% / @n);
+  .input-@{i} {
+    width: calc(  @calc - @margin-combined);
   }
-  .inputColLoop(@index - 1);
+  .input-columns(@n, (@i + 1));
 }
-
-// end the loop when index is 0
-// .inputColLoop (0) {}
-
-// "call" the loopingClass the first time with highest value
-.inputColLoop (@grid-columns);
