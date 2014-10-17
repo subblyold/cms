@@ -144,10 +144,10 @@ class User extends Service
     }
 
     /**
-     * Name of the service
-     * Must be unique
+     *
      */
-    public function name() {
+    public function name()
+    {
         return 'subbly.user';
     }
 }
