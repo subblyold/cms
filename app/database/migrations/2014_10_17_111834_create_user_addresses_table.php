@@ -12,7 +12,8 @@ class CreateUserAddressesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('user_addresses', function(Blueprint $table) {
+        Schema::create('user_addresses', function(Blueprint $table)
+        {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('name', 255);
@@ -27,8 +28,6 @@ class CreateUserAddressesTable extends Migration {
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-
-            // $table->index();
         });
     }
 
