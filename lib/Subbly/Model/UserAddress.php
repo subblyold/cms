@@ -15,6 +15,6 @@ class UserAddress extends Model
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('Subbly\\Model\\User');
     }
 }

@@ -27,11 +27,11 @@ class User extends Model implements UserInterface, RemindableInterface
 
     public function orders()
     {
-        return $this->hasMany('Order');
+        return $this->hasMany('Subbly\\Model\\Order');
     }
 
     public function addresses()
     {
-        return $this->hasMany('UserAddress');
+        return $this->hasMany('Subbly\\Model\\UserAddress');
     }
 }

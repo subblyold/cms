@@ -12,7 +12,7 @@ class CreateUserAddressesTable extends Migration {
      */
     public function up()
     {
-        Schema::create('user_addresses', function($table) {
+        Schema::create('user_addresses', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('name', 255);
@@ -39,7 +39,7 @@ class CreateUserAddressesTable extends Migration {
      */
     public function down()
     {
-        Schema::table('users', function($table) {
+        Schema::table('users', function(Blueprint $table) {
             $table->dropForeign('user_addresses_user_id_foreign');
         });
 

@@ -10,4 +10,9 @@ class Order extends Model
      * @var string
      */
     protected $table = 'orders';
+
+    public function user()
+    {
+        return $this->belongsTo('Subbly\\Model\\User');
+    }
 }
