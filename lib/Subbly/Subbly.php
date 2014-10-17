@@ -6,10 +6,14 @@ use Subbly\Core\Container;
 
 class Subbly
 {
-    const VERSION = '0.1.0-pre';
+    const VERSION = '0.1.0-dev';
 
+    /** @var Subbly\Core\Container */
     static private $container;
 
+    /**
+     * Protection
+     */
     private function __construct() {}
     private function __clone () {}
 
@@ -34,6 +38,7 @@ class Subbly
     }
 
     /**
+     * Get the container
      *
      * @return Subbly\Core\Container
      */
