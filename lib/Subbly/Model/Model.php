@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 abstract class Model extends Eloquent
 {
-    public function save(array $options = array())
+    final public function save(array $options = array())
     {
         if (
             isset($options['subbly_api_service'])
