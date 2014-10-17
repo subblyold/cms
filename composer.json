@@ -30,10 +30,11 @@
         "php":                         ">=5.4"
       , "ext-mcrypt":                  "*"
       , "laravel/framework":           "4.2.*"
-      , "cartalyst/sentry":            "2.0.*"
+      , "cartalyst/sentry":            "2.1.*"
       , "league/oauth2-client":        "~0.3"
       , "yohang/finite":               "1.0.3"
       , "barryvdh/laravel-debugbar":   "1.*"
+      , "pimple/pimple":               "~3.0"
     }
   , "autoload": 
     {
@@ -49,7 +50,7 @@
       ]
     , "psr-0": 
       {
-        "Subbly": "app/subbly"
+        "": "lib"
       }
     }
   , "scripts": 
