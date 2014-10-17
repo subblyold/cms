@@ -33,6 +33,10 @@ class Subbly
         return $api;
     }
 
+    /**
+     *
+     * @return Subbly\Core\Container
+     */
     static private function getContainer()
     {
         if (!(self::$container instanceof Container))
