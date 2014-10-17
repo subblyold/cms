@@ -4,31 +4,10 @@ namespace Subbly\Core;
 
 use Pimple;
 
+use Subbly\Api\Api;
+
 class Container extends Pimple\Container
 {
-//     private static $_instance;
-
-//     private function __construct () {}
-//     private function __clone () {}
-
-//     public static function access() {
-//         if (!(self::$_instance instanceof self)) {
-//             self::$_instance = new self();
-//         }
-
-//         return self::$_instance;
-//     }
-// Subbly\Core\Container::->get('api');
-    /**
-     * Construct
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->load();
-    }
-
     /**
      * Load services
      */
@@ -36,9 +15,11 @@ class Container extends Pimple\Container
     {
         $c = $this;
 
-        $this['api'] = $this->share(function () use ($c) {
-            return new \Subbly\Api($c);
-        });
+        $this['api'] = function () use ($c) {
+            return new Api($c, array(
+                'Subbly\\Api\\Service\\User',
+            ));
+        };
     }
 
     /**

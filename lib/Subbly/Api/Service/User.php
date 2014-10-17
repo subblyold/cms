@@ -1,17 +1,96 @@
 <?php
 
-namespace Subbly\Api;
+namespace Subbly\Api\Service;
+
+use Subbly\Api\Service;
+use Subbly\Model;
 
 class User extends Service
 {
+    /**
+     * Return an empty model
+     *
+     * @return Subbly\Model\User
+     *
+     * @api
+     */
+    public function init()
+    {
+        return new Model\User();
+    }
+
+    /**
+     * Get all User
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     *
+     * @api
+     */
+    public function all()
+    {
+        return Model\User::all();
+    }
+
+    /**
+     * Find a User by $id
+     *
+     * @example
+     *     Subbly::api('subbly.user')->find(1);
+     *
+     * @param integer $id
+     *
+     * @return User
+     *
+     * @api
+     */
+    public function find($id)
+    {
+        return Model\User::find($id);
+    }
+
+    /**
+     * Search a User by options
+     *
+     * @example
+     *     Subbly::api('subbly.user')->searchBy(array(
+     *         'firstname' => 'John',
+     *         'lastname'  => 'Snow',
+     *     ));
+     *
+     * @param integer $id
+     *
+     * @return User
+     *
+     * @api
+     */
+    public function searchBy(array $options)
+    {
+        $options = array_replace(array(
+            'global'    => null,
+            'firstname' => null,
+            'lastname'  => null,
+        ));
+
+        $query = Model\User::query();
+
+        if ($options['firstname']) {
+            $query->where('first_name', 'LIKE', "%{$options['firstname']}%");
+        }
+        if ($options['lastname']) {
+            $query->where('last_name', 'LIKE', "%{$options['lastname']}%");
+        }
+
+        return $query->get();
+    }
+
     /**
      * Create a new User
      *
      * @example
      *     $user = Subbly\Core\Model\User;
-     *     Api::get('subbly.user')->create($user);
+     *     Subbly::api('subbly.user')->create($user);
      *
-     *     Api::get('subbly.user')->create(array(
+     *     Subbly::api('subbly.user')->create(array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -19,11 +98,14 @@ class User extends Service
      * @param User|array $user
      *
      * @return User
+     *
+     * @api
      */
     public function create($user)
     {
         if ($user instanceof User) {
-            $this->save($user)
+            // TODO use Sentry instead
+            $this->save($user);
         }
         else if (is_array($user)) {
             // TODO
@@ -37,9 +119,9 @@ class User extends Service
      *
      * @example
      *     $user = [Subbly\Core\Model\User instance];
-     *     Api::get('subbly.user')->update($user);
+     *     Subbly::api('subbly.user')->update($user);
      *
-     *     Api::get('subbly.user')->update($user_id, array(
+     *     Subbly::api('subbly.user')->update($user_id, array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -48,6 +130,8 @@ class User extends Service
      * @param array|null
      *
      * @return User
+     *
+     * @api
      */
     public function update()
     {
@@ -57,5 +141,13 @@ class User extends Service
             $this->save($user);
         }
         // else if 2 args. $id, $array
+    }
+
+    /**
+     * Name of the service
+     * Must be unique
+     */
+    public function name() {
+        return 'subbly.user';
     }
 }

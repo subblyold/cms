@@ -2,7 +2,7 @@
 
 namespace Subbly\Api;
 
-user Subbly\Core\Model;
+use Subbly\Core\Model;
 
 abstract class Service
 {
@@ -13,13 +13,17 @@ abstract class Service
         $this->api = $api;
     }
 
+    abstract public function name();
+
     protected function api()
     {
         return $this->api;
     }
 
-    protected function saveModel(Model $model)
+    protected function saveModel(Model $model, array $options = array())
     {
-        $model->save();
+        $model->save(array_replace(array(
+            'subbly_api_service' => $this,
+        ), $options));
     }
 }
