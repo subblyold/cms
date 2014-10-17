@@ -35,3 +35,137 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+// Links
+
+a {
+  color: @link-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: @link-hover-color;
+    // text-decoration: underline;
+    outline: none;
+  }
+
+  &:focus {
+    .tab-focus();
+  }
+}
+
+// Lists
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+//
+// Main view
+// --------------------------------------------------
+
+.container {
+  .flex-display;
+  height: 100%;
+  max-width: 1200px;
+  min-width: 960px;
+}
+
+.main-nav {
+  background: @black;
+  width: 240px;
+}
+
+.subbly-logo,
+.subbly-nav {
+  .center-block;
+  width: 160px;
+  -webkit-user-select: none;
+   -khtml-user-select: none;
+     -moz-user-select: none;
+       -o-user-select: none;
+          user-select: none; 
+
+  img {
+    .center-block;
+    fill: #fff;
+  }
+
+  li + li {
+    margin-top: 20px
+  }
+
+  .badge {
+    float: right
+  }
+
+  a {
+    font-size: @font-size-large;
+
+    &:hover,
+    &.active {
+      color: @white
+    }
+  }
+}
+
+.main-view {
+  .flex(1);
+  position: relative;
+  // background: @white;
+}
+
+
+//
+// Views
+// --------------------------------------------------
+
+.view-full {
+  height:100%;
+  position:absolute;
+  width:100%;
+
+  & > .view-half,
+  & > .view-third {
+    border-right: 1px solid @border;
+    height:100%;
+    position:absolute;
+  }
+
+  & > .view-half {
+    background-color: #fafafa;
+    width:45%;
+  }
+
+  & > .view-third {
+    background-color: @white;
+    width:70%;
+  }
+
+  & > .view-half + .view-half,
+  & > .view-third + .view-third {
+    border-right: none;
+  }
+
+  & > .view-half + .view-half {
+    background-color: @white;
+    margin-left: 45%;
+    width: 55%;
+  }
+
+  & > .view-third + .view-third {
+    background-color: #fafafa;
+    margin-left: 70%;
+    width: 30%;
+  }
+}

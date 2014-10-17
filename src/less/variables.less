@@ -36,17 +36,17 @@
 
 
 
-//== Scaffolding
+//== Layout
 //
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-@body-bg:               @white;
+@body-bg:               #fafafa;
 //** Global text color on `<body>`.
 @text-color:            @gray;
 
 //** Global textual link color.
-@link-color:            @gray-light;
+@link-color:            @gray;
 //** Link hover color set via `darken()` function.
 @link-hover-color:      darken(@link-color, 15%);
 
@@ -73,14 +73,10 @@
 
 //== Iconography
 //
-//## Specify custom location and filename of the included Glyphicons icon font. Useful for those including Bootstrap via Bower.
+//## Specify custom location of the font.
 
 //** Load fonts from this directory.
 @font-path:               "../fonts/";
-//** File name for all font files.
-@icon-font-name:          "glyphicons-halflings-regular";
-//** Element ID within SVG icon file.
-@icon-font-svg-id:        "glyphicons_halflingsregular";
 
 
 //== Components
@@ -99,17 +95,15 @@
 @padding-xs-vertical:       1px;
 @padding-xs-horizontal:     5px;
 
+
+@margin-large-vertical:     20px;
+
 @line-height-large:         1.33;
 @line-height-small:         1.5;
 
 @border-radius-base:        2px;
 @border-radius-large:       4px;
 @border-radius-small:       @border-radius-base;
-
-//** Global color for active items (e.g., navs or dropdowns).
-@component-active-color:    @black;
-//** Global background color for active items (e.g., navs or dropdowns).
-@component-active-bg:       @brand-primary;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 @caret-width-base:          4px;
@@ -149,46 +143,12 @@
 @table-border-color:            #ddd;
 
 
-//== Buttons
-//
-//## For each of Bootstrap's buttons, define text, background and border color.
-
-@btn-font-weight:                normal;
-@btn-border-radius:              60px;
-
-@btn-default-color:              @gray-light;
-@btn-default-bg:                 @gray;
-@btn-default-border:             @gray;
-
-@btn-primary-color:              #fff;
-@btn-primary-bg:                 @brand-primary;
-@btn-primary-border:             darken(@btn-primary-bg, 5%);
-
-@btn-success-color:              #fff;
-@btn-success-bg:                 @brand-success;
-@btn-success-border:             darken(@btn-success-bg, 5%);
-
-@btn-info-color:                 #fff;
-@btn-info-bg:                    @brand-info;
-@btn-info-border:                darken(@btn-info-bg, 5%);
-
-@btn-warning-color:              #fff;
-@btn-warning-bg:                 @brand-warning;
-@btn-warning-border:             darken(@btn-warning-bg, 5%);
-
-@btn-danger-color:               #fff;
-@btn-danger-bg:                  @brand-danger;
-@btn-danger-border:              darken(@btn-danger-bg, 5%);
-
-@btn-link-disabled-color:        @gray-light;
-
-
 //== Forms
 //
 //##
 
 //** `<input>` background color
-@input-bg:                       #fff;
+@input-bg:                       @white;
 //** `<input disabled>` background color
 @input-bg-disabled:              @gray-lighter;
 
@@ -215,6 +175,61 @@
 //** Border color for textual input addons
 @input-group-addon-border-color: @input-border;
 
+//** Left and Right input margin 
+@input-margin-horizontal:        9px;
+
+//** Left and Right input margin combined
+@input-margin-combined:          ( @input-margin-horizontal * 2 );
+
+
+//== Buttons
+//
+//## 
+
+@btn-font-weight:                normal;
+@btn-border-radius:              60px;
+@btn-height:                     40px;
+
+@btn-default-color:              @white;
+@btn-default-bg:                 @white;
+@btn-default-border:             @gray;
+
+@btn-action-color:              @white;
+@btn-action-bg:                 #a9a9a9;
+@btn-action-border:             #a9a9a9;
+
+@btn-valid-color:               #fff;
+@btn-valid-bg:                  #36bb4c;
+@btn-valid-border:              #36bb4c;
+
+@btn-warning-color:              #fff;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             darken(@btn-warning-bg, 5%);
+
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              darken(@btn-danger-bg, 5%);
+
+@btn-link-disabled-color:        @gray-light;
+
+//== Badges
+//
+//##
+
+@badge-color:                 #fff;
+//** Linked badge text color on hover
+@badge-link-hover-color:      #fff;
+@badge-bg:                    @gray-light;
+
+//** Badge text color in active nav link
+@badge-active-color:          @link-color;
+//** Badge background color in active nav link
+@badge-active-bg:             #fff;
+
+@badge-font-weight:           bold;
+@badge-line-height:           1;
+@badge-border-radius:         12px;
+
 
 //== Dropdowns
 //
@@ -237,7 +252,7 @@
 @dropdown-link-hover-bg:         fade(#dee7e3, 30%);
 
 //** Active dropdown menu item text color.
-@dropdown-link-active-color:     @component-active-color;
+@dropdown-link-active-color:     @black;
 //** Active dropdown menu item background color.
 @dropdown-link-active-bg:        #dee7e3;
 
@@ -267,45 +282,6 @@
 @zindex-higher:            2000;
 
 
-//== Media queries breakpoints
-//
-//## Define the breakpoints at which your layout will change, adapting to different screen sizes.
-
-// Extra small screen / phone
-//** Deprecated `@screen-xs` as of v3.0.1
-@screen-xs:                  480px;
-//** Deprecated `@screen-xs-min` as of v3.2.0
-@screen-xs-min:              @screen-xs;
-//** Deprecated `@screen-phone` as of v3.0.1
-@screen-phone:               @screen-xs-min;
-
-// Small screen / tablet
-//** Deprecated `@screen-sm` as of v3.0.1
-@screen-sm:                  768px;
-@screen-sm-min:              @screen-sm;
-//** Deprecated `@screen-tablet` as of v3.0.1
-@screen-tablet:              @screen-sm-min;
-
-// Medium screen / desktop
-//** Deprecated `@screen-md` as of v3.0.1
-@screen-md:                  992px;
-@screen-md-min:              @screen-md;
-//** Deprecated `@screen-desktop` as of v3.0.1
-@screen-desktop:             @screen-md-min;
-
-// Large screen / wide desktop
-//** Deprecated `@screen-lg` as of v3.0.1
-@screen-lg:                  1200px;
-@screen-lg-min:              @screen-lg;
-//** Deprecated `@screen-lg-desktop` as of v3.0.1
-@screen-lg-desktop:          @screen-lg-min;
-
-// So media queries don't overlap when required, provide a maximum
-@screen-xs-max:              (@screen-sm-min - 1);
-@screen-sm-max:              (@screen-md-min - 1);
-@screen-md-max:              (@screen-lg-min - 1);
-
-
 //== Grid system
 //
 //## Define your custom responsive grid.
@@ -313,33 +289,7 @@
 //** Number of columns in the grid.
 @grid-columns:              12;
 //** Padding between columns. Gets divided in half for the left and right.
-@grid-gutter-width:         30px;
-// Navbar collapse
-//** Point at which the navbar becomes uncollapsed.
-@grid-float-breakpoint:     @screen-sm-min;
-//** Point at which the navbar begins collapsing.
-@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);
-
-
-//== Container sizes
-//
-//## Define the maximum width of `.container` for different screen sizes.
-
-// Small screen / tablet
-@container-tablet:             ((720px + @grid-gutter-width));
-//** For `@screen-sm-min` and up.
-@container-sm:                 @container-tablet;
-
-// Medium screen / desktop
-@container-desktop:            ((940px + @grid-gutter-width));
-//** For `@screen-md-min` and up.
-@container-md:                 @container-desktop;
-
-// Large screen / wide desktop
-@container-large-desktop:      ((1140px + @grid-gutter-width));
-//** For `@screen-lg-min` and up.
-@container-lg:                 @container-large-desktop;
-
+@grid-gutter-width:         18px;
 
 
 //== Modals
@@ -389,9 +339,9 @@
 //** Background color of single list items on hover
 @list-group-hover-bg:           #f5f5f5;
 //** Text color of active list items
-@list-group-active-color:       @component-active-color;
+@list-group-active-color:       @black;
 //** Background color of active list items
-@list-group-active-bg:          @component-active-bg;
+@list-group-active-bg:          @black;
 //** Border color of active list elements
 @list-group-active-border:      @list-group-active-bg;
 //** Text color for content within active list items

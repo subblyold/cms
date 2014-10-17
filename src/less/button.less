@@ -1,0 +1,32 @@
+
+.btn {
+  border-radius: @btn-border-radius;
+  border: 1px solid;
+  display: inline-block;
+  font-weight: bold;
+  height: 40px;
+  line-height: 38px;
+  padding: 0 @padding-large-horizontal;
+
+  .icon {
+    margin-right: @padding-base-horizontal
+  }
+}
+
+.btn-action {
+  background: @btn-action-bg;
+  border-color: @btn-action-border;
+  color: @btn-action-color;
+}
+
+.btn-valid {
+  background: @btn-valid-bg;
+  border-color: @btn-valid-border;
+  color: @btn-valid-color;
+
+  &:hover,
+  &:focus {
+    color: @btn-valid-color;
+  }
+}
+
