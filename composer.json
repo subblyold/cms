@@ -36,7 +36,10 @@
       , "barryvdh/laravel-debugbar":   "1.*"
       , "pimple/pimple":               "~3.0"
     }
-  , "autoload": 
+  , "require-dev": {
+        "phpunit/phpunit": "4.3.*"
+    }
+  , "autoload":
     {
       "classmap": 
       [
