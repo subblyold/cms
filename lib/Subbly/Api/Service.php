@@ -14,9 +14,15 @@ abstract class Service
      *
      * @param Subbly\Api\Api  $api
      */
-    public function __construct(Api $api)
+    final public function __construct(Api $api)
     {
         $this->api = $api;
+
+        $this->init();
+    }
+
+    protected function init()
+    {
     }
 
     /**
@@ -33,7 +39,7 @@ abstract class Service
      *
      * @return Subbly\Api\Api
      */
-    protected function api()
+    final protected function api()
     {
         return $this->api;
     }
