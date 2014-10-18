@@ -83,12 +83,98 @@ ol {
 
 .main-nav {
   background: @black;
+  font-size: @font-size-large;
   width: 240px;
+
+  hr {
+    border: 0;
+    border-top: 1px solid #323336;
+    height: 0;
+    float: left;
+    margin-bottom: 20px;
+    margin-left: 40px;
+    width: 15px;
+  }
 }
 
-.subbly-logo,
-.subbly-nav {
+.user-nav {
+  height: 40px;
+  position: relative;
+}
+
+.user-nav-container {
   .center-block;
+  .transition(all, 350ms, ease);
+  border-radius: @border-radius-base;
+  height: 40px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  position: relative;
+  width: 180px; 
+
+  a {
+    color: @white;
+    display: block;
+    line-height: 40px;
+    padding: 0 10px;
+    width: 100%;
+  }
+
+  & > a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+  }
+
+  .caret {
+    .transition( all, 350ms, ease );
+    position: absolute;
+    right: 10px;
+    top: 18px;
+  }
+
+
+  &:hover,
+  &.active {
+    background: #323336;
+    height: 130px;
+
+    .caret {
+      .transform( rotate( -180deg ) );
+    }
+  }
+}
+
+.user-nav-sub {
+  .transform( translateY( 80px ) );
+  .transition( all, 250ms, ease );
+  left: 0;
+  position: absolute;
+  top: 40px;
+  width: 100%;
+
+  li {
+    height: 40px;
+  }
+
+  a:hover {
+    background: #2c2d2f
+  }
+}
+
+.user-nav-container:hover,
+.user-nav-container.active {
+  .user-nav-sub {
+    .delay(75ms);
+    .transform( translateY( 0 ) );
+  }
+}
+
+.main-logo,
+.bo-nav {
+  .center-block;
+  clear: left;
   width: 160px;
   -webkit-user-select: none;
    -khtml-user-select: none;
@@ -110,13 +196,15 @@ ol {
   }
 
   a {
-    font-size: @font-size-large;
-
     &:hover,
     &.active {
       color: @white
     }
   }
+}
+
+.bo-nav {
+  margin-top: @padding-large-vertical;
 }
 
 .main-view {

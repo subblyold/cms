@@ -375,13 +375,114 @@ ol {
 }
 .main-nav {
   background: #202124;
+  font-size: 18px;
   width: 240px;
 }
-.subbly-logo,
-.subbly-nav {
+.main-nav hr {
+  border: 0;
+  border-top: 1px solid #323336;
+  height: 0;
+  float: left;
+  margin-bottom: 20px;
+  margin-left: 40px;
+  width: 15px;
+}
+.user-nav {
+  height: 40px;
+  position: relative;
+}
+.user-nav-container {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  -webkit-transition: all 350ms ease;
+  -moz-transition: all 350ms ease;
+  -ms-transition: all 350ms ease;
+  -o-transition: all 350ms ease;
+  transition: all 350ms ease;
+  border-radius: 2px;
+  height: 40px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  position: relative;
+  width: 180px;
+}
+.user-nav-container a {
+  color: #ffffff;
+  display: block;
+  line-height: 40px;
+  padding: 0 10px;
+  width: 100%;
+}
+.user-nav-container > a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 170px;
+}
+.user-nav-container .caret {
+  -webkit-transition: all 350ms ease;
+  -moz-transition: all 350ms ease;
+  -ms-transition: all 350ms ease;
+  -o-transition: all 350ms ease;
+  transition: all 350ms ease;
+  position: absolute;
+  right: 10px;
+  top: 18px;
+}
+.user-nav-container:hover,
+.user-nav-container.active {
+  background: #323336;
+  height: 130px;
+}
+.user-nav-container:hover .caret,
+.user-nav-container.active .caret {
+  -webkit-transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -ms-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+}
+.user-nav-sub {
+  -webkit-transform: translateY(80px);
+  -moz-transform: translateY(80px);
+  -ms-transform: translateY(80px);
+  -o-transform: translateY(80px);
+  transform: translateY(80px);
+  -webkit-transition: all 250ms ease;
+  -moz-transition: all 250ms ease;
+  -ms-transition: all 250ms ease;
+  -o-transition: all 250ms ease;
+  transition: all 250ms ease;
+  left: 0;
+  position: absolute;
+  top: 40px;
+  width: 100%;
+}
+.user-nav-sub li {
+  height: 40px;
+}
+.user-nav-sub a:hover {
+  background: #2c2d2f;
+}
+.user-nav-container:hover .user-nav-sub,
+.user-nav-container.active .user-nav-sub {
+  -webkit-transition-delay: 75ms;
+  -moz-transition-delay: 75ms;
+  -o-transition-delay: 75ms;
+  transition-delay: 75ms;
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -ms-transform: translateY(0);
+  -o-transform: translateY(0);
+  transform: translateY(0);
+}
+.main-logo,
+.bo-nav {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  clear: left;
   width: 160px;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -389,30 +490,29 @@ ol {
   -o-user-select: none;
   user-select: none;
 }
-.subbly-logo img,
-.subbly-nav img {
+.main-logo img,
+.bo-nav img {
   display: block;
   margin-left: auto;
   margin-right: auto;
   fill: #fff;
 }
-.subbly-logo li + li,
-.subbly-nav li + li {
+.main-logo li + li,
+.bo-nav li + li {
   margin-top: 20px;
 }
-.subbly-logo .badge,
-.subbly-nav .badge {
+.main-logo .badge,
+.bo-nav .badge {
   float: right;
 }
-.subbly-logo a,
-.subbly-nav a {
-  font-size: 18px;
-}
-.subbly-logo a:hover,
-.subbly-nav a:hover,
-.subbly-logo a.active,
-.subbly-nav a.active {
+.main-logo a:hover,
+.bo-nav a:hover,
+.main-logo a.active,
+.bo-nav a.active {
   color: #ffffff;
+}
+.bo-nav {
+  margin-top: 16px;
 }
 .main-view {
   -webkit-flex: 1;
@@ -604,9 +704,11 @@ a.list-group-item.active > .badge,
   line-height: 1.28571429;
   padding: 12px;
   width: 100%;
-  -webkit-transition: border-color ease-in-out .15s;
-  -o-transition: border-color ease-in-out .15s;
-  transition: border-color ease-in-out .15s;
+  -webkit-transition: border-color ease-in-out .15s 1s ease-out;
+  -moz-transition: border-color ease-in-out .15s 1s ease-out;
+  -ms-transition: border-color ease-in-out .15s 1s ease-out;
+  -o-transition: border-color ease-in-out .15s 1s ease-out;
+  transition: border-color ease-in-out .15s 1s ease-out;
 }
 .form-input:focus,
 .form-input:hover {
