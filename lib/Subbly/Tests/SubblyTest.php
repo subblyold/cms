@@ -22,7 +22,13 @@ class SubblyTest extends \PHPUnit_Framework_TestCase
         $service = Subbly::api()->service('subbly.user');
         $this->assertInstanceOf('Subbly\\Api\\Service', $service);
 
-        $service = Subbly::api()->service('subbly.wrongwrongwrong');
-        $this->assertInstanceOf('Subbly\\Api\\Service', $service);
+        try {
+            Subbly::api('subbly.a_very_wrong_service');
+
+            $this->fail('Subbly\Api\Exception has not be raised.');
+        }
+        catch (\Subbly\Api\Exception $e) {
+            $this->assertTrue(true);
+        }
     }
 }
