@@ -5,7 +5,7 @@ namespace Subbly\Api\Service;
 use Subbly\Api\Service;
 use Subbly\Model;
 
-class Setting extends Service
+class SettingService extends Service
 {
     public function init()
     {

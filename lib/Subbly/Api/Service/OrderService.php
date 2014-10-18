@@ -5,7 +5,7 @@ namespace Subbly\Api\Service;
 use Subbly\Api\Service;
 use Subbly\Model;
 
-class Order extends Service
+class OrderService extends Service
 {
     /**
      * Return an empty model
