@@ -97,13 +97,18 @@ h1, h2, h3, h4, h5, h6 {
     }
   }
 
-  // Account for badges in navs
-  a.list-group-item.active > &,
-  .nav-pills > .active > a > & {
-    color: @badge-active-color;
-    background-color: @badge-active-bg;
+  &.product {
+    background: @product;
   }
-  .nav-pills > li > a > & {
-    margin-left: 3px;
-  }
+
+  // // Account for badges in navs
+  // a.list-group-item.active > &,
+  // .nav-pills > .active > a > & {
+  //   color: @badge-active-color;
+  //   background-color: @badge-active-bg;
+  // }
+  // .nav-pills > li > a > & {
+  //   margin-left: 3px;
+  // }
+}
 }

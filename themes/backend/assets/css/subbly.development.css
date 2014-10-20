@@ -421,11 +421,6 @@ ol {
   width: 170px;
 }
 .user-nav-container .caret {
-  -webkit-transition: all 350ms ease;
-  -moz-transition: all 350ms ease;
-  -ms-transition: all 350ms ease;
-  -o-transition: all 350ms ease;
-  transition: all 350ms ease;
   position: absolute;
   right: 10px;
   top: 18px;
@@ -434,14 +429,6 @@ ol {
 .user-nav-container.active {
   background: #323336;
   height: 130px;
-}
-.user-nav-container:hover .caret,
-.user-nav-container.active .caret {
-  -webkit-transform: rotate(-180deg);
-  -moz-transform: rotate(-180deg);
-  -ms-transform: rotate(-180deg);
-  -o-transform: rotate(-180deg);
-  transform: rotate(-180deg);
 }
 .user-nav-sub {
   -webkit-transform: translateY(80px);
@@ -504,7 +491,6 @@ ol {
 }
 .main-logo .badge,
 .bo-nav .badge {
-  background: #aacdf9;
   float: right;
 }
 .main-logo a:hover,
@@ -662,13 +648,8 @@ a.badge:focus {
   text-decoration: none;
   cursor: pointer;
 }
-a.list-group-item.active > .badge,
-.nav-pills > .active > a > .badge {
-  color: #878787;
-  background-color: #ffffff;
-}
-.nav-pills > li > a > .badge {
-  margin-left: 3px;
+.badge.product {
+  background: #aacdf9;
 }
 .pdt-list {
   background: #ffffff;
@@ -995,7 +976,6 @@ input[type="search"] {
   -ms-transform: translate(0, -50%);
   -o-transform: translate(0, -50%);
   transform: translate(0, -50%);
-  background: #aacdf9;
   position: absolute;
   right: 25px;
   top: 50%;
