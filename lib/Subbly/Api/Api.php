@@ -2,6 +2,7 @@
 
 namespace Subbly\Api;
 
+use Subbly\Api\Service\Service;
 use Subbly\Core\Container;
 
 class Api
@@ -30,7 +31,7 @@ class Api
      *
      * @param string  $name The name of the service
      *
-     * @return Subbly\Api\Service
+     * @return Subbly\Api\Service\Service
      *
      * @throws Subbly\Api\Exception Throw an exception if the service name does not exists
      *
@@ -63,7 +64,7 @@ class Api
      * @param string  $className The class name of the service
      *
      * @throws Subbly\Api\Exception Throw an exception if class name does not exists
-     * @throws Subbly\Api\Exception Throw an exception if the class does not implement Subbly\Api\Service
+     * @throws Subbly\Api\Exception Throw an exception if the class does not implement Subbly\Api\Service\Service
      * @throws Subbly\Api\Exception Throw an exception if service name is already register
      */
     private function registerService($className)

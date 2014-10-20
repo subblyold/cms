@@ -2,7 +2,6 @@
 
 namespace Subbly\Api\Service;
 
-use Subbly\Api\Service;
 use Subbly\Model;
 
 class UserService extends Service
