@@ -1,8 +1,9 @@
 <?php
 
-namespace Subbly\Api;
+namespace Subbly\Api\Service;
 
-use Subbly\Core\Model;
+use Subbly\Api\Api;
+use Subbly\Model\Model;
 
 abstract class Service
 {
@@ -21,10 +22,6 @@ abstract class Service
         $this->init();
     }
 
-    protected function init()
-    {
-    }
-
     /**
      * Name of the service
      * Must be unique
@@ -34,6 +31,15 @@ abstract class Service
      * @return string
      */
     abstract public function name();
+
+    /**
+     * Service initialization
+     *
+     * @api
+     */
+    protected function init()
+    {
+    }
 
     /**
      *

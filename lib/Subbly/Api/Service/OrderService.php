@@ -2,8 +2,7 @@
 
 namespace Subbly\Api\Service;
 
-use Subbly\Api\Service;
-use Subbly\Model;
+use Subbly\Model\Order;
 
 class OrderService extends Service
 {
@@ -14,9 +13,9 @@ class OrderService extends Service
      *
      * @api
      */
-    public function init()
+    public function newOrder()
     {
-        return new Model\Order();
+        return new Order();
     }
 
     /**

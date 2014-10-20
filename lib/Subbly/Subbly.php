@@ -22,7 +22,7 @@ class Subbly
      *
      * @param null|string  $serviceName The name of the service (optional)
      *
-     * @return Subbly\Api\Api|Subbly\Api\Service
+     * @return Subbly\Api\Api|Subbly\Api\Service\Service
      *
      * @api
      */

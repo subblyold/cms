@@ -12,4 +12,12 @@ class OrderAddress extends Model
      * @var string
      */
     protected $table = 'order_addresses';
+
+    /**
+     * Relashionship
+     */
+    public function order()
+    {
+        return $this->hasOne('Subbly\\Model\\Order');
+    }
 }

@@ -17,9 +17,10 @@ class Container extends Pimple\Container
 
         $this['api'] = function () use ($c) {
             return new Api($c, array(
-                'Subbly\\Api\\Service\\UserService',
                 'Subbly\\Api\\Service\\OrderService',
+                'Subbly\\Api\\Service\\ProductService',
                 'Subbly\\Api\\Service\\SettingService',
+                'Subbly\\Api\\Service\\UserService',
             ));
         };
     }

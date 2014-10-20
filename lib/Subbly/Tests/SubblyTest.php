@@ -17,10 +17,10 @@ class SubblyTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Subbly\\Api\\Api', $api);
 
         $service = Subbly::api('subbly.user');
-        $this->assertInstanceOf('Subbly\\Api\\Service', $service);
+        $this->assertInstanceOf('Subbly\\Api\\Service\\Service', $service);
 
         $service = Subbly::api()->service('subbly.user');
-        $this->assertInstanceOf('Subbly\\Api\\Service', $service);
+        $this->assertInstanceOf('Subbly\\Api\\Service\\Service', $service);
 
         try {
             Subbly::api('subbly.a_very_wrong_service');

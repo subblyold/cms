@@ -23,8 +23,24 @@ class User extends Model implements UserInterface, RemindableInterface
      *
      * @var array
      */
-    protected $hidden = array('password', 'remember_token');
+    protected $visible = array('uid', 'first_name', 'last_name');
 
+    /**
+     * Boot
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($user)
+        {
+            $user->uid = md5(uniqid(mt_rand(), true));
+        });
+    }
+
+    /**
+     * Relashionship
+     */
     public function orders()
     {
         return $this->hasMany('Subbly\\Model\\Order');
