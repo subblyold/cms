@@ -121,9 +121,7 @@ ol {
   }
 
   & > a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    .text-overflow;
     width: 170px;
   }
 
@@ -192,7 +190,8 @@ ol {
   }
 
   .badge {
-    float: right
+    background: @product;
+    float: right;
   }
 
   a {
