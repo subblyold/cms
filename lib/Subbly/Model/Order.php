@@ -26,11 +26,11 @@ class Order extends Model
 
     public function shippingAddress()
     {
-        return $this->belongsTo('Subbly\\Model\\OrderAddress', 'shipping_address_id')
+        return $this->belongsTo('Subbly\\Model\\OrderAddress', 'shipping_address_id');
     }
 
     public function billingAddress()
     {
-        return $this->belongsTo('Subbly\\Model\\OrderAddress', 'billing_address_id')
+        return $this->belongsTo('Subbly\\Model\\OrderAddress', 'billing_address_id');
     }
 }
