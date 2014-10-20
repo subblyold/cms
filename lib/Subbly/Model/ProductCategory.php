@@ -11,6 +11,9 @@ class ProductCategory extends Model
      */
     protected $table = 'product_categories';
 
+    /**
+     * Relashionship
+     */
     public function parent()
     {
         return $this->belongsTo('Subbly\\Model\\ProductCategory', 'parent_id');
@@ -19,5 +22,10 @@ class ProductCategory extends Model
     public function children()
     {
         return $this->hasMany('Subbly\\Model\\ProductCategory', 'parent_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo('Subbly\\Model\\Product', 'product_id');
     }
 }
