@@ -111,4 +111,86 @@ h1, h2, h3, h4, h5, h6 {
   //   margin-left: 3px;
   // }
 }
+
+//
+// Products list
+// --------------------------------------------------
+
+.pdt-list {
+
+  background: @white;
+  border-radius: @border-radius-large;
+  border: 1px solid @border;
+  display: table;
+  width: 100%;
+    // display: flex;
+    // flex-flow: row wrap;
+}
+
+.pdt-lst-itm {
+
+  // .flex-direction(column);
+  // .align-items(center);
+  .clearfix;
+  // height: 70px;
+  // padding: 0 @padding-large-horizontal;
+  position: relative;
+  // vertical-align: middle;
+  width: 100%;
+
+  & + .pdt-lst-itm:before {
+    border-top: 1px solid @border;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 1%;
+    position: absolute;
+    top: 0;
+    width: 98%;
+  }
+
+  & > *  {
+    line-height: 70px
+  }
+
+  // .alg-l {
+  //   .align-self(flex-start);
+  //   .flex(1);
+  //   .justify-content(center);
+
+  //   &.icon-handler {
+  //     cursor: move;
+  //     line-height: 70px;
+  //   }
+
+  //   &.thmb-list {
+  //     margin-left: 30px;
+
+  //     .thmb-img {
+  //       height: 48px; // Firefox don't get height: 100%
+  //     }
+  //   }
+
+  //   &.pdt-name {
+  //     line-height: 30px;
+  //     margin-left: 100px;
+  //   }
+  // }
+
+  // .alg-r {
+  //   // .align-self(flex-end);
+  //   // float: right;
+  // }
+  
+  // .badge {
+  //   .transform( translate(0, -50%));
+  //   position: absolute;
+  //   right: 100px;
+  //   top: 50%;
+  // }
+}
+
+.pdt-name {
+  color: @black;
+  font-weight: bold;
 }

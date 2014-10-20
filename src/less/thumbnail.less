@@ -43,6 +43,19 @@
   }
 }
 
+.thmb-list {
+  border-radius: @border-radius-large;
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+}
+
+.pdt-list-item {
+  .thmb-list {
+    vertical-align: middle;
+  } 
+}
+
 .thmb-img {
   background-position: center;
   background-size: cover;
@@ -65,15 +78,12 @@
 
   .pdt-name {
     .text-overflow;
-    color: @black;
     display: block;
-    font-weight: bold;
     width: 130px;
   }
 
   .badge {
     .transform( translate(0, -50%));
-    background: @product;
     position: absolute;
     right: @thumbnail-caption-padding-horz;
     top: 50%;

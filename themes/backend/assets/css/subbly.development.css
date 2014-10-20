@@ -658,20 +658,30 @@ a.badge:focus {
   display: table;
   width: 100%;
 }
-.pdt-list-item {
-  display: table-cell;
-  height: 70px;
-  padding: 0 16px;
-  vertical-align: middle;
+.pdt-lst-itm {
+  position: relative;
   width: 100%;
 }
-.pdt-list-item:before,
-.pdt-list-item:after {
+.pdt-lst-itm:before,
+.pdt-lst-itm:after {
   content: " ";
   display: table;
 }
-.pdt-list-item:after {
+.pdt-lst-itm:after {
   clear: both;
+}
+.pdt-lst-itm + .pdt-lst-itm:before {
+  border-top: 1px solid #c7c7c7;
+  content: '';
+  display: block;
+  height: 1px;
+  left: 1%;
+  position: absolute;
+  top: 0;
+  width: 98%;
+}
+.pdt-lst-itm > * {
+  line-height: 70px;
 }
 .pdt-name {
   color: #202124;
