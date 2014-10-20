@@ -2,13 +2,28 @@
 
 namespace Subbly\Api\Service;
 
-use Subbly\Model;
+use Cache, Carbon\Carbon;
+
+use Subbly\Model\Setting;
 
 class SettingService extends Service
 {
-    public function init()
+    const CACHE_NAME = 'subbly.settings';
+
+    /**
+     *
+     */
+    protected function init()
     {
 
+    }
+
+    /**
+     *
+     */
+    public function all()
+    {
+        return $this->getCachedSettings();
     }
 
     /**
@@ -16,7 +31,11 @@ class SettingService extends Service
      */
     public function get($key)
     {
+        if (!$this->has($key)) {
+            throw new Exception(sprintf(Exception::SETTING_KEY_NOT_EXISTS, $key));
+        }
 
+        return $this->getCachedSettings()->offsetGet($key);
     }
 
     /**
@@ -24,7 +43,7 @@ class SettingService extends Service
      */
     public function has($key)
     {
-
+        return $this->getCachedSettings()->offsetExists($key);
     }
 
     /**
@@ -32,16 +51,66 @@ class SettingService extends Service
      */
     public function add($key, $value)
     {
+        // TODO check that identifier is defined into default_settings.yml
 
+        $settings = $this->getCachedSettings();
+        // TODO identifier = PACKAGE_NAME.KEY_NAME
+        // Example subbly.shop_name
+
+        $setting = Setting::firstOrNew(array(
+            'identifier'        => $key,
+            'plugin_identifier' => '',
+        ));
+
+        $setting->value = $value;
+        $setting->save();
+
+        $settings->offsetSet($key, $value);
+
+        $this->setCachedSettings($settings);
+    }
+
+    /**
+     *
+     * @return \ArrayObject
+     */
+    private function getCachedSettings()
+    {
+        if (! Cache::has(self::CACHE_NAME))
+        {
+            $this->initCachedSettings();
+        }
+
+        return new \ArrayObject(
+            Cache::get(self::CACHE_NAME)
+        );
+    }
+
+    /**
+     *
+     * @param \ArrayObject  $settings
+     */
+    private function setCachedSettings(\ArrayObject $settings)
+    {
+        $expiresAt = Carbon::now()->addMinutes(15);
+
+        Cache::put(self::CACHE_NAME, $settings->getArrayCopy(), $expiresAt);
     }
 
     /**
      *
      */
-    private function updateCache()
+    private function initCachedSettings()
     {
-        $key = sprintf('ssc:%s:%s', $scope, $key);
-        Cache::put($key, 'value', $minutes);
+        $settings = new \ArrayObject;
+
+        foreach (Setting::all() as $s) {
+            $settings->offsetSet($s->identifier, $s->value);
+        }
+
+        $this->setCachedSettings($settings);
+
+        return $settings;
     }
 
     /**
