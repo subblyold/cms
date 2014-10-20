@@ -3,7 +3,7 @@
 namespace Subbly\Api\Service;
 
 use Subbly\Api\Api;
-use Subbly\Core\Model;
+use Subbly\Model\Model;
 
 abstract class Service
 {
