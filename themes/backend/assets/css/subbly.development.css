@@ -670,6 +670,32 @@ a.list-group-item.active > .badge,
 .nav-pills > li > a > .badge {
   margin-left: 3px;
 }
+.pdt-list {
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #c7c7c7;
+  display: table;
+  width: 100%;
+}
+.pdt-list-item {
+  display: table-cell;
+  height: 70px;
+  padding: 0 16px;
+  vertical-align: middle;
+  width: 100%;
+}
+.pdt-list-item:before,
+.pdt-list-item:after {
+  content: " ";
+  display: table;
+}
+.pdt-list-item:after {
+  clear: both;
+}
+.pdt-name {
+  color: #202124;
+  font-weight: bold;
+}
 .form-row {
   display: -webkit-flex;
   display: -moz-flex;
@@ -929,11 +955,23 @@ input[type="search"] {
   opacity: 1;
   filter: alpha(opacity=100);
 }
+.thmb-list {
+  border-radius: 4px;
+  display: inline-block;
+  height: 48px;
+  width: 48px;
+}
+.pdt-list-item .thmb-list {
+  vertical-align: middle;
+}
 .thmb-img {
   background-position: center;
   background-size: cover;
   display: block;
   height: 100%;
+}
+.list .thmb-img {
+  height: calc(100% - 76px);
 }
 .thmb-capt {
   background: #ffffff;
@@ -948,9 +986,7 @@ input[type="search"] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #202124;
   display: block;
-  font-weight: bold;
   width: 130px;
 }
 .thmb-capt .badge {
