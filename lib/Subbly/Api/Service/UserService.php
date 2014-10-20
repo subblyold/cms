@@ -2,7 +2,7 @@
 
 namespace Subbly\Api\Service;
 
-use Subbly\Model;
+use Subbly\Model\User;
 
 class UserService extends Service
 {
@@ -15,7 +15,7 @@ class UserService extends Service
      */
     public function newUser()
     {
-        return new Model\User();
+        return new User();
     }
 
     /**
@@ -27,7 +27,7 @@ class UserService extends Service
      */
     public function all()
     {
-        return Model\User::all();
+        return User::all();
     }
 
     /**
@@ -42,9 +42,9 @@ class UserService extends Service
      *
      * @api
      */
-    public function find($id)
+    public function find($uid)
     {
-        return Model\User::find($id);
+        return User::where('uid', '=', $uid)->firstOrFail();
     }
 
     /**
@@ -70,7 +70,7 @@ class UserService extends Service
             'lastname'  => null,
         ));
 
-        $query = Model\User::query();
+        $query = User::query();
 
         if ($options['firstname']) {
             $query->where('first_name', 'LIKE', "%{$options['firstname']}%");
@@ -86,7 +86,7 @@ class UserService extends Service
      * Create a new User
      *
      * @example
-     *     $user = Subbly\Core\Model\User;
+     *     $user = Subbly\Model\User;
      *     Subbly::api('subbly.user')->create($user);
      *
      *     Subbly::api('subbly.user')->create(array(
@@ -117,7 +117,7 @@ class UserService extends Service
      * Update a User
      *
      * @example
-     *     $user = [Subbly\Core\Model\User instance];
+     *     $user = [Subbly\Model\User instance];
      *     Subbly::api('subbly.user')->update($user);
      *
      *     Subbly::api('subbly.user')->update($user_id, array(
