@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
 
   <title>Subbly Backend GUI</title>
-  <script src="../themes/backend/assets/lib/modernizr.js"></script>
+  <script src="../../themes/backend/assets/lib/modernizr.js"></script>
 
-  <link rel="stylesheet" href="../themes/backend/assets/css/subbly.development.css">
+  <link rel="stylesheet" href="../../themes/backend/assets/css/subbly.development.css">
   <style>
   </style>
 
@@ -15,11 +15,32 @@
 <body>
   <div class="container">
     <section class="main-nav">
-      <a href="javascript:;" class="subbly-logo js-trigger-go-home">
-         <img class src="../themes/backend/assets/img/subbly-logo.svg" width="160" alt="logo Subbly">
+      <a href="javascript:;" class="main-logo js-trigger-go-home">
+         <img class src="../../themes/backend/assets/img/subbly-logo.svg" width="100" alt="logo Subbly">
       </a>
 
-      <ul class="subbly-nav">
+      <div class="user-nav">
+        <div class="user-nav-container">
+          <a href="javascript:;">
+            Le col de Claudine
+          </a>
+          <span class="caret"></span>
+          <ul class="user-nav-sub">
+            <li>
+              <a href="javascript:;">
+                Visit my store
+              </a>
+            </li>
+            <li>
+              <a href="javascript:;">
+                logout
+              </a>
+            </li>
+          </ul><!-- /.user-nav-sub -->
+        </div><!-- /.user-nav-container -->
+      </div><!-- /.user-nav -->
+      <hr>
+      <ul class="bo-nav">
         <li>
           <a href="javascript:;" class="fst-nav js-trigger-go-home">
             Dashboard
@@ -54,10 +75,15 @@
       </ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
     <section class="main-view">
+        <!-- <div class="view-full"> full view</div> -->
+        <!-- <div class="view-full">
+          <div class="view-half"> 2/5 view</div>
+          <div class="view-half"> 2/5 view</div>
+        </div> -->
         <div class="view-full">
-          <div class="view-half"> 2/4 view</div>
-          <div class="view-half"> 2/4 view</div>
-        </div>
+          <div class="view-third"> 3/4 view</div>
+          <div class="view-third"> 3/4 view</div>
+        </div> 
     </section><!-- /.main-view -->
   </div><!-- /. container -->
 </body>
