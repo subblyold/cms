@@ -13,7 +13,7 @@ class UserService extends Service
      *
      * @api
      */
-    public function init()
+    public function newUser()
     {
         return new Model\User();
     }

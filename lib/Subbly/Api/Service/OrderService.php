@@ -13,7 +13,7 @@ class OrderService extends Service
      *
      * @api
      */
-    public function init()
+    public function newOrder()
     {
         return new Model\Order();
     }
