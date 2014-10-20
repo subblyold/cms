@@ -46,7 +46,6 @@
           "app/commands"
         , "app/controllers"
         , "app/models"
-        , "app/subbly"
         , "app/database/migrations"
         , "app/database/seeds"
         , "app/tests/TestCase.php"
