@@ -15,7 +15,7 @@ class UpdateUsersTable extends Migration {
         Schema::table('users', function(Blueprint $table)
         {
             $table->string('uid', 32)->unique();
-            $table->boolean('is_subscribe_newsletter');
+            $table->boolean('is_subscribe_newsletter')->default(false);
         });
     }
 
