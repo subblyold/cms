@@ -40,7 +40,7 @@ Route::post('/test-option', 'TestOptionController@save');
  * Backend routes
  */
 Route::group(array(
-    'prefix'    => '/backend',
+    'prefix'    => Config::get( 'subbly.apiUri', 'api' ),
     'namespace' => 'Backend',
 ), function() {
 
