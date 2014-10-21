@@ -651,6 +651,15 @@ a.badge:focus {
 .badge.product {
   background: #aacdf9;
 }
+.bullet {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background-color: #18b72e;
+  border-radius: 5px;
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+}
 .pdt-list {
   background: #ffffff;
   border-radius: 4px;
@@ -659,7 +668,11 @@ a.badge:focus {
   width: 100%;
 }
 .pdt-lst-itm {
+  height: 70px;
+  padding: 11px 16px;
+  line-height: 70px;
   position: relative;
+  vertical-align: middle;
   width: 100%;
 }
 .pdt-lst-itm:before,
@@ -680,8 +693,29 @@ a.badge:focus {
   top: 0;
   width: 98%;
 }
-.pdt-lst-itm > * {
-  line-height: 70px;
+.pdt-lst-itm .thmb-list,
+.pdt-lst-itm .pdt-name,
+.pdt-lst-itm .pdt-price,
+.pdt-lst-itm .bullet {
+  margin-left: 20px;
+}
+.pdt-lst-itm .icon-handler,
+.pdt-lst-itm .pdt-name,
+.pdt-lst-itm .pdt-price {
+  line-height: 48px;
+}
+.pdt-lst-itm .badge {
+  background: #aacdf9;
+  position: relative;
+  top: 12px;
+}
+.pdt-lst-itm .bullet {
+  position: relative;
+  top: 18px;
+}
+.pdt-lst-itm .pdt-price {
+  text-align: right;
+  width: 80px;
 }
 .pdt-name {
   color: #202124;
@@ -948,7 +982,8 @@ input[type="search"] {
 }
 .thmb-list {
   border-radius: 4px;
-  display: inline-block;
+  display: block;
+  float: left;
   height: 48px;
   width: 48px;
 }
