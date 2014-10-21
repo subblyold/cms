@@ -52,7 +52,7 @@ class UserServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $email       = 'john.snow@subbly.com';
+        $email = 'john.snow@subbly.com';
 
         // Events
         Event::listen($this->getService()->name() . ':user_created', function($user) use ($email)

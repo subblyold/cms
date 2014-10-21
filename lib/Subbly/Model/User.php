@@ -23,7 +23,7 @@ class User extends Model implements UserInterface, RemindableInterface
      *
      * @var array
      */
-    protected $visible = array('uid', 'first_name', 'last_name');
+    protected $visible = array('uid', 'first_name', 'last_name', 'addresses', 'orders');
 
     /**
      * Boot

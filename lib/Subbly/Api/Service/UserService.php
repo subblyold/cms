@@ -163,7 +163,8 @@ class UserService extends Service
 
         $event = $this->fireEvent('user_updating', array($user));
 
-        if ($user instanceof User) {
+        if ($user instanceof User)
+        {
             // TODO use Sentry also or instead
             $this->saveModel($user);
         }
