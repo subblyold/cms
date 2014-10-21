@@ -3,11 +3,50 @@
 namespace Subbly\Model;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\Facades\Validator;
 
 use Subbly\Api\Service\Service;
 
 abstract class Model extends Eloquent
 {
+    protected $rules = array();
+
+    private $errors        = array();
+    private $errorMessages = array();
+
+    /**
+     *
+     */
+    public function validate()
+    {
+        $v = Validator::make($this->attributes, $this->rules);
+
+        if ($v->fails())
+        {
+            $this->errors        = $v->errors();
+            $this->errorMessages = $v->messages();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     */
+    public function errors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     *
+     */
+    public function errorMessages()
+    {
+        return $this->errorMessages;
+    }
+
     /**
      *
      */
