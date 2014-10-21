@@ -16,12 +16,18 @@ class Container extends Pimple\Container
         $c = $this;
 
         $this['api'] = function () use ($c) {
-            return new Api($c, array(
+            $api = new Api($c, array(
                 'Subbly\\Api\\Service\\OrderService',
                 'Subbly\\Api\\Service\\ProductService',
                 'Subbly\\Api\\Service\\SettingService',
                 'Subbly\\Api\\Service\\UserService',
             ));
+
+            $api->service('subbly.setting')->registerDefaultSettings(
+                __DIR__ . '/../Resources/configs/default_settings.yml'
+            );
+
+            return $api;
         };
     }
 

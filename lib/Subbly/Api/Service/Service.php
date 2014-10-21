@@ -22,6 +22,12 @@ abstract class Service
         $this->api = $api;
 
         $this->init();
+
+        if (!is_string($this->name())) {
+            throw new Exception(sprintf('"%s"::name() method must return a string'),
+                __CLASS__
+            );
+        }
     }
 
     /**
@@ -79,8 +85,8 @@ abstract class Service
      */
     protected function saveModel(Model $model, array $options = array())
     {
-        return $model->save(array_replace(array(
+        return $model->save(array_replace($options, array(
             'subbly_api_service' => $this,
-        ), $options));
+        )));
     }
 }

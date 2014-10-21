@@ -21,6 +21,17 @@ class SettingService extends Service
     /**
      *
      */
+    public function registerDefaultSettings($filename)
+    {
+        // TODO check if file exists
+        // TODO load yaml
+
+
+    }
+
+    /**
+     *
+     */
     public function all()
     {
         return $this->getCachedSettings();
@@ -95,6 +106,8 @@ class SettingService extends Service
         $expiresAt = Carbon::now()->addMinutes(15);
 
         Cache::put(self::CACHE_NAME, $settings->getArrayCopy(), $expiresAt);
+
+        $event = $this->fireEvent('cache_updated');
     }
 
     /**
