@@ -15,6 +15,9 @@ class Setting extends Model
 
     protected $fillable = array('identifier', 'plugin_identifier', 'value');
 
+    /**
+     *
+     */
     public function setValueAttribute($value)
     {
         $this->attributes['type']  = gettype($value);
@@ -36,6 +39,9 @@ class Setting extends Model
         }
     }
 
+    /**
+     *
+     */
     public function getValueAttribute()
     {
         switch ($this->attributes['type'])

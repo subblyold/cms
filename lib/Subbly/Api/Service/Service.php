@@ -13,7 +13,7 @@ abstract class Service
     /**
      * The constructor.
      *
-     * @param Subbly\Api\Api  $api
+     * @param Subbly\Api\Api  $api The Api class
      */
     final public function __construct(Api $api)
     {
@@ -37,7 +37,7 @@ abstract class Service
      *
      * @api
      */
-    protected function init()
+    protected function init() {}
     {
     }
 
@@ -51,7 +51,12 @@ abstract class Service
     }
 
     /**
+     * Save a Model
      *
+     * @param Model  $model   The Model
+     * @param array  $options Options
+     *
+     * @return Model
      */
     protected function saveModel(Model $model, array $options = array())
     {
