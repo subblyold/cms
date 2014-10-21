@@ -2,7 +2,7 @@
 
 namespace Subbly\Api\Service;
 
-use Event;
+use Illuminate\Support\Facades\Event;
 
 use Subbly\Api\Api;
 use Subbly\Model\Model;

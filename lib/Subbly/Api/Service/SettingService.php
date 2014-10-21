@@ -2,7 +2,8 @@
 
 namespace Subbly\Api\Service;
 
-use Cache, Carbon\Carbon;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 use Subbly\Model\Setting;
 
