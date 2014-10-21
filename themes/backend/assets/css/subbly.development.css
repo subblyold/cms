@@ -516,7 +516,7 @@ ol {
 }
 .view-full > .view-half,
 .view-full > .view-third {
-  border-right: 1px solid #c7c7c7;
+  border-right: 1px solid #e1e1e1;
   height: 100%;
   position: absolute;
 }
@@ -601,7 +601,7 @@ h6 {
 }
 .hr {
   border: 0;
-  border-top: 1px solid #a9a9a9;
+  border-top: 1px solid #e1e1e1;
   display: block;
   height: 0;
   margin: 20px auto;
@@ -1013,7 +1013,7 @@ input[type="search"] {
   text-overflow: ellipsis;
   white-space: nowrap;
   display: block;
-  width: 130px;
+  width: 120px;
 }
 .thmb-capt .badge {
   -webkit-transform: translate(0, -50%);
