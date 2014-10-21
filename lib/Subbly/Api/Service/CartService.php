@@ -2,7 +2,7 @@
 
 namespace Subbly\Api\Service;
 
-use Subbly\Model;
+use Subbly\Model\Order;
 
 class CartService extends Service
 {
@@ -13,7 +13,7 @@ class CartService extends Service
     {
         Session::get('cart.order');
 
-        return new Model\Order;
+        return new Order;
     }
 
     /**

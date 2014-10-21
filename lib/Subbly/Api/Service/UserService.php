@@ -104,7 +104,7 @@ class UserService extends Service
     {
         if ($user instanceof User) {
             // TODO use Sentry instead
-            $this->save($user);
+            $this->saveModel($user);
         }
         else if (is_array($user)) {
             // TODO
@@ -137,9 +137,9 @@ class UserService extends Service
         $args = func_get_args();
 
         if (count($args) == 1 && $args[0] instanceof User) {
-            $this->save($user);
         }
         // else if 2 args. $id, $array
+            $this->saveModel($user);
     }
 
     /**
