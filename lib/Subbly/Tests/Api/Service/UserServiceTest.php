@@ -2,6 +2,8 @@
 
 namespace Subbly\Tests\Api\Service;
 
+use Event;
+
 use Subbly\Subbly;
 use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
@@ -47,7 +49,24 @@ class UserServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testSearchBy() {}
-    public function testCreate() {}
+
+    public function testCreate()
+    {
+        $email       = 'john.snow@subbly.com';
+
+        $user = $this->getService()->newUser();
+        $user->email    = $email;
+        $user->password = uniqid();
+
+        $returnedUser = $this->getService()->create($user);
+
+        $this->assertInstanceOf('Subbly\\Model\\User', $user);
+        $this->assertEquals($email, $user->email);
+
+        $this->assertInstanceOf('Subbly\\Model\\User', $returnedUser);
+        $this->assertEquals($email, $returnedUser->email);
+    }
+
     public function testUpdate() {}
 
     public function testName()

@@ -102,12 +102,24 @@ class UserService extends Service
      */
     public function create($user)
     {
-        if ($user instanceof User) {
-            // TODO use Sentry instead
-            $this->saveModel($user);
+        if (is_array($user)) {
+            $user = new User($user);
         }
-        else if (is_array($user)) {
-            // TODO
+
+        if ($user instanceof User) {
+            $this->saveModel($user);
+
+            // TODO use Sentry also or instead
+            // Sentry::register(array(
+            //     'email'    => $user->email,
+            //     'password' => $user->password,
+            // ));
+        }
+        else {
+                throw new Exception(sprintf(Exception::CANT_CREATE_MODEL),
+                    'Subbly\\Model\\User',
+                    $this->name()
+                );
         }
 
         return $user;
@@ -137,9 +149,32 @@ class UserService extends Service
         $args = func_get_args();
 
         if (count($args) == 1 && $args[0] instanceof User) {
+            $user = $args[0];
         }
-        // else if 2 args. $id, $array
+        else if (count($args) == 2 && is_integer($args[0]) && is_array($args[1]))
+        {
+            $user = User::find($args[0]);
+            $user->fill($args[1]);
+        }
+
+        if ($user instanceof User) {
+            // TODO use Sentry also or instead
             $this->saveModel($user);
+        }
+        else {
+            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL),
+                'Subbly\\Model\\User',
+                $this->name()
+            );
+        }
+    }
+
+    /**
+     *
+     */
+    public function delete()
+    {
+        // TODO use soft delete for user
     }
 
     /**
