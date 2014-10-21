@@ -2,6 +2,8 @@
 
 namespace Subbly\Api\Service;
 
+use Event;
+
 use Subbly\Api\Api;
 use Subbly\Model\Model;
 
@@ -38,10 +40,27 @@ abstract class Service
      * @api
      */
     protected function init() {}
+
+    /**
+     * Fire an event
+     *
+     * @param string  $eventName Name of the event
+     * @param array   $vars      Event vars
+     *
+     * @return Event
+     *
+     * @api
+     */
+    protected function fireEvent($eventName, array $vars = array())
     {
+        return Event::fire(
+            sprintf('%s:%s', $this->name(), $eventName),
+            $vars
+        );
     }
 
     /**
+     * Get the Api class
      *
      * @return Subbly\Api\Api
      */

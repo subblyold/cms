@@ -106,6 +106,8 @@ class UserService extends Service
             $user = new User($user);
         }
 
+        $event = $this->fireEvent('user_creating', array($user));
+
         if ($user instanceof User) {
             $this->saveModel($user);
 
@@ -121,6 +123,8 @@ class UserService extends Service
                     $this->name()
                 );
         }
+
+        $event = $this->fireEvent('user_created', array($user));
 
         return $user;
     }
@@ -157,6 +161,8 @@ class UserService extends Service
             $user->fill($args[1]);
         }
 
+        $event = $this->fireEvent('user_updating', array($user));
+
         if ($user instanceof User) {
             // TODO use Sentry also or instead
             $this->saveModel($user);
@@ -167,6 +173,8 @@ class UserService extends Service
                 $this->name()
             );
         }
+
+        $event = $this->fireEvent('user_updated', array($user));
     }
 
     /**
