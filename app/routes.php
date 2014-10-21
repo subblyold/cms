@@ -3,7 +3,7 @@
 /*
  * Register Backend routes before public routes.
  */
-App::before(function($request) 
+App::before(function($request)
 {
 
   /*
@@ -35,3 +35,24 @@ Route::post('/test-option', 'TestOptionController@save');
 // Route::get('/your-route', 'YourRoute@yourMethod');
 
 
+
+/**
+ * Backend routes
+ */
+Route::group(array(
+    'prefix'    => '/backend',
+    'namespace' => 'Backend',
+), function() {
+
+    // AuthController
+    Route::get('/auth/test-credentials', 'AuthController@testCredentials');
+
+    // WelcomeController
+    Route::get('/welcome', 'WelcomeController@index');
+
+    // UsersController
+    Route::resource('/users', 'UsersController', array('except' => array('create', 'edit')));
+
+    // ProductsController
+    Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
+});

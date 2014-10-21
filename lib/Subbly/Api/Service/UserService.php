@@ -2,6 +2,8 @@
 
 namespace Subbly\Api\Service;
 
+use Sentry;
+
 use Subbly\Model\User;
 
 class UserService extends Service
@@ -16,6 +18,15 @@ class UserService extends Service
     public function newUser()
     {
         return new User();
+    }
+
+    /**
+     *
+     * @api
+     */
+    public function authenticate(array $credentials, $remember = false)
+    {
+        return Sentry::authenticate($credentials, $remember);
     }
 
     /**
@@ -42,9 +53,25 @@ class UserService extends Service
      *
      * @api
      */
-    public function find($uid)
+    public function find($uid, array $options = array())
     {
-        return User::where('uid', '=', $uid)->firstOrFail();
+        $options = array_replace(array(
+            'with_addresses' => false,
+            'with_orders'    => false,
+        ), $options);
+
+        $query = User::query();
+        $query->where('uid', '=', $uid);
+
+        if ($options['with_addresses'] === true) {
+            $query->with('addresses');
+        }
+
+        if ($options['with_orders'] === true) {
+            $query->with('orders');
+        }
+
+        return $query->firstOrFail();
     }
 
     /**
@@ -181,9 +208,21 @@ class UserService extends Service
     /**
      *
      */
-    public function delete()
+    public function delete($user)
     {
-        // TODO use soft delete for user
+        if (is_integer($user)) {
+            $user = User::find($user);
+        }
+
+        $event = $this->fireEvent('user_deleting', array($user));
+
+        if ($user instanceof User)
+        {
+            // TODO use soft delete for user
+            $this->deleteModel($user);
+        }
+
+        $event = $this->fireEvent('user_deleted', array($user));
     }
 
     /**

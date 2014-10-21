@@ -19,6 +19,18 @@ class ProductService extends Service
     }
 
     /**
+     * Get all Product
+     *
+     * @return Illuminate\Database\Eloquent\Collection
+     *
+     * @api
+     */
+    public function all()
+    {
+        return Product::all();
+    }
+
+    /**
      *
      */
     public function name()
