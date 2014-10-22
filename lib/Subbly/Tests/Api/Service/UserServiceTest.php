@@ -55,7 +55,7 @@ class UserServiceTest extends \PHPUnit_Framework_TestCase
         $email = 'john.snow@subbly.com';
 
         // Events
-        Event::listen($this->getService()->name() . ':user_created', function($user) use ($email)
+        Event::listen($this->getService()->name() . ':created', function($user) use ($email)
         {
             $this->assertEquals($email, $user->email);
         });

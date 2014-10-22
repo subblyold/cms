@@ -129,11 +129,13 @@ class UserService extends Service
      */
     public function create($user)
     {
+        $user = null;
+
         if (is_array($user)) {
             $user = new User($user);
         }
 
-        $event = $this->fireEvent('user_creating', array($user));
+        $event = $this->fireEvent('creating', array($user));
 
         if ($user instanceof User) {
             $this->saveModel($user);
@@ -151,7 +153,7 @@ class UserService extends Service
                 );
         }
 
-        $event = $this->fireEvent('user_created', array($user));
+        $event = $this->fireEvent('created', array($user));
 
         return $user;
     }
@@ -178,6 +180,7 @@ class UserService extends Service
     public function update()
     {
         $args = func_get_args();
+        $user = null;
 
         if (count($args) == 1 && $args[0] instanceof User) {
             $user = $args[0];
@@ -188,7 +191,7 @@ class UserService extends Service
             $user->fill($args[1]);
         }
 
-        $event = $this->fireEvent('user_updating', array($user));
+        $event = $this->fireEvent('updating', array($user));
 
         if ($user instanceof User)
         {
@@ -202,7 +205,7 @@ class UserService extends Service
             );
         }
 
-        $event = $this->fireEvent('user_updated', array($user));
+        $event = $this->fireEvent('updated', array($user));
     }
 
     /**
