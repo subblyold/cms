@@ -28,7 +28,7 @@ class Product extends Model implements SortableInterface
     protected $rules = array(
         'status' => 'required',
         'name'   => 'required',
-        'sku'    => 'required',
+        'sku'    => 'required|unique:products,sku,{self_id}',
     );
 
     protected $defaultAttributes = array(

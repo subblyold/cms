@@ -29,9 +29,19 @@ abstract class Model extends Eloquent
     /**
      *
      */
-    public function validate()
+    public function isValid()
     {
-        $v = Validator::make($this->attributes, $this->rules);
+        $rules = array();
+
+        foreach ($this->rules as $k=>$v) {
+            $rules[$k] = str_replace(array(
+                '{self_id}',
+            ), array(
+                $this->attributes['id'],
+            ), $v);
+        }
+
+        $v = Validator::make($this->attributes, $rules);
 
         if ($v->fails())
         {
@@ -66,6 +76,8 @@ abstract class Model extends Eloquent
     {
         $this->protectMethod($options);
 
+        $this->processValidation();
+
         return parent::save($options);
     }
 
@@ -75,6 +87,8 @@ abstract class Model extends Eloquent
     final public function update(array $attributes = array())
     {
         $this->protectMethod($attributes);
+
+        $this->processValidation();
 
         return parent::update($attributes);
     }
@@ -97,5 +111,15 @@ abstract class Model extends Eloquent
         }
 
         unset($options['subbly_api_service']);
+    }
+
+    /**
+     *
+     */
+    private function processValidation()
+    {
+        if (!$this->isValid()) {
+            throw new Exception\UnvalidModelException($this->errorMessages()->first());
+        }
     }
 }
