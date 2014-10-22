@@ -9,10 +9,22 @@ use Subbly\Api\Service\Service;
 
 abstract class Model extends Eloquent
 {
+    protected $defaultAttributes = array();
+
     protected $rules = array();
 
     private $errors        = array();
     private $errorMessages = array();
+
+    /**
+     * The constructor.
+     */
+    public function __construct(array $attributes = array())
+    {
+        $attributes = array_replace_recursive($this->defaultAttributes, $attributes);
+
+        parent::__construct($attributes);
+    }
 
     /**
      *

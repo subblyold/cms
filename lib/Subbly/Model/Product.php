@@ -12,6 +12,10 @@ class Product extends Model
     protected $table = 'products';
 
     /**
+    protected $defaultAttributes = array(
+        'status' => self::STATUS_DRAFT,
+    );
+
      * Relashionship
      */
     public function images()
