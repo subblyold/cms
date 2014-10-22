@@ -2,7 +2,7 @@
 
 namespace Backend;
 
-use Controller, Request, Response, Sentry;
+use App, Controller, Request, Response, Sentry;
 
 use Subbly\Subbly;
 
@@ -72,15 +72,25 @@ class BaseController extends Controller
      */
     public function callAction($method, $parameters)
     {
-        // return parent::callAction($method, $parameters);
         try {
             $response = parent::callAction($method, $parameters);
         }
-        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            $response = $this->jsonNotFoundResponse($e->getMessage());
-        }
         catch (\Exception $e) {
-            $response = $this->jsonErrorResponse($e->getMessage());
+            $allowExceptions = array(
+                'Symfony\Component\HttpKernel\Exception\NotFoundHttpException',
+                'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
+                'Subbly\\Model\\Exception\\UnvalidModelException',
+            );
+
+            if (in_array(get_class($e), $allowExceptions)) {
+                return $this->jsonNotFoundResponse($e->getMessage());
+            }
+
+            $response = $this->jsonErrorResponse('Fatal error!');
+        }
+
+        if (App::environment('local')) {
+            return parent::callAction($method, $parameters);
         }
 
         return $response;

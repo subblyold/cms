@@ -65,6 +65,12 @@ class ProductsController extends BaseController
 
         return $this->jsonResponse(array(
             'product' => $product,
+        ),
+        array(
+            'status' => array(
+                'code'    => 201,
+                'message' => 'Product created',
+            ),
         ));
     }
 
@@ -87,6 +93,9 @@ class ProductsController extends BaseController
 
         return $this->jsonResponse(array(
             'product' => $product,
+        ),
+        array(
+            'status' => array('message' => 'Product updated'),
         ));
     }
 }

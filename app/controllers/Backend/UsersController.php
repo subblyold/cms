@@ -64,6 +64,12 @@ class UsersController extends BaseController
 
         return $this->jsonResponse(array(
             'user' => $user,
+        ),
+        array(
+            'status' => array(
+                'code'    => 201,
+                'message' => 'User created',
+            ),
         ));
     }
 
@@ -86,6 +92,12 @@ class UsersController extends BaseController
 
         return $this->jsonResponse(array(
             'user' => $user,
+        ),
+        array(
+            'status' => array(
+                'code'    => 200,
+                'message' => 'User updated',
+            ),
         ));
     }
 }
