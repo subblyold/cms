@@ -2,8 +2,13 @@
 
 namespace Subbly\Model;
 
-class Product extends Model
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableInterface;
+
+class Product extends Model implements SortableInterface
 {
+    use Sortable;
+
     /**
      * The database table used by the model.
      *
@@ -14,6 +19,10 @@ class Product extends Model
     /**
     protected $defaultAttributes = array(
         'status' => self::STATUS_DRAFT,
+    );
+
+    public $sortable = array(
+        'order_column_name' => 'position',
     );
 
      * Relashionship
