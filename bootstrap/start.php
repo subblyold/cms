@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('packer-virtualbox-iso', '2014penets.via.ecp.fr'),
+	'local' => array('packer-virtualbox-iso', '2014penets.via.ecp.fr', gethostname()),
 
 ));
 
