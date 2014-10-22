@@ -17,6 +17,20 @@ class Product extends Model implements SortableInterface
     protected $table = 'products';
 
     /**
+     * The attributes visible from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $visible = array('position', 'status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity', 'images', 'options', 'categories');
+
+    protected $fillable = array('status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity');
+
+    protected $rules = array(
+        'status' => 'required',
+        'name'   => 'required',
+        'sku'    => 'required',
+    );
+
     protected $defaultAttributes = array(
         'status' => self::STATUS_DRAFT,
     );
@@ -25,6 +39,9 @@ class Product extends Model implements SortableInterface
         'order_column_name' => 'position',
     );
 
+    const STATUS_DRAFT = 'draft';
+
+    /**
      * Relashionship
      */
     public function images()
