@@ -2,8 +2,11 @@
 
 namespace Subbly\Model;
 
-class OrderAddress extends Model
+use Illuminate\Database\Eloquent\Model;
+
+class OrderAddress extends Model implements ModelInterface
 {
+    use Concerns\SubblyModel;
     use Concerns\AddressTrait;
 
     /**

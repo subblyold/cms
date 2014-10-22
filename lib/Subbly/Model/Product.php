@@ -2,12 +2,15 @@
 
 namespace Subbly\Model;
 
+use Illuminate\Database\Eloquent\Model;
+
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableInterface;
 
-class Product extends Model implements SortableInterface
+class Product extends Model  implements ModelInterface, SortableInterface
 {
     use Sortable;
+    use Concerns\SubblyModel;
 
     /**
      * The database table used by the model.
@@ -28,7 +31,7 @@ class Product extends Model implements SortableInterface
     protected $rules = array(
         'status' => 'required',
         'name'   => 'required',
-        'sku'    => 'required|unique:products,sku,{self_id}',
+        'sku'    => 'required|unique:products,sku,{{self_id}}',
     );
 
     protected $defaultAttributes = array(

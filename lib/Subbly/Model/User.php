@@ -4,8 +4,10 @@ namespace Subbly\Model;
 
 use Cartalyst\Sentry\Users\Eloquent\User as Model;
 
-class User extends Model
+class User extends Model implements ModelInterface
 {
+    use Concerns\SubblyModel;
+
     /**
      * The database table used by the model.
      *
@@ -19,6 +21,8 @@ class User extends Model
      * @var array
      */
     protected $visible = array('uid', 'email', 'first_name', 'last_name', 'addresses', 'orders');
+
+    protected $fillable = array('first_name', 'last_name');
 
     /**
      * Validations

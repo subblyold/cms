@@ -2,8 +2,12 @@
 
 namespace Subbly\Model;
 
-class ProductOption extends Model
+use Illuminate\Database\Eloquent\Model;
+
+class ProductOption extends Model implements ModelInterface
 {
+    use Concerns\SubblyModel;
+
     /**
      * The database table used by the model.
      *

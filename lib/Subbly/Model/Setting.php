@@ -2,8 +2,12 @@
 
 namespace Subbly\Model;
 
-class Setting extends Model
+use Illuminate\Database\Eloquent\Model;
+
+class Setting extends Model implements ModelInterface
 {
+    use Concerns\SubblyModel;
+
     /**
      * The database table used by the model.
      *
