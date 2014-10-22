@@ -7,7 +7,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\SettingService;
 use Subbly\Core\Container;
 
-class SettingServiceTest extends \PHPUnit_Framework_TestCase
+class SettingServiceTest extends \Illuminate\Foundation\Testing\TestCase
 {
     private function getService()
     {

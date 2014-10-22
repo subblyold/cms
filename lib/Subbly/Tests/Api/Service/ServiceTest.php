@@ -4,7 +4,7 @@ namespace Subbly\Tests\Api\Service;
 
 use Subbly\Api\Service;
 
-class ServiceTest extends \PHPUnit_Framework_TestCase
+class ServiceTest extends \Illuminate\Foundation\Testing\TestCase
 {
     public function testConstruct()
     {

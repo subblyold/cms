@@ -9,7 +9,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
 use Subbly\Core\Container;
 
-class UserServiceTest extends \PHPUnit_Framework_TestCase
+class UserServiceTest extends \Illuminate\Foundation\Testing\TestCase
 {
     private function getService()
     {

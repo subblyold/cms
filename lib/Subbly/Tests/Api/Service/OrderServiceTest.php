@@ -7,7 +7,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\OrderService;
 use Subbly\Core\Container;
 
-class OrderServiceTest extends \PHPUnit_Framework_TestCase
+class OrderServiceTest extends \Illuminate\Foundation\Testing\TestCase
 {
     private function getService()
     {
