@@ -121,9 +121,10 @@ return array(
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
+
         'Cartalyst\Sentry\SentryServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
-
+        'Spatie\EloquentSortable\SortableServiceProvider',
     ),
 
     /*
