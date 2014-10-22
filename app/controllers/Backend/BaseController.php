@@ -36,33 +36,51 @@ class BaseController extends Controller
 
         try {
             $credentials = array(
-                'email'    => Request::server('PHP_AUTH_USER'),
+                'login'    => Request::server('PHP_AUTH_USER'),
                 'password' => Request::server('PHP_AUTH_PW'),
             );
 
             $user = Subbly::api('subbly.user')->authenticate($credentials, false);
         }
-        catch (\Exception $e) {
+        catch (\Exception $e)
+        {
+            if (
+                $e instanceof \Cartalyst\Sentry\Users\UserNotActivatedException
+                || $e instanceof \Cartalyst\Sentry\Users\UserSuspendedException
+                || $e instanceof \Cartalyst\Sentry\Users\UserBannedException
+            ) {
+                return $this->jsonErrorResponse($e->getMessage());
+            }
+
+            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array(
+                'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
+            ));
         }
 
         // TODO Check if is admin
-
-        if ($authRequired === true && !$user) {
-            // return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array(
-            //     'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
-            // ));
-        }
     }
 
     /**
-     * Handle calls to missing methods on the controller.
+     * Execute an action on the controller.
      *
+     * @param  string  $method
      * @param  array   $parameters
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function missingMethod($parameters = array())
+    public function callAction($method, $parameters)
     {
-        return $this->jsonNotFoundResponse();
+        // return parent::callAction($method, $parameters);
+        try {
+            $response = parent::callAction($method, $parameters);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            $response = $this->jsonNotFoundResponse($e->getMessage());
+        }
+        catch (\Exception $e) {
+            $response = $this->jsonErrorResponse($e->getMessage());
+        }
+
+        return $response;
     }
 
     /**
