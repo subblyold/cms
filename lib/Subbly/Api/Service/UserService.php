@@ -117,8 +117,8 @@ class UserService extends Service
      *     Subbly::api('subbly.user')->create($user);
      *
      *     Subbly::api('subbly.user')->create(array(
-     *         'firstname' => 'John',
-     *         'lastname'  => 'Snow',
+     *         'first_name' => 'John',
+     *         'last_name'  => 'Snow',
      *     ));
      *
      * @param User|array $user
@@ -147,10 +147,10 @@ class UserService extends Service
             // ));
         }
         else {
-                throw new Exception(sprintf(Exception::CANT_CREATE_MODEL),
-                    'Subbly\\Model\\User',
-                    $this->name()
-                );
+            throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
+                'Subbly\\Model\\User',
+                $this->name()
+            ));
         }
 
         $event = $this->fireEvent('created', array($user));
@@ -165,7 +165,7 @@ class UserService extends Service
      *     $user = [Subbly\Model\User instance];
      *     Subbly::api('subbly.user')->update($user);
      *
-     *     Subbly::api('subbly.user')->update($user_id, array(
+     *     Subbly::api('subbly.user')->update($user_uid, array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -185,9 +185,9 @@ class UserService extends Service
         if (count($args) == 1 && $args[0] instanceof User) {
             $user = $args[0];
         }
-        else if (count($args) == 2 && is_integer($args[0]) && is_array($args[1]))
+        else if (count($args) == 2 && !empty($args[0]) && is_array($args[1]))
         {
-            $user = User::find($args[0]);
+            $user = $this->find($args[0]);
             $user->fill($args[1]);
         }
 
@@ -195,14 +195,13 @@ class UserService extends Service
 
         if ($user instanceof User)
         {
-            // TODO use Sentry also or instead
             $this->saveModel($user);
         }
         else {
-            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL),
+            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
                 'Subbly\\Model\\User',
                 $this->name()
-            );
+            ));
         }
 
         $event = $this->fireEvent('updated', array($user));
