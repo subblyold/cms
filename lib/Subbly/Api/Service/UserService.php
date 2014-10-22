@@ -209,6 +209,8 @@ class UserService extends Service
         }
 
         $event = $this->fireEvent('updated', array($user));
+
+        return $user;
     }
 
     /**
