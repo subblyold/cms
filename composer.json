@@ -31,6 +31,7 @@
       , "ext-mcrypt":                  "*"
       , "laravel/framework":           "4.2.*"
       , "cartalyst/sentry":            "2.1.*"
+      , "spatie/eloquent-sortable":    "0.*"
       , "league/oauth2-client":        "~0.3"
       , "yohang/finite":               "1.0.3"
       , "barryvdh/laravel-debugbar":   "1.*"
@@ -41,7 +42,7 @@
     }
   , "autoload":
     {
-      "classmap": 
+      "classmap":
       [
           "app/commands"
         , "app/controllers"
@@ -50,24 +51,24 @@
         , "app/database/seeds"
         , "app/tests/TestCase.php"
       ]
-    , "psr-0": 
+    , "psr-0":
       {
         "": "lib"
       }
     }
-  , "scripts": 
+  , "scripts":
     {
-        "post-install-cmd": 
+        "post-install-cmd":
         [
             "php artisan clear-compiled"
           , "php artisan optimize"
         ]
-      , "post-update-cmd": 
+      , "post-update-cmd":
         [
             "php artisan clear-compiled"
           , "php artisan optimize"
         ]
-      , "post-create-project-cmd": 
+      , "post-create-project-cmd":
         [
             "php artisan key:generate"
         ]
