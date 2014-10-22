@@ -228,7 +228,7 @@ class UserService extends Service
     }
 
     /**
-     *
+     * Service name
      */
     public function name()
     {

@@ -12,15 +12,18 @@ class SettingService extends Service
     const CACHE_NAME = 'subbly.settings';
 
     /**
-     *
+     * Initialize the service
      */
     protected function init()
     {
-
     }
 
     /**
+     * Register a new default settings file
      *
+     * @param string  $filename Name of the file
+     *
+     * @api
      */
     public function registerDefaultSettings($filename)
     {
@@ -31,7 +34,11 @@ class SettingService extends Service
     }
 
     /**
+     * Get all Setting
      *
+     * @return \ArrayObject
+     *
+     * @api
      */
     public function all()
     {
@@ -39,7 +46,13 @@ class SettingService extends Service
     }
 
     /**
+     * Get a Setting value
      *
+     * @param string  $key  The setting key
+     *
+     * @return mixed
+     *
+     * @api
      */
     public function get($key)
     {
@@ -63,6 +76,7 @@ class SettingService extends Service
      */
     public function add($key, $value)
     {
+        $this->fireEvent('adding', array($key, $value));
         // TODO check that identifier is defined into default_settings.yml
 
         $settings = $this->getCachedSettings();
@@ -80,6 +94,8 @@ class SettingService extends Service
         $settings->offsetSet($key, $value);
 
         $this->setCachedSettings($settings);
+
+        $this->fireEvent('added', array($key, $value));
     }
 
     /**
@@ -105,10 +121,11 @@ class SettingService extends Service
     private function setCachedSettings(\ArrayObject $settings)
     {
         $expiresAt = Carbon::now()->addMinutes(15);
+        $settings  = $settings->getArrayCopy();
 
-        Cache::put(self::CACHE_NAME, $settings->getArrayCopy(), $expiresAt);
+        Cache::put(self::CACHE_NAME, $settings, $expiresAt);
 
-        $event = $this->fireEvent('cache_updated');
+        $this->fireEvent('updated', array($settings));
     }
 
     /**
@@ -128,7 +145,7 @@ class SettingService extends Service
     }
 
     /**
-     *
+     * Service name
      */
     public function name()
     {
