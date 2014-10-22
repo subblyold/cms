@@ -60,10 +60,7 @@ trait SubblyModel
     {
         if ($this->isValid() !== true)
         {
-            throw new UnvalidModelException($this->errorMessages()
-                ? $this->errorMessages()->first()
-                : ''
-            );
+            throw new UnvalidModelException($this);
         }
     }
 }

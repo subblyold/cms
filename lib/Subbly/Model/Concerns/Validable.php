@@ -17,7 +17,7 @@ trait Validable
     public function isValid()
     {
         if (!isset($this->rules) || !is_array($this->rules) || empty($this->rules)) {
-            return;
+            return true;
         }
 
         $rules        = array();
@@ -43,7 +43,7 @@ trait Validable
     }
 
     /**
-     *
+     * Get the error messages
      *
      * @return array
      */

@@ -79,11 +79,13 @@ class BaseController extends Controller
             $allowExceptions = array(
                 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException',
                 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
-                'Subbly\\Model\\Exception\\UnvalidModelException',
             );
 
             if (in_array(get_class($e), $allowExceptions)) {
                 return $this->jsonNotFoundResponse($e->getMessage());
+            }
+            if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
+                return $this->jsonErrorResponse($e->firstErrorMessage());
             }
 
             $response = $this->jsonErrorResponse('Fatal error!');
