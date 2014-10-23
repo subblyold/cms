@@ -10,12 +10,14 @@ trait SubblyModel
     use DefaultValues;
     use Validable;
 
+    private $callerService;
+
     /**
      *
      */
     final public function save(array $options = array())
     {
-        $this->protectMethod($options);
+        $this->protectMethod();
 
         $this->processValidation();
 
@@ -27,11 +29,21 @@ trait SubblyModel
      */
     final public function update(array $attributes = array())
     {
-        $this->protectMethod($attributes);
+        $this->protectMethod();
 
         $this->processValidation();
 
         return parent::update($attributes);
+    }
+
+    /**
+     *
+     */
+    final public function delete()
+    {
+        $this->protectMethod();
+
+        return parent::delete();
     }
 
     /**
@@ -41,16 +53,19 @@ trait SubblyModel
     /**
      *
      */
-    private function protectMethod(array $options = array())
+    final public function setCaller(Service $service)
     {
-        if (
-            !isset($options['subbly_api_service'])
-            || !($options['subbly_api_service'] instanceof Service)
-        ) {
+        $this->callerService = $service;
+    }
+
+    /**
+     *
+     */
+    private function protectMethod()
+    {
+        if (! ($this->callerService instanceof Service)) {
             throw new \Exception('You must use an Subbly\Api\Service\Service to save a Model');
         }
-
-        unset($options['subbly_api_service']);
     }
 
     /**

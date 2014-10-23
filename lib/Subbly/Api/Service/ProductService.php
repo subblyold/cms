@@ -34,7 +34,7 @@ class ProductService extends Service
      * Find a Product by $id
      *
      * @example
-     *     Subbly::api('subbly.product')->find('sku');
+     *     $product = Subbly::api('subbly.product')->find('sku');
      *
      * @param string $sku
      *
@@ -69,6 +69,43 @@ class ProductService extends Service
     }
 
     /**
+     * Search a Product by options
+     *
+     * @example
+     *     $products = Subbly::api('subbly.product')->searchBy(array(
+     *         'sku'  => 'p123',
+     *         'name' => 'awesome product',
+     *     ));
+     *
+     * @param integer $id
+     *
+     * @return Product
+     *
+     * @api
+     */
+    public function searchBy(array $options)
+    {
+        $options = array_replace(array(
+            'global' => null,
+            'sku'    => null,
+            'name'   => null,
+        ));
+
+        $query = Product::query();
+
+        if ($options['global']) {
+        }
+        if ($options['sku']) {
+            $query->where('sku', 'LIKE', "%{$options['sku']}%");
+        }
+        if ($options['name']) {
+            $query->where('name', 'LIKE', "%{$options['name']}%");
+        }
+
+        return $query->get();
+    }
+
+    /**
      * Create a new Product
      *
      * @example
@@ -94,10 +131,11 @@ class ProductService extends Service
             $product = new Product($product);
         }
 
-        $event = $this->fireEvent('creating', array($product));
+        if ($this->fireEvent('creating', array($product)) === false) return false;
 
         if ($product instanceof Product) {
-            $this->saveModel($product);
+            $product->setCaller($this);
+            $product->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
@@ -118,7 +156,7 @@ class ProductService extends Service
      *     $product = [Subbly\Model\Product instance];
      *     Subbly::api('subbly.product')->update($product);
      *
-     *     Subbly::api('subbly.product')->update($user_uid, array(
+     *     Subbly::api('subbly.product')->update($product_sku, array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -144,11 +182,12 @@ class ProductService extends Service
             $product->fill($args[1]);
         }
 
-        $event = $this->fireEvent('updating', array($product));
+        if ($this->fireEvent('updating', array($product)) === false) return false;
 
         if ($product instanceof Product)
         {
-            $this->saveModel($product);
+            $product->setCaller($this);
+            $product->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
@@ -157,7 +196,7 @@ class ProductService extends Service
             ));
         }
 
-        $event = $this->fireEvent('updated', array($product));
+        $this->fireEvent('updated', array($product));
 
         return $product;
     }

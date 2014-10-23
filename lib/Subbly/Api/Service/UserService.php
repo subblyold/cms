@@ -21,6 +21,19 @@ class UserService extends Service
     }
 
     /**
+     * Attempts to authenticate the given user
+     * according to the passed credentials.
+     *
+     * @param  array  $credentials
+     * @param  bool   $remember
+     *
+     * @return \Cartalyst\Sentry\Users\UserInterface
+     *
+     * @throws \Cartalyst\Sentry\Throttling\UserBannedException
+     * @throws \Cartalyst\Sentry\Throttling\UserSuspendedException
+     * @throws \Cartalyst\Sentry\Users\LoginRequiredException
+     * @throws \Cartalyst\Sentry\Users\PasswordRequiredException
+     * @throws \Cartalyst\Sentry\Users\UserNotFoundException
      *
      * @api
      */
@@ -45,7 +58,7 @@ class UserService extends Service
      * Find a User by $id
      *
      * @example
-     *     Subbly::api('subbly.user')->find(1);
+     *     $user = Subbly::api('subbly.user')->find(1);
      *
      * @param integer $id
      *
@@ -78,7 +91,7 @@ class UserService extends Service
      * Search a User by options
      *
      * @example
-     *     Subbly::api('subbly.user')->searchBy(array(
+     *     $users = Subbly::api('subbly.user')->searchBy(array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -139,16 +152,11 @@ class UserService extends Service
             $user = new User($user);
         }
 
-        $event = $this->fireEvent('creating', array($user));
+        if ($this->fireEvent('creating', array($user)) === false) return false;
 
         if ($user instanceof User) {
-            $this->saveModel($user);
-
-            // TODO use Sentry also or instead
-            // Sentry::register(array(
-            //     'email'    => $user->email,
-            //     'password' => $user->password,
-            // ));
+            $user->setCaller($this);
+            $user->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
@@ -174,7 +182,7 @@ class UserService extends Service
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @param User|integer
+     * @param User|string
      * @param array|null
      *
      * @return User
@@ -195,11 +203,12 @@ class UserService extends Service
             $user->fill($args[1]);
         }
 
-        $event = $this->fireEvent('updating', array($user));
+        if ($this->fireEvent('updating', array($user)) === false) return false;
 
         if ($user instanceof User)
         {
-            $this->saveModel($user);
+            $user->setCaller($this);
+            $user->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
@@ -214,23 +223,27 @@ class UserService extends Service
     }
 
     /**
+     * Delete a User
      *
+     * @param User|string  $user The user_uid or the user model
+     *
+     * @return User
+     *
+     * @pi
      */
     public function delete($user)
     {
-        if (is_integer($user)) {
-            $user = User::find($user);
+        if (!is_object($user)) {
+            $user = $this->find($user);
         }
 
-        $event = $this->fireEvent('user_deleting', array($user));
+        if ($this->fireEvent('deleting', array($user)) === false) return false;
 
-        if ($user instanceof User)
-        {
-            // TODO use soft delete for user
-            $this->deleteModel($user);
+        if ($user instanceof User) {
+            $user->delete($this);
         }
 
-        $event = $this->fireEvent('user_deleted', array($user));
+        $event = $this->fireEvent('deleted', array($user));
     }
 
     /**

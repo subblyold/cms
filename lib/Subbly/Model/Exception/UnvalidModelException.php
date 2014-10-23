@@ -34,7 +34,7 @@ class UnvalidModelException extends \Exception
     /**
      * Return the first unvalid error messages
      *
-     * @return
+     * @return string
      */
     public function firstErrorMessage()
     {

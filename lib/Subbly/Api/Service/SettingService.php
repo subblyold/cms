@@ -89,7 +89,9 @@ class SettingService extends Service
         ));
 
         $setting->value = $value;
-        $this->saveModel($setting);
+
+        $setting->setCaller($this);
+        $setting->save();
 
         $settings->offsetSet($key, $value);
 
