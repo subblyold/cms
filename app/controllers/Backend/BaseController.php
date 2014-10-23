@@ -77,7 +77,7 @@ class BaseController extends Controller
         }
         catch (\Exception $e) {
             $allowExceptions = array(
-                'Symfony\Component\HttpKernel\Exception\NotFoundHttpException',
+                'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
                 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
             );
 

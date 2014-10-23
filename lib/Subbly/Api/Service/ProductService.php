@@ -94,7 +94,7 @@ class ProductService extends Service
             $product = new Product($product);
         }
 
-        $event = $this->fireEvent('creating', array($product));
+        if ($this->fireEvent('creating', array($product)) === false) return false;
 
         if ($product instanceof Product) {
             $product->setCaller($this);
@@ -119,7 +119,7 @@ class ProductService extends Service
      *     $product = [Subbly\Model\Product instance];
      *     Subbly::api('subbly.product')->update($product);
      *
-     *     Subbly::api('subbly.product')->update($user_uid, array(
+     *     Subbly::api('subbly.product')->update($product_sku, array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -145,7 +145,7 @@ class ProductService extends Service
             $product->fill($args[1]);
         }
 
-        $event = $this->fireEvent('updating', array($product));
+        if ($this->fireEvent('updating', array($product)) === false) return false;
 
         if ($product instanceof Product)
         {
@@ -159,7 +159,7 @@ class ProductService extends Service
             ));
         }
 
-        $event = $this->fireEvent('updated', array($product));
+        $this->fireEvent('updated', array($product));
 
         return $product;
     }
