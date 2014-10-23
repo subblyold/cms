@@ -97,7 +97,8 @@ class ProductService extends Service
         $event = $this->fireEvent('creating', array($product));
 
         if ($product instanceof Product) {
-            $this->saveModel($product);
+            $product->setCaller($this);
+            $product->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
@@ -148,7 +149,8 @@ class ProductService extends Service
 
         if ($product instanceof Product)
         {
-            $this->saveModel($product);
+            $product->setCaller($this);
+            $product->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,

@@ -76,29 +76,4 @@ abstract class Service
     {
         return $this->api;
     }
-
-    /**
-     * Save a Model
-     *
-     * @param ModelInterface  $model   The Model
-     * @param array           $options Options
-     *
-     * @return Model
-     *
-     * @throws Subbly\Api\Service\Exception Throw an exception if the model does not use Subbly\Model\Concers\SubblyModel trait
-     */
-    protected function saveModel(ModelInterface $model, array $options = array())
-    {
-        if (!in_array('Subbly\\Model\\Concerns\\SubblyModel', class_uses($model)))
-        {
-            throw new Exception(sprintf('"%s" trait must be use by the model "%s"',
-                'Subbly\\Model\\Concerns\\SubblyModel',
-                get_class($model)
-            ));
-        }
-
-        return $model->save(array_replace($options, array(
-            'subbly_api_service' => $this,
-        )));
-    }
 }

@@ -142,13 +142,8 @@ class UserService extends Service
         $event = $this->fireEvent('creating', array($user));
 
         if ($user instanceof User) {
-            $this->saveModel($user);
-
-            // TODO use Sentry also or instead
-            // Sentry::register(array(
-            //     'email'    => $user->email,
-            //     'password' => $user->password,
-            // ));
+            $user->setCaller($this);
+            $user->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
@@ -199,7 +194,8 @@ class UserService extends Service
 
         if ($user instanceof User)
         {
-            $this->saveModel($user);
+            $user->setCaller($this);
+            $user->save();
         }
         else {
             throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
@@ -222,15 +218,15 @@ class UserService extends Service
             $user = User::find($user);
         }
 
-        $event = $this->fireEvent('user_deleting', array($user));
+        $event = $this->fireEvent('deleting', array($user));
 
         if ($user instanceof User)
         {
             // TODO use soft delete for user
-            $this->deleteModel($user);
+            $user->delete($this);
         }
 
-        $event = $this->fireEvent('user_deleted', array($user));
+        $event = $this->fireEvent('deleted', array($user));
     }
 
     /**
