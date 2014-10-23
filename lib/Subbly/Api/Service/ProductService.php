@@ -34,7 +34,7 @@ class ProductService extends Service
      * Find a Product by $id
      *
      * @example
-     *     Subbly::api('subbly.product')->find('sku');
+     *     $product = Subbly::api('subbly.product')->find('sku');
      *
      * @param string $sku
      *
@@ -66,6 +66,43 @@ class ProductService extends Service
         }
 
         return $query->firstOrFail();
+    }
+
+    /**
+     * Search a Product by options
+     *
+     * @example
+     *     $products = Subbly::api('subbly.product')->searchBy(array(
+     *         'sku'  => 'p123',
+     *         'name' => 'awesome product',
+     *     ));
+     *
+     * @param integer $id
+     *
+     * @return Product
+     *
+     * @api
+     */
+    public function searchBy(array $options)
+    {
+        $options = array_replace(array(
+            'global' => null,
+            'sku'    => null,
+            'name'   => null,
+        ));
+
+        $query = Product::query();
+
+        if ($options['global']) {
+        }
+        if ($options['sku']) {
+            $query->where('sku', 'LIKE', "%{$options['sku']}%");
+        }
+        if ($options['name']) {
+            $query->where('name', 'LIKE', "%{$options['name']}%");
+        }
+
+        return $query->get();
     }
 
     /**
