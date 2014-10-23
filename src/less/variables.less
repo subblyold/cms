@@ -99,6 +99,8 @@
 
 @margin-large-vertical:     20px;
 
+@content-padding:           40px;
+
 @line-height-large:         1.33;
 @line-height-small:         1.5;
 
@@ -164,7 +166,7 @@
 @input-border-focus:             #a9a9a9;
 
 //** Placeholder text color
-@input-color-placeholder:        @gray-lighter;
+@input-color-placeholder:        @gray-light;
 
 //** Default `.form-control` height
 @input-height-base:              42px;
@@ -326,41 +328,6 @@
 @modal-md:                    600px;
 @modal-sm:                    300px;
 
-
-//== List group
-//
-//##
-
-//** Background color on `.list-group-item`
-@list-group-bg:                 #fff;
-//** `.list-group-item` border color
-@list-group-border:             #ddd;
-//** List group border radius
-@list-group-border-radius:      @border-radius-base;
-
-//** Background color of single list items on hover
-@list-group-hover-bg:           #f5f5f5;
-//** Text color of active list items
-@list-group-active-color:       @black;
-//** Background color of active list items
-@list-group-active-bg:          @black;
-//** Border color of active list elements
-@list-group-active-border:      @list-group-active-bg;
-//** Text color for content within active list items
-@list-group-active-text-color:  lighten(@list-group-active-bg, 40%);
-
-//** Text color of disabled list items
-@list-group-disabled-color:      @gray-light;
-//** Background color of disabled list items
-@list-group-disabled-bg:         @gray-lighter;
-//** Text color for content within disabled list items
-@list-group-disabled-text-color: @list-group-disabled-color;
-
-@list-group-link-color:         #555;
-@list-group-link-hover-color:   @list-group-link-color;
-@list-group-link-heading-color: #333;
-
-
 //== Thumbnails
 //
 //##
@@ -413,4 +380,13 @@
 
 //** Horizontal line color.
 @hr-border:                   @border-dark;
+
+//== nanoScrollerJS
+//
+//## initial setup 
+
+@nanoClass:    ~'nano';
+@paneClass:    ~'nano-pane';
+@sliderClass:  ~'nano-slider';
+@contentClass: ~'nano-content';
 

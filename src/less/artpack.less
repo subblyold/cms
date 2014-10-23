@@ -7,6 +7,16 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
 
+  // font base
+.f-bas {
+  font-size: @font-size-base;
+}
+
+  // font title
+.f-ttl {
+  font-size: @font-size-title
+}
+
   // font large
 .f-lrg {
   font-size: @font-size-large;
@@ -15,15 +25,91 @@ h1, h2, h3, h4, h5, h6 {
   // font small
 .f-sml {
   font-size: @font-size-small;
+  letter-spacing: -0.02em;
 }
 
 //
 // Color
 // --------------------------------------------------
 
+  // color black
 .c-blk {
   color: @black;
 }
+
+  // base color
+.c-bas {
+  color: @text-color;
+}
+
+//
+// Content padding rules
+// --------------------------------------------------
+
+  // content global padding
+.c-pdg {
+  padding: @content-padding;
+}
+  // vertical
+.c-pdg-v {
+  padding-bottom: @content-padding;
+  padding-top: @content-padding;
+}
+  // horizontal
+.c-pdg-h {
+  padding-left: @content-padding;
+  padding-right: @content-padding;
+}
+
+.c-pdg-t {
+  padding-top: @content-padding;
+}
+
+.c-pdg-r {
+  padding-right: @content-padding;
+}
+
+.c-pdg-b {
+  padding-bottom: @content-padding;
+}
+
+.c-pdg-l {
+  padding-left: @content-padding;
+}
+
+  // contant padding base
+.c-pdg-b {
+  padding: @padding-large-vertical
+}
+
+  // contant padding base vertical
+.c-pdg-b-v {
+  padding-bottom: @padding-large-vertical;
+  padding-top: @padding-large-vertical
+}
+
+  // contant padding base horizontal
+.c-pdg-b-h {
+  padding-left: @padding-large-vertical;
+  padding-right: @padding-large-vertical;
+}
+
+.c-pdg-b-t {
+  padding-top: @padding-large-vertical
+}
+
+.c-pdg-b-r {
+  padding-right: @padding-large-vertical
+}
+
+.c-pdg-b-b {
+  padding-bottom: @padding-large-vertical
+}
+
+.c-pdg-b-l {
+  padding-left: @padding-large-vertical
+}
+
 
 //
 // Horizontal rule
@@ -100,16 +186,6 @@ h1, h2, h3, h4, h5, h6 {
   &.product {
     background: @product;
   }
-
-  // // Account for badges in navs
-  // a.list-group-item.active > &,
-  // .nav-pills > .active > a > & {
-  //   color: @badge-active-color;
-  //   background-color: @badge-active-bg;
-  // }
-  // .nav-pills > li > a > & {
-  //   margin-left: 3px;
-  // }
 }
 
 //
@@ -118,13 +194,109 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .bullet {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   background-color: #18b72e;
   border-radius: 5px;
   display: inline-block;
   height: 10px;
+  margin-left: auto;
+  margin-right: auto;
   width: 10px;
+
+  &.warning {
+    background-color: #ff9211;
+  }
+
+  &.danger {
+    background-color: #f00;
+  }
+}
+
+//
+// Scroll to sticky
+// --------------------------------------------------
+
+.scrll-stck {
+  position: relative;
+}
+
+.scrll-stck-cnt {
+  background-color: @body-bg;
+  position: relative;
+
+  &.sticky {
+    left: 240px;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+  }
+
+  &:after {
+    background-image: -moz-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+    background-image: -ms-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+    background-image: -o-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@body-bg), to(fade(@body-bg, 0)));
+    background-image: -webkit-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+    background-image: linear-gradient(top, @body-bg, fade(@body-bg, 0));
+    background-repeat: repeat-y;
+    bottom: -8px;
+    content: '';
+    height: 8px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+//
+// Column list
+// --------------------------------------------------
+
+.cln-lst {
+  border-bottom: 1px solid @border-ligth;
+}
+  // column list's row
+.cln-lst-rw {
+  .clearfix;
+  cursor: pointer;
+  border-top: 1px solid @border-ligth;
+  height: 100px;
+}
+
+  // column list's item
+.cln-lst-itm {
+  float: left;
+  height: 100px;
+}
+
+.cln-lst-blk {
+  line-height: 100px
+}
+
+  // order resume status
+.ordr-sts {
+  text-align: center;
+  width: 50px;
+}
+  // order resume details 
+.ordr-dtls {
+  padding-top: @font-size-large
+}
+
+  // order resume time ago
+.ordr-tago {
+  float: right;
+  padding-right: @content-padding;
+}
+
+.ordr-row {
+  &:hover,
+  &.active {
+    background: @product;
+
+    & * {
+      color: @white !important;
+    }
+  }
 }
 
 //
@@ -138,14 +310,9 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid @border;
   display: table;
   width: 100%;
-    // display: flex;
-    // flex-flow: row wrap;
 }
 
 .pdt-lst-itm {
-
-  // .flex-direction(column);
-  // .align-items(center);
   .clearfix;
   height: 70px;
   padding: 11px @padding-large-horizontal;

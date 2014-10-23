@@ -23,8 +23,8 @@
 }
 
 .form-input {
-  background-color: @input-bg;
   background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  background-color: transparent;
   border-radius: @input-border-radius;
   border: 1px solid @border;
   color: @input-color;
@@ -32,9 +32,9 @@
   font-size: @font-size-base;
   height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
   line-height: @line-height-base;
-  padding: @padding-base-horizontal;
+  padding: 10px @padding-base-horizontal;
   width: 100%;
-  .transition(~"border-color ease-in-out .15s");
+  .transitionBlocks(~"border-color ease-in-out .15s, background-color ease-in-out .15s");
 
   // Customize the `:focus` state to imitate native WebKit styles.
   .form-control-focus();
@@ -173,6 +173,23 @@ select[size] {
 // Override content-box in Normalize (* isn't specific enough)
 input[type="search"] {
   .box-sizing(border-box);
+  font-family: @font-family-base;
+  padding-left: @content-padding;
+}
+
+.input-search-holder {
+  font-size: @font-size-large;
+  position: relative;
+
+  &:before {
+    content: "\e605";
+    display: block;
+    height: 22px;
+    left: @padding-large-horizontal;
+    position: absolute;
+    top: @padding-base-horizontal;
+    width: 20px;
+  }
 }
 
 

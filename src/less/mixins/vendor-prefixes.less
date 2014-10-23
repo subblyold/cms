@@ -215,6 +215,16 @@
           transition: @type @duration @easing;
 }
 
+
+.transitionBlocks (@props) {
+  -webkit-transition: @props;
+     -moz-transition: @props;
+      -ms-transition: @props;
+       -o-transition: @props;
+          transition: @props;
+}
+
+
 .transition-property(@transition-property) {
   -webkit-transition-property: @transition-property;
           transition-property: @transition-property;
