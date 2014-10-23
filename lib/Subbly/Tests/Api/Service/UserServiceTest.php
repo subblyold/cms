@@ -9,7 +9,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
 use Subbly\Core\Container;
 
-class UserServiceTest extends \PHPUnit_Framework_TestCase
+class UserServiceTest extends \Subbly\Tests\Support\TestCase
 {
     private function getService()
     {
@@ -55,7 +55,7 @@ class UserServiceTest extends \PHPUnit_Framework_TestCase
         $email = 'john.snow@subbly.com';
 
         // Events
-        Event::listen($this->getService()->name() . ':user_created', function($user) use ($email)
+        Event::listen($this->getService()->name() . ':created', function($user) use ($email)
         {
             $this->assertEquals($email, $user->email);
         });

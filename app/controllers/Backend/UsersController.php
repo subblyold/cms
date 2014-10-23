@@ -2,6 +2,8 @@
 
 namespace Backend;
 
+use Input;
+
 use Subbly\Subbly;
 
 class UsersController extends BaseController
@@ -54,10 +56,20 @@ class UsersController extends BaseController
      */
     public function store()
     {
+        if (!Input::has('user')) {
+            return $this->jsonErrorResponse('"user" is required.');
+        }
+
         $user = Subbly::api('subbly.user')->create(Input::get('user'));
 
         return $this->jsonResponse(array(
             'user' => $user,
+        ),
+        array(
+            'status' => array(
+                'code'    => 201,
+                'message' => 'User created',
+            ),
         ));
     }
 
@@ -69,10 +81,23 @@ class UsersController extends BaseController
      */
     public function update()
     {
-        $user = Subbly::api('subbly.user')->update(Input::get('user_id'), Input::get('user'));
+        if (!Input::has('user_uid')) {
+            return $this->jsonErrorResponse('"user_uid" is required.');
+        }
+        if (!Input::has('user')) {
+            return $this->jsonErrorResponse('"user" is required.');
+        }
+
+        $user = Subbly::api('subbly.user')->update(Input::get('user_uid'), Input::get('user'));
 
         return $this->jsonResponse(array(
             'user' => $user,
+        ),
+        array(
+            'status' => array(
+                'code'    => 200,
+                'message' => 'User updated',
+            ),
         ));
     }
 }

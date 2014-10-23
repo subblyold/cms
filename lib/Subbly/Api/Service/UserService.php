@@ -92,18 +92,22 @@ class UserService extends Service
     public function searchBy(array $options)
     {
         $options = array_replace(array(
-            'global'    => null,
-            'firstname' => null,
-            'lastname'  => null,
+            'global'     => null,
+            'first_name' => null,
+            'last_name'  => null,
+            'email'      => null,
         ));
 
         $query = User::query();
 
         if ($options['firstname']) {
-            $query->where('first_name', 'LIKE', "%{$options['firstname']}%");
+            $query->where('first_name', 'LIKE', "%{$options['first_name']}%");
         }
         if ($options['lastname']) {
-            $query->where('last_name', 'LIKE', "%{$options['lastname']}%");
+            $query->where('last_name', 'LIKE', "%{$options['last_name']}%");
+        }
+        if ($options['email']) {
+            $query->where('email', 'LIKE', "%{$options['email']}%");
         }
 
         return $query->get();
@@ -117,8 +121,8 @@ class UserService extends Service
      *     Subbly::api('subbly.user')->create($user);
      *
      *     Subbly::api('subbly.user')->create(array(
-     *         'firstname' => 'John',
-     *         'lastname'  => 'Snow',
+     *         'first_name' => 'John',
+     *         'last_name'  => 'Snow',
      *     ));
      *
      * @param User|array $user
@@ -129,11 +133,13 @@ class UserService extends Service
      */
     public function create($user)
     {
+        $user = null;
+
         if (is_array($user)) {
             $user = new User($user);
         }
 
-        $event = $this->fireEvent('user_creating', array($user));
+        $event = $this->fireEvent('creating', array($user));
 
         if ($user instanceof User) {
             $this->saveModel($user);
@@ -145,13 +151,13 @@ class UserService extends Service
             // ));
         }
         else {
-                throw new Exception(sprintf(Exception::CANT_CREATE_MODEL),
-                    'Subbly\\Model\\User',
-                    $this->name()
-                );
+            throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
+                'Subbly\\Model\\User',
+                $this->name()
+            ));
         }
 
-        $event = $this->fireEvent('user_created', array($user));
+        $event = $this->fireEvent('created', array($user));
 
         return $user;
     }
@@ -163,7 +169,7 @@ class UserService extends Service
      *     $user = [Subbly\Model\User instance];
      *     Subbly::api('subbly.user')->update($user);
      *
-     *     Subbly::api('subbly.user')->update($user_id, array(
+     *     Subbly::api('subbly.user')->update($user_uid, array(
      *         'firstname' => 'John',
      *         'lastname'  => 'Snow',
      *     ));
@@ -178,31 +184,33 @@ class UserService extends Service
     public function update()
     {
         $args = func_get_args();
+        $user = null;
 
         if (count($args) == 1 && $args[0] instanceof User) {
             $user = $args[0];
         }
-        else if (count($args) == 2 && is_integer($args[0]) && is_array($args[1]))
+        else if (count($args) == 2 && !empty($args[0]) && is_array($args[1]))
         {
-            $user = User::find($args[0]);
+            $user = $this->find($args[0]);
             $user->fill($args[1]);
         }
 
-        $event = $this->fireEvent('user_updating', array($user));
+        $event = $this->fireEvent('updating', array($user));
 
         if ($user instanceof User)
         {
-            // TODO use Sentry also or instead
             $this->saveModel($user);
         }
         else {
-            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL),
+            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
                 'Subbly\\Model\\User',
                 $this->name()
-            );
+            ));
         }
 
-        $event = $this->fireEvent('user_updated', array($user));
+        $event = $this->fireEvent('updated', array($user));
+
+        return $user;
     }
 
     /**
@@ -226,7 +234,7 @@ class UserService extends Service
     }
 
     /**
-     *
+     * Service name
      */
     public function name()
     {

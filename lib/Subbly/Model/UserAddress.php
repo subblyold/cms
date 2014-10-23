@@ -2,8 +2,11 @@
 
 namespace Subbly\Model;
 
-class UserAddress extends Model
+use Illuminate\Database\Eloquent\Model;
+
+class UserAddress extends Model implements ModelInterface
 {
+    use Concerns\SubblyModel;
     use Concerns\AddressTrait;
 
     /**

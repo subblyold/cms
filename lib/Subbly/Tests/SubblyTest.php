@@ -4,7 +4,7 @@ namespace Subbly\Tests;
 
 use Subbly\Subbly;
 
-class SubblyTest extends \PHPUnit_Framework_TestCase
+class SubblyTest extends \Subbly\Tests\Support\TestCase
 {
     public function testVersion()
     {

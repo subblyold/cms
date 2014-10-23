@@ -2,14 +2,11 @@
 
 namespace Subbly\Model;
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use Cartalyst\Sentry\Users\Eloquent\User as Model;
 
-class User extends Model implements UserInterface, RemindableInterface
+class User extends Model implements ModelInterface
 {
-    use UserTrait, RemindableTrait;
+    use Concerns\SubblyModel;
 
     /**
      * The database table used by the model.
@@ -19,11 +16,22 @@ class User extends Model implements UserInterface, RemindableInterface
     protected $table = 'users';
 
     /**
-     * The attributes excluded from the model's JSON form.
+     * The attributes visible from the model's JSON form.
      *
      * @var array
      */
-    protected $visible = array('uid', 'first_name', 'last_name', 'addresses', 'orders');
+    protected $visible = array('uid', 'email', 'first_name', 'last_name', 'addresses', 'orders');
+
+    protected $fillable = array('first_name', 'last_name');
+
+    /**
+     * Validations
+     */
+    protected $rules = array(
+        'first_name' => 'required',
+        'last_name'  => 'required',
+        'email'      => 'required|email',
+    );
 
     /**
      * Boot

@@ -19,7 +19,7 @@ class OrderService extends Service
     }
 
     /**
-     *
+     * Service name
      */
     public function name()
     {

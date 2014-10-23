@@ -2,6 +2,8 @@
 
 namespace Backend;
 
+use Input;
+
 use Subbly\Subbly;
 
 class ProductsController extends BaseController
@@ -33,13 +35,13 @@ class ProductsController extends BaseController
     /**
      * Get Product datas
      *
-     * @route GET /backend/products/:uid
+     * @route GET /backend/products/:sku
      * @authentication required
      */
-    public function show($uid)
+    public function show($sku)
     {
         return $this->jsonResponse(array(
-            'product' => Subbly::api('subbly.product')->find($uid, array(
+            'product' => Subbly::api('subbly.product')->find($sku, array(
                 'with_images'     => true,
                 'with_options'    => true,
                 'with_categories' => true,
@@ -55,10 +57,20 @@ class ProductsController extends BaseController
      */
     public function store()
     {
+        if (!Input::has('product')) {
+            return $this->jsonErrorResponse('"product" is required.');
+        }
+
         $product = Subbly::api('subbly.product')->create(Input::get('product'));
 
         return $this->jsonResponse(array(
             'product' => $product,
+        ),
+        array(
+            'status' => array(
+                'code'    => 201,
+                'message' => 'Product created',
+            ),
         ));
     }
 
@@ -70,10 +82,20 @@ class ProductsController extends BaseController
      */
     public function update()
     {
-        $product = Subbly::api('subbly.product')->update(Input::get('product_id'), Input::get('product'));
+        if (!Input::has('product_sku')) {
+            return $this->jsonErrorResponse('"product_sku" is required.');
+        }
+        if (!Input::has('product')) {
+            return $this->jsonErrorResponse('"product" is required.');
+        }
+
+        $product = Subbly::api('subbly.product')->update(Input::get('product_sku'), Input::get('product'));
 
         return $this->jsonResponse(array(
             'product' => $product,
+        ),
+        array(
+            'status' => array('message' => 'Product updated'),
         ));
     }
 }

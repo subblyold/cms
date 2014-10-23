@@ -2,7 +2,7 @@
 
 namespace Backend;
 
-use Controller, Request, Response, Sentry;
+use App, Controller, Request, Response, Sentry;
 
 use Subbly\Subbly;
 
@@ -17,8 +17,6 @@ class BaseController extends Controller
 
     /**
      * Setup the layout used by the controller.
-     *
-     * @return void
      */
     protected function setupLayout()
     {
@@ -28,45 +26,86 @@ class BaseController extends Controller
     }
 
     /**
+     * Controller filter to process to the authentication.
      *
+     * @param mixed    $route
+     * @param Request  $request
+     *
+     * @return void|Response
      */
-    public function processAuthentication($route, $request, $authRequired = true)
+    public function processAuthentication($route, $request)
     {
         $user = null;
 
         try {
             $credentials = array(
-                'email'    => Request::server('PHP_AUTH_USER'),
+                'login'    => Request::server('PHP_AUTH_USER'),
                 'password' => Request::server('PHP_AUTH_PW'),
             );
 
             $user = Subbly::api('subbly.user')->authenticate($credentials, false);
         }
-        catch (\Exception $e) {
+        catch (\Exception $e)
+        {
+            if (
+                $e instanceof \Cartalyst\Sentry\Users\UserNotActivatedException
+                || $e instanceof \Cartalyst\Sentry\Users\UserSuspendedException
+                || $e instanceof \Cartalyst\Sentry\Users\UserBannedException
+            ) {
+                return $this->jsonErrorResponse($e->getMessage());
+            }
+
+            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array(
+                'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
+            ));
         }
 
         // TODO Check if is admin
-
-        if ($authRequired === true && !$user) {
-            // return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array(
-            //     'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
-            // ));
-        }
     }
 
     /**
-     * Handle calls to missing methods on the controller.
+     * Execute an action on the controller.
      *
+     * @param  string  $method
      * @param  array   $parameters
-     * @return mixed
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function missingMethod($parameters = array())
+    public function callAction($method, $parameters)
     {
-        return $this->jsonNotFoundResponse();
+        try {
+            $response = parent::callAction($method, $parameters);
+        }
+        catch (\Exception $e) {
+            $allowExceptions = array(
+                'Symfony\Component\HttpKernel\Exception\NotFoundHttpException',
+                'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
+            );
+
+            if (in_array(get_class($e), $allowExceptions)) {
+                return $this->jsonNotFoundResponse($e->getMessage());
+            }
+            if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
+                return $this->jsonErrorResponse($e->firstErrorMessage());
+            }
+
+            $response = $this->jsonErrorResponse('Fatal error!');
+        }
+
+        if (App::environment('local')) {
+            return parent::callAction($method, $parameters);
+        }
+
+        return $response;
     }
 
     /**
+     * Format a json Response
      *
+     * @param mixed  $data        The data to format into JSON
+     * @param array  $headers     Headers to set into the JSON output
+     * @param array  $httpHeaders Http headers to insert into the Response
+     *
+     * @return Response
      */
     protected function jsonResponse($data = null, array $headers = array(), array $httpHeaders = array())
     {
@@ -91,22 +130,32 @@ class BaseController extends Controller
         return $response;
     }
 
-    /**
-     *
-     */
+     /**
+      * Format a json error Response
+      *
+      * @param string $errorMessage  The error message to send
+      * @param int    $statusCode    The HTTP status code
+      * @param array  $httpHeaders   Http headers to insert into the Response
+      *
+      * @return Response
+      */
     protected function jsonErrorResponse($errorMessage, $statusCode = 400, array $httpHeaders = array())
     {
         return $this->jsonResponse(null, array(
             'status' => array(
-                'code'    => $statusCode,
-                'message' => $errorMessage,
+                'code'    => (int) $statusCode,
+                'message' => (string) $errorMessage,
             ),
         ), $httpHeaders);
     }
 
-    /**
-     *
-     */
+     /**
+      * Format a json Not Found Response
+      *
+      * @param string $message  The error message to send
+      *
+      * @return Response
+      */
     protected function jsonNotFoundResponse($message='Not Found')
     {
         return $this->jsonResponse(null, array(

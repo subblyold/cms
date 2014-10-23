@@ -7,17 +7,18 @@ use Subbly\Model\Order;
 class CartService extends Service
 {
     /**
-     *
+     * Access to the cart
      */
     public function access()
     {
-        Session::get('cart.order');
+        $order = new Order;
+        // Session::get('cart.order');
 
-        return new Order;
+        return $order;
     }
 
     /**
-     *
+     * Service name
      */
     public function name()
     {

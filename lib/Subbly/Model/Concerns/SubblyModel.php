@@ -1,19 +1,23 @@
 <?php
 
-namespace Subbly\Model;
-
-use Illuminate\Database\Eloquent\Model as Eloquent;
+namespace Subbly\Model\Concerns;
 
 use Subbly\Api\Service\Service;
+use Subbly\Model\Exception\UnvalidModelException;
 
-abstract class Model extends Eloquent
+trait SubblyModel
 {
+    use DefaultValues;
+    use Validable;
+
     /**
      *
      */
     final public function save(array $options = array())
     {
         $this->protectMethod($options);
+
+        $this->processValidation();
 
         return parent::save($options);
     }
@@ -24,6 +28,8 @@ abstract class Model extends Eloquent
     final public function update(array $attributes = array())
     {
         $this->protectMethod($attributes);
+
+        $this->processValidation();
 
         return parent::update($attributes);
     }
@@ -37,7 +43,6 @@ abstract class Model extends Eloquent
      */
     private function protectMethod(array $options = array())
     {
-        // var_dump($options);
         if (
             !isset($options['subbly_api_service'])
             || !($options['subbly_api_service'] instanceof Service)
@@ -46,5 +51,16 @@ abstract class Model extends Eloquent
         }
 
         unset($options['subbly_api_service']);
+    }
+
+    /**
+     *
+     */
+    private function processValidation()
+    {
+        if ($this->isValid() !== true)
+        {
+            throw new UnvalidModelException($this);
+        }
     }
 }
