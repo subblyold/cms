@@ -4,7 +4,7 @@ namespace Subbly\Tests\Core;
 
 use Subbly\Core\Container;
 
-class ContainerTest extends \Illuminate\Foundation\Testing\TestCase
+class ContainerTest extends \Subbly\Tests\Support\TestCase
 {
     public function testConstruct()
     {

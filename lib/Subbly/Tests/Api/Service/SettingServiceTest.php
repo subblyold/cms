@@ -7,7 +7,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\SettingService;
 use Subbly\Core\Container;
 
-class SettingServiceTest extends \Illuminate\Foundation\Testing\TestCase
+class SettingServiceTest extends \Subbly\Tests\Support\TestCase
 {
     private function getService()
     {

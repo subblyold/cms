@@ -7,7 +7,7 @@ use Subbly\Api\Api;
 use Subbly\Api\Service\OrderService;
 use Subbly\Core\Container;
 
-class OrderServiceTest extends \Illuminate\Foundation\Testing\TestCase
+class OrderServiceTest extends \Subbly\Tests\Support\TestCase
 {
     private function getService()
     {
