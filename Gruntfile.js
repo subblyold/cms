@@ -129,55 +129,52 @@ module.exports = function(grunt)
             {
                 src: [
                   // Dependencies
-                  // 'src/lib/zepto/zepto.js'
-                  // , 'src/lib/lodash/lodash.underscore.js'
-                    'src/lib/jquery/jquery-2.1.0.js'
-                  , 'src/lib/jquery/jquery-ui-1.10.4.custom.js'
+                    'src/lib/jquery/jquery-2.1.1.js'
+                  // , 'src/lib/jquery/jquery.ui.widget.js'
                   , 'src/lib/jquery/jquery.nanoscroller.js'
-                  , 'src/lib/jquery/jquery.fileupload.js'
-                  , 'src/lib/underscore/underscore.js'
-                  , 'src/lib/underscore/underscore.string.js'
-                  , 'src/lib/backbone/backbone.js'
-                  , 'src/lib/backbone/backbone-approuter.js'
-                  , 'src/lib/backbone/backbone.controller.js'
-                  , 'src/lib/handlebars/handlebars-v1.3.0.js'
-                  , 'src/lib/bootstrap/dropdown.js'
-                  , 'src/lib/bootstrap/button.js'
-                  , 'src/lib/bootstrap/modal.js'
-                  , 'src/lib/momentjs/moment-with-langs.js'
-                  , 'src/lib/download/download.js'
+                  // , 'src/lib/jquery/jquery.fileupload.js'
+                  // , 'src/lib/underscore/underscore.js'
+                  // , 'src/lib/backbone/backbone.js'
+                  // , 'src/lib/backbone/backbone-approuter.js'
+                  // , 'src/lib/backbone/backbone.controller.js'
+                  // , 'src/lib/handlebars/handlebars-v2.0.0.js'
+                  // , 'src/lib/bootstrap/dropdown.js'
+                  // , 'src/lib/bootstrap/button.js'
+                  // , 'src/lib/bootstrap/modal.js'
+                  // , 'src/lib/momentjs/moment.js'
+                  // , 'src/lib/download/download.js'
 
                   // App
-                  , 'src/js/i18n.js'
-                  , 'src/js/helpers.js'
+                  // , 'src/js/helpers.js'
                   , 'src/js/closure.intro.js'
                   , 'src/js/closure.utils.js'
 
+                  // , 'src/js/backbone.js'
+                  // , 'src/js/validation.js'
+                  // , 'src/js/delete.js'
+                  // , 'src/js/uploader.js'
+                  // , 'src/js/xhr.js'
 
-                  , 'src/js/backbone.js'
-                  , 'src/js/validation.js'
-                  , 'src/js/delete.js'
-                  , 'src/js/uploader.js'
-                  , 'src/js/xhr.js'
+                  // , 'src/js/models/user.js'
 
-                  , 'src/js/models/user.js'
-
-                  , 'src/js/collections/list.js'
+                  // , 'src/js/collections/list.js'
 
                   // , 'src/js/controllers/admin.js'
 
-                  , 'src/js/views/form.js'
-                  , 'src/js/views/list.js'
-                  , 'src/js/views/sortable.js'
-                  , 'src/js/views/login.js'
-                  , 'src/js/views/modal.js'
+                  // , 'src/js/views/form.js'
+                  // , 'src/js/views/list.js'
+                  // , 'src/js/views/sortable.js'
+                  // , 'src/js/views/login.js'
+                  // , 'src/js/views/modal.js'
 
-                  , 'src/js/subbly.js'
-                  , 'src/js/session.js'
-                  , 'src/js/feedback.js'
+                  // , 'src/js/subbly.js'
+                  // , 'src/js/session.js'
+                  // , 'src/js/feedback.js'
 
-                  , 'src/js/router.js'
+                  // , 'src/js/router.js'
                   , 'src/js/closure.outro.js'
+
+                  , 'src/js/scroll2sicky.js'
                 ]
               , dest: 'themes/backend/assets/js/<%= pkg.name %>.development.js'
             }
@@ -214,7 +211,7 @@ module.exports = function(grunt)
         {
             javascript: 
             {
-              files: ['src/js/*.js', 'src/js/**/*.js', 'src/js/*/*.js']
+              files: ['src/js/*.js', 'src/js/*/*.js'] //, 'src/js/*/*.js'
             , tasks: ['concat_sourcemap']
             , options: 
               {
