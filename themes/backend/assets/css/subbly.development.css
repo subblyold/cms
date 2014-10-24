@@ -692,27 +692,27 @@ h6 {
 .c-pdg-l {
   padding-left: 40px;
 }
-.c-pdg-b {
+.c-pdg-bas {
   padding: 16px;
 }
-.c-pdg-b-v {
+.c-pdg-bas-v {
   padding-bottom: 16px;
   padding-top: 16px;
 }
-.c-pdg-b-h {
+.c-pdg-bas-h {
   padding-left: 16px;
   padding-right: 16px;
 }
-.c-pdg-b-t {
+.c-pdg-bas-t {
   padding-top: 16px;
 }
-.c-pdg-b-r {
+.c-pdg-bas-r {
   padding-right: 16px;
 }
-.c-pdg-b-b {
+.c-pdg-bas-b {
   padding-bottom: 16px;
 }
-.c-pdg-b-l {
+.c-pdg-bas-l {
   padding-left: 16px;
 }
 .hr {
@@ -1124,6 +1124,7 @@ input[type="search"] {
   color: #ffffff;
 }
 .btn-icon {
+  border-color: #bbbbbb;
   position: relative;
   width: 40px;
 }
