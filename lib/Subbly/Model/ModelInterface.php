@@ -2,6 +2,8 @@
 
 namespace Subbly\Model;
 
+use Subbly\Api\Service\Service;
+
 interface ModelInterface
 {
 
@@ -20,7 +22,9 @@ interface ModelInterface
     public function errorMessages();
 
     /**
-     * 
+     * Set the caller Service
+     *
+     * @param Subbly\api\Service\Service  $service The caller Service
      */
-    final public function setCaller(Service $service);
+    public function setCaller(Service $service);
 }
