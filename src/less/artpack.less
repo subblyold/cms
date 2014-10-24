@@ -230,27 +230,28 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 
   &.sticky {
+    background-color: fade( @body-bg, 95% );
     left: 240px;
     position: fixed;
     top: 0;
     z-index: 100;
   }
 
-  &:after {
-    background-image: -moz-linear-gradient(top, @body-bg, fade(@body-bg, 0));
-    background-image: -ms-linear-gradient(top, @body-bg, fade(@body-bg, 0));
-    background-image: -o-linear-gradient(top, @body-bg, fade(@body-bg, 0));
-    background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@body-bg), to(fade(@body-bg, 0)));
-    background-image: -webkit-linear-gradient(top, @body-bg, fade(@body-bg, 0));
-    background-image: linear-gradient(top, @body-bg, fade(@body-bg, 0));
-    background-repeat: repeat-y;
-    bottom: -8px;
-    content: '';
-    height: 8px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-  }
+  // &:after {
+  //   background-image: -moz-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+  //   background-image: -ms-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+  //   background-image: -o-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+  //   background-image: -webkit-gradient(linear, 0 0, 100% 0, from(@body-bg), to(fade(@body-bg, 0)));
+  //   background-image: -webkit-linear-gradient(top, @body-bg, fade(@body-bg, 0));
+  //   background-image: linear-gradient(top, @body-bg, fade(@body-bg, 0));
+  //   background-repeat: repeat-y;
+  //   bottom: -8px;
+  //   content: '';
+  //   height: 8px;
+  //   left: 0;
+  //   position: absolute;
+  //   width: 100%;
+  // }
 }
 
 //
