@@ -55,7 +55,7 @@ class UserServiceTest extends \Subbly\Tests\Support\TestCase
         $email = 'john.snow@subbly.com';
 
         // Events
-        Event::listen($this->getService()->name() . ':created', function($user) use ($email)
+        Subbly::events()->listen($this->getService()->name() . ':created', function($user) use ($email)
         {
             $this->assertEquals($email, $user->email);
         });

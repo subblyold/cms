@@ -5,6 +5,7 @@ namespace Subbly\Core;
 use Pimple;
 
 use Subbly\Api\Api;
+use Subbly\Core\EventDispatcher;
 
 class Container extends Pimple\Container
 {
@@ -15,7 +16,7 @@ class Container extends Pimple\Container
     {
         $c = $this;
 
-        $this['api'] = function () use ($c) {
+        $this['api'] = function($c) {
             $api = new Api($c, array(
                 'Subbly\\Api\\Service\\CartService',
                 'Subbly\\Api\\Service\\OrderService',
@@ -29,6 +30,10 @@ class Container extends Pimple\Container
             );
 
             return $api;
+        };
+
+        $this['event_dispatcher'] = function($c) {
+            return new EventDispatcher();
         };
     }
 

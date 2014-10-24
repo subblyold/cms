@@ -2,10 +2,9 @@
 
 namespace Subbly\Api\Service;
 
-use Illuminate\Support\Facades\Event;
-
 use Subbly\Api\Api;
 use Subbly\Model\ModelInterface;
+use Subbly\Subbly;
 
 abstract class Service
 {
@@ -59,12 +58,12 @@ abstract class Service
      *
      * @api
      */
-    protected function fireEvent($eventName, array $vars = array())
+    protected function fireEvent($eventName, array $vars = array(), $halt = true)
     {
-        return Event::fire(
-            sprintf('%s:%s', $this->name(), $eventName),
-            $vars
-        );
+        $method    = $halt ? 'until' : 'fire';
+        $eventName = sprintf('%s:%s', $this->name(), $eventName);
+
+        return Subbly::events()->{$method}($eventName, $vars);
     }
 
     /**

@@ -37,6 +37,15 @@ class Subbly
         return $api;
     }
 
+
+    /**
+     *
+     */
+    static public function events()
+    {
+        return self::getContainer()->get('event_dispatcher');
+    }
+
     /**
      * Get the container
      *
