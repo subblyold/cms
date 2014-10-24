@@ -4,6 +4,7 @@
 // --------------------------------------------------
 
 h1, h2, h3, h4, h5, h6 {
+  font-size: @font-size-base;
   font-weight: normal;
 }
 
@@ -40,6 +41,11 @@ h1, h2, h3, h4, h5, h6 {
   // base color
 .c-bas {
   color: @text-color;
+}
+
+  // color danger
+.c-dgr {
+  color: @brand-danger;
 }
 
 //
@@ -207,7 +213,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   &.danger {
-    background-color: #f00;
+    background-color: @brand-danger;
   }
 }
 
@@ -270,33 +276,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .cln-lst-blk {
   line-height: 100px
-}
-
-  // order resume status
-.ordr-sts {
-  text-align: center;
-  width: 50px;
-}
-  // order resume details 
-.ordr-dtls {
-  padding-top: @font-size-large
-}
-
-  // order resume time ago
-.ordr-tago {
-  float: right;
-  padding-right: @content-padding;
-}
-
-.ordr-row {
-  &:hover,
-  &.active {
-    background: @product;
-
-    & * {
-      color: @white !important;
-    }
-  }
 }
 
 //

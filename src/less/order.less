@@ -1,0 +1,90 @@
+
+//
+// Orders resume
+// --------------------------------------------------
+
+  // orders resume status
+.ordr-sts {
+  text-align: center;
+  width: 50px;
+}
+
+  // orders resume details 
+.ordr-dtls {
+  padding-top: @font-size-large
+}
+
+  // orders resume time ago
+.ordr-tago {
+  float: right;
+  padding-right: @content-padding;
+}
+
+  // orders resume row
+.ordr-row {
+  &:hover,
+  &.active {
+    background: @product;
+
+    & * {
+      color: @white !important;
+    }
+  }
+}
+
+//
+// Order Details
+// --------------------------------------------------
+
+.ord-dtls {
+
+  .thmb-list {
+    border: 1px solid @border;
+    margin-top: 23px;
+    overflow: hidden;
+  }
+}
+
+.ord-lst {
+  margin-top: -20px;
+}
+
+.ord-rw-itm {
+  float: left;
+  padding: 0 7px;
+}
+
+.pdt-dtls {
+  padding-top: 30px;
+
+  .pdt-name {
+    .text-overflow;
+    width: 100px;
+  }
+}
+
+.ord-lst-rw {
+  .clearfix;
+  height: 100px;
+  margin: 0 -7px;
+
+  & + .ord-lst-rw {
+    border-top: 1px solid @border-ligth;
+  }
+
+  .pdt-price,
+  .pdt-qty,
+  .pdt-ttl-row {
+    line-height: 100px;
+  }
+}
+
+//
+// Order Total Detail
+// --------------------------------------------------
+
+.ord-ttl-dts {
+  background: #faf6e6;
+  border-radius: @border-radius-large;
+  padding: 25px 30px;
+}
