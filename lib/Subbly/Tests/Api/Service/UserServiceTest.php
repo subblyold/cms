@@ -8,8 +8,9 @@ use Subbly\Subbly;
 use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
 use Subbly\Core\Container;
+use Subbly\Tests\Support\TestCase;
 
-class UserServiceTest extends \Subbly\Tests\Support\TestCase
+class UserServiceTest extends TestCase
 {
     private function getService()
     {
@@ -39,13 +40,13 @@ class UserServiceTest extends \Subbly\Tests\Support\TestCase
 
     public function testFind()
     {
-        // TODO create a test database with test seeds
-        $uid  = '';
-        $user = $this->getService()->find($uid);
+        $fixture = TestCase::getFixture('users.john_snow');
+        $uid     = $fixture->uid;
+        $user    = $this->getService()->find($uid);
 
         $this->assertInstanceOf('Subbly\\Model\\User', $user);
-        // $this->assertEquals('john', $user->first_name);
-        // $this->assertEquals('snow', $user->last_name);
+        $this->assertEquals($fixture->first_name, $user->first_name);
+        $this->assertEquals($fixture->last_name, $user->last_name);
     }
 
     public function testSearchBy() {}
@@ -61,8 +62,10 @@ class UserServiceTest extends \Subbly\Tests\Support\TestCase
         });
 
         $user = $this->getService()->newUser();
-        $user->email    = $email;
-        $user->password = uniqid();
+        $user->email      = $email;
+        $user->first_name = 'john';
+        $user->last_name  = 'snow';
+        $user->password   = uniqid();
 
         $returnedUser = $this->getService()->create($user);
 

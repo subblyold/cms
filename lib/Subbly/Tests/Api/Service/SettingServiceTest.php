@@ -33,7 +33,7 @@ class SettingServiceTest extends \Subbly\Tests\Support\TestCase
     {
         $setting = $this->getService()->get('subbly.shop_name');
 
-        $this->assertEquals('Awesome Shop', $setting);
+        $this->assertEquals('My first Subbly Shop', $setting);
     }
 
     public function testHas()
@@ -43,7 +43,7 @@ class SettingServiceTest extends \Subbly\Tests\Support\TestCase
         $this->assertFalse($hasSetting);
     }
 
-    public function testAdd()
+    public function testUpdate()
     {
         $tests = array(
             '-- a awesome string value --',
@@ -57,7 +57,7 @@ class SettingServiceTest extends \Subbly\Tests\Support\TestCase
 
         foreach ($tests as $value)
         {
-            $this->getService()->add('subbly.test_entry_setting', $value);
+            $this->getService()->update('subbly.test_entry_setting', $value);
             $this->assertSame($this->getService()->get('subbly.test_entry_setting'), $value);
         }
     }
