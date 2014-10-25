@@ -46,7 +46,7 @@ return array(
 	|
 	*/
 
-	'hasher' => 'native',
+	'hasher' => 'bcrypt',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -120,7 +120,7 @@ return array(
 		|
 		*/
 
-		'model' => 'Cartalyst\Sentry\Users\Eloquent\User',
+		'model' => 'Subbly\Model\User',
 
 		/*
 		|--------------------------------------------------------------------------
