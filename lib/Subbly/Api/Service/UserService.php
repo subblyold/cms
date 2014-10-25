@@ -146,8 +146,6 @@ class UserService extends Service
      */
     public function create($user)
     {
-        $user = null;
-
         if (is_array($user)) {
             $user = new User($user);
         }

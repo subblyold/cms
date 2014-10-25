@@ -2,6 +2,8 @@
 
 namespace Subbly\Model\Concerns;
 
+use Illuminate\Support\Facades\App;
+
 use Subbly\Api\Service\Service;
 use Subbly\Model\Exception\UnvalidModelException;
 
@@ -63,7 +65,7 @@ trait SubblyModel
      */
     private function protectMethod()
     {
-        if (! ($this->callerService instanceof Service)) {
+        if (!App::environment('testing') && !($this->callerService instanceof Service)) {
             throw new \Exception('You must use an Subbly\Api\Service\Service to save a Model');
         }
     }

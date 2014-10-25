@@ -4,9 +4,11 @@ namespace Subbly\Model;
 
 use Cartalyst\Sentry\Users\Eloquent\User as Model;
 
+use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
-class User extends Model implements ModelInterface
+class User extends Model implements ModelInterface//, UserInterface, RemindableInterface
 {
     use Concerns\SubblyModel;
     use SoftDeletingTrait;
@@ -25,7 +27,7 @@ class User extends Model implements ModelInterface
      */
     protected $visible = array('uid', 'email', 'first_name', 'last_name', 'addresses', 'orders');
 
-    protected $fillable = array('first_name', 'last_name');
+    protected $fillable = array('email', 'password', 'first_name', 'last_name');
 
     protected $dates = array('deleted_at');
 
@@ -45,10 +47,7 @@ class User extends Model implements ModelInterface
     {
         parent::boot();
 
-        static::creating(function($user)
-        {
-            $user->uid = md5(uniqid(mt_rand(), true));
-        });
+        self::$hasher = new \Cartalyst\Sentry\Hashing\BcryptHasher;
     }
 
     /**
@@ -62,5 +61,15 @@ class User extends Model implements ModelInterface
     public function addresses()
     {
         return $this->hasMany('Subbly\\Model\\UserAddress');
+    }
+
+    /**
+     *
+     */
+    protected function performInsert(\Illuminate\Database\Eloquent\Builder $query, array $options)
+    {
+        $this->attributes['uid'] = md5(uniqid(mt_rand(), true));
+
+        parent::performInsert($query, $options);
     }
 }

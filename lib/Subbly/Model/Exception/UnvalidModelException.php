@@ -18,7 +18,10 @@ class UnvalidModelException extends \Exception
     {
         $this->model = $model;
 
-        $this->message = sprintf('"%s" model is unvalid', get_class($model));
+        $this->message = sprintf('"%s" model is unvalid. FIRST ERROR MESSAGE: %s',
+            get_class($model),
+            $this->firstErrorMessage()
+        );
     }
 
     /**

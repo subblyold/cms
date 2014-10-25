@@ -125,8 +125,6 @@ class ProductService extends Service
      */
     public function create($product)
     {
-        $product = null;
-
         if (is_array($product)) {
             $product = new Product($product);
         }

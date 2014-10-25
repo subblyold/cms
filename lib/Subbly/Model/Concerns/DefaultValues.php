@@ -20,5 +20,7 @@ trait DefaultValues
 
             $this->fill($attributes);
         }
+
+        parent::bootIfNotBooted();
     }
 }
