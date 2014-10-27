@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
     private static $fixtures;
+    private static $faker;
 
     protected $useDatabase = true;
 

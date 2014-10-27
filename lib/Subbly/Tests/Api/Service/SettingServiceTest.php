@@ -39,8 +39,10 @@ class SettingServiceTest extends \Subbly\Tests\Support\TestCase
     public function testHas()
     {
         $hasSetting = $this->getService()->has('subbly.totaly_undefined_setting_key');
-
         $this->assertFalse($hasSetting);
+
+        $hasSetting = $this->getService()->has('subbly.shop_name');
+        $this->assertTrue($hasSetting);
     }
 
     public function testUpdate()
@@ -59,6 +61,7 @@ class SettingServiceTest extends \Subbly\Tests\Support\TestCase
         {
             $this->getService()->update('subbly.test_entry_setting', $value);
             $this->assertSame($this->getService()->get('subbly.test_entry_setting'), $value);
+            // TODO must be false
         }
     }
 

@@ -49,7 +49,16 @@ class UserServiceTest extends TestCase
         $this->assertEquals($fixture->lastname, $user->lastname);
     }
 
-    public function testSearchBy() {}
+    public function testSearchBy()
+    {
+        $fixture = TestCase::getFixture('users.user_2');
+        $uid     = $fixture->uid;
+        $user    = $this->getService()->searchBy(array(
+            'firstname' => $fixture->lastname,
+        ));
+
+        $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $user);
+    }
 
     public function testCreate()
     {
@@ -57,6 +66,10 @@ class UserServiceTest extends TestCase
 
         // Events
         Subbly::events()->listen($this->getService()->name() . ':created', function($user) use ($email)
+        {
+            $this->assertEquals($email, $user->email);
+        });
+        Subbly::events()->listen($this->getService()->name() . ':creating', function($user) use ($email)
         {
             $this->assertEquals($email, $user->email);
         });
@@ -76,7 +89,29 @@ class UserServiceTest extends TestCase
         $this->assertEquals($email, $returnedUser->email);
     }
 
-    public function testUpdate() {}
+    public function testUpdate()
+    {
+        $user = TestCase::getFixture('users.user_1');
+
+        // Events
+        Subbly::events()->listen($this->getService()->name() . ':updated', function($model) use ($user)
+        {
+            $this->assertEquals($user->id, $model->id);
+        });
+        Subbly::events()->listen($this->getService()->name() . ':updating', function($model) use ($user)
+        {
+            $this->assertEquals($user->id, $model->id);
+        });
+
+        $user->firstname = TestCase::faker()->firstname;
+        $user->lastname  = TestCase::faker()->lastname;
+
+        $returnedUser = $this->getService()->update($user);
+
+        $this->assertInstanceOf('Subbly\\Model\\User', $user);
+        $this->assertInstanceOf('Subbly\\Model\\User', $returnedUser);
+        $this->assertEquals($user->id, $returnedUser->id);
+    }
 
     public function testName()
     {
