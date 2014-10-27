@@ -486,7 +486,7 @@ ol {
   margin-left: auto;
   margin-right: auto;
   fill: #fff;
-  margin-bottom: 20px;
+  margin: 10px auto 20px;
 }
 .main-logo li + li,
 .bo-nav li + li {
@@ -559,6 +559,9 @@ ol {
   right: 0;
   bottom: 0;
   left: 0;
+}
+.nano > .nano-content:focus {
+  outline: none;
 }
 .nano > .nano-content::-webkit-scrollbar {
   display: none;
@@ -669,6 +672,9 @@ h6 {
 }
 .c-dgr {
   color: #dc7363;
+}
+.bkgd-wht {
+  background: #ffffff;
 }
 .c-pdg {
   padding: 40px;
@@ -1104,6 +1110,9 @@ input[type="search"] {
 .btn .icon {
   margin-right: 12px;
 }
+.btn-borderless {
+  border-color: transparent;
+}
 .btn-action {
   background: #a9a9a9;
   border-color: #a9a9a9;
@@ -1168,6 +1177,9 @@ input[type="search"] {
 }
 .thmb.list .icon-handler {
   left: 16px;
+}
+.thmb.product {
+  height: 217px;
 }
 .thmb.product .icon-handler {
   right: 16px;
