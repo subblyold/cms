@@ -45,8 +45,8 @@ class UserServiceTest extends TestCase
         $user    = $this->getService()->find($uid);
 
         $this->assertInstanceOf('Subbly\\Model\\User', $user);
-        $this->assertEquals($fixture->first_name, $user->first_name);
-        $this->assertEquals($fixture->last_name, $user->last_name);
+        $this->assertEquals($fixture->firstname, $user->firstname);
+        $this->assertEquals($fixture->lastname, $user->lastname);
     }
 
     public function testSearchBy() {}
@@ -63,8 +63,8 @@ class UserServiceTest extends TestCase
 
         $user = $this->getService()->newUser();
         $user->email      = $email;
-        $user->first_name = 'john';
-        $user->last_name  = 'snow';
+        $user->firstname = 'john';
+        $user->lastname  = 'snow';
         $user->password   = uniqid();
 
         $returnedUser = $this->getService()->create($user);

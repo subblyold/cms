@@ -113,8 +113,8 @@ class ProductService extends Service
      *     Subbly::api('subbly.product')->create($product);
      *
      *     Subbly::api('subbly.product')->create(array(
-     *         'first_name' => 'John',
-     *         'last_name'  => 'Snow',
+     *         'firstname' => 'John',
+     *         'lastname'  => 'Snow',
      *     ));
      *
      * @param Product|array $product

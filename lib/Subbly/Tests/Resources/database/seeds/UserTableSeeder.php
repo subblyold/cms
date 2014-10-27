@@ -17,11 +17,11 @@ class UserTableSeeder extends Seeder {
         DB::table('users')->delete();
 
         $user = User::create(array(
-            'email'      => 'john.snow@test.subbly.com',
-            'password'   => 'hodor123',
-            'first_name' => 'John',
-            'last_name'  => 'Snow',
-            'activated'  => true,
+            'email'     => 'john.snow@test.subbly.com',
+            'password'  => 'hodor123',
+            'firstname' => 'John',
+            'lastname'  => 'Snow',
+            'activated' => true,
         ));
         TestCase::addFixture('users.john_snow', $user);
 
@@ -29,11 +29,11 @@ class UserTableSeeder extends Seeder {
         for ($i=1; $i <= 10; $i++)
         {
             User::create(array(
-                'email'      => $faker->email,
-                'password'   => $faker->text(45),
-                'first_name' => $faker->firstName,
-                'last_name'  => $faker->lastName,
-                'activated'  => $i === 0 ? true : rand(0, 1),
+                'email'     => $faker->email,
+                'password'  => $faker->text(45),
+                'firstname' => $faker->firstName,
+                'lastname'  => $faker->lastName,
+                'activated' => $i === 0 ? true : rand(0, 1),
             ));
             TestCase::addFixture('users.user_' . $i, $user);
         }

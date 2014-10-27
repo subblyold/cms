@@ -25,9 +25,9 @@ class User extends Model implements ModelInterface//, UserInterface, RemindableI
      *
      * @var array
      */
-    protected $visible = array('uid', 'email', 'first_name', 'last_name', 'addresses', 'orders');
+    protected $visible = array('uid', 'email', 'firstname', 'lastname', 'addresses', 'orders');
 
-    protected $fillable = array('email', 'password', 'first_name', 'last_name');
+    protected $fillable = array('email', 'password', 'firstname', 'lastname');
 
     protected $dates = array('deleted_at');
 
@@ -71,5 +71,22 @@ class User extends Model implements ModelInterface//, UserInterface, RemindableI
         $this->attributes['uid'] = md5(uniqid(mt_rand(), true));
 
         parent::performInsert($query, $options);
+    }
+
+    /**
+     * Aliases
+     */
+    public function setFirstnameAttribute($value) {
+        $this->attributes['first_name'] = (string) $value;
+    }
+    public function getFirstnameAttribute() {
+        return $this->attributes['first_name'];
+    }
+
+    public function setLastnameAttribute($value) {
+        $this->attributes['last_name'] = (string) $value;
+    }
+    public function getLastnameAttribute() {
+        return $this->attributes['last_name'];
     }
 }
