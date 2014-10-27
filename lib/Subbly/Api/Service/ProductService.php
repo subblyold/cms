@@ -113,7 +113,7 @@ class ProductService extends Service
      *     Subbly::api('subbly.product')->create($product);
      *
      *     Subbly::api('subbly.product')->create(array(
-     *         'firstname' => 'John',
+     *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *
@@ -155,7 +155,7 @@ class ProductService extends Service
      *     Subbly::api('subbly.product')->update($product);
      *
      *     Subbly::api('subbly.product')->update($product_sku, array(
-     *         'firstname' => 'John',
+     *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *

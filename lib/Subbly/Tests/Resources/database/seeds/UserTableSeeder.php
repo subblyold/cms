@@ -17,13 +17,13 @@ class UserTableSeeder extends Seeder {
         DB::table('users')->delete();
 
         $user = User::create(array(
-            'email'     => 'john.snow@test.subbly.com',
+            'email'     => 'jon.snow@test.subbly.com',
             'password'  => 'hodor123',
-            'firstname' => 'John',
+            'firstname' => 'Jon',
             'lastname'  => 'Snow',
             'activated' => true,
         ));
-        TestCase::addFixture('users.john_snow', $user);
+        TestCase::addFixture('users.jon_snow', $user);
 
         // generate some others users
         for ($i=1; $i <= 10; $i++)

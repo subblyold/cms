@@ -92,7 +92,7 @@ class UserService extends Service
      *
      * @example
      *     $users = Subbly::api('subbly.user')->searchBy(array(
-     *         'firstname' => 'John',
+     *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *
@@ -134,8 +134,8 @@ class UserService extends Service
      *     Subbly::api('subbly.user')->create($user);
      *
      *     Subbly::api('subbly.user')->create(array(
-     *         'first_name' => 'John',
-     *         'last_name'  => 'Snow',
+     *         'firstname' => 'Jon',
+     *         'lastname'  => 'Snow',
      *     ));
      *
      * @param User|array $user
@@ -176,7 +176,7 @@ class UserService extends Service
      *     Subbly::api('subbly.user')->update($user);
      *
      *     Subbly::api('subbly.user')->update($user_uid, array(
-     *         'firstname' => 'John',
+     *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *

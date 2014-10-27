@@ -40,7 +40,7 @@ class UserServiceTest extends TestCase
 
     public function testFind()
     {
-        $fixture = TestCase::getFixture('users.john_snow');
+        $fixture = TestCase::getFixture('users.jon_snow');
         $uid     = $fixture->uid;
         $user    = $this->getService()->find($uid);
 
@@ -62,7 +62,7 @@ class UserServiceTest extends TestCase
 
     public function testCreate()
     {
-        $email = 'john.snow@subbly.com';
+        $email = 'jon.snow@subbly.com';
 
         // Events
         Subbly::events()->listen($this->getService()->name() . ':created', function($user) use ($email)
@@ -76,8 +76,8 @@ class UserServiceTest extends TestCase
 
         $user = $this->getService()->newUser();
         $user->email      = $email;
-        $user->firstname = 'john';
-        $user->lastname  = 'snow';
+        $user->firstname = 'Jon';
+        $user->lastname  = 'Snow';
         $user->password   = uniqid();
 
         $returnedUser = $this->getService()->create($user);
