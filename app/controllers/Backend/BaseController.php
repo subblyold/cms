@@ -2,7 +2,7 @@
 
 namespace Backend;
 
-use App, Controller, Request, Response, Sentry;
+use App, Controller, Input, Request, Response, Sentry;
 
 use Subbly\Subbly;
 
@@ -13,6 +13,16 @@ class BaseController extends Controller
      */
     public function __construct()
     {
+    }
+
+    protected function offset()
+    {
+        return (int) Input::get('offset', 0);
+    }
+
+    protected function limit()
+    {
+        return (int) Input::get('limit', 1);
     }
 
     /**
