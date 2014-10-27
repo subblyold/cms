@@ -55,6 +55,18 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /**
      *
      */
+    public static function faker()
+    {
+        if (!isset(self::$faker)) {
+            self::$faker = \Faker\Factory::create();;
+        }
+
+        return self::$faker;
+    }
+
+    /**
+     *
+     */
     public function setUp()
     {
         parent::setUp();
