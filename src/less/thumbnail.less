@@ -21,7 +21,8 @@
 
   .icon-handler {
     .opacity(0);
-    cursor: move;
+    cursor: -webkit-grab;
+    cursor: grab;
     font-size: @font-size-large;
     position: absolute;
     top: @padding-large-vertical;
@@ -32,8 +33,12 @@
     left: @padding-large-horizontal;
   }
 
-  &.product .icon-handler {
-    right: @padding-large-horizontal;
+  &.product {
+    height: 217px;
+    
+    .icon-handler {
+      right: @padding-large-horizontal;
+    }  
   }
 
   &:hover {
@@ -70,6 +75,7 @@
 
 .thmb-capt {
   background: @white;
+  border-radius: 0 0 @border-radius-large @border-radius-large;
   bottom: 0;
   left: 0;
   padding: @thumbnail-caption-padding-vert @thumbnail-caption-padding-horz;

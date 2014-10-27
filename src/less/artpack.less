@@ -48,6 +48,10 @@ h1, h2, h3, h4, h5, h6 {
   color: @brand-danger;
 }
 
+.bkgd-wht {
+  background: @white;
+}
+
 //
 // Content padding rules
 // --------------------------------------------------
@@ -116,6 +120,9 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: @padding-large-vertical
 }
 
+.c-mrg-bas-l {
+  margin-left: @padding-large-vertical
+}
 
 //
 // Horizontal rule
@@ -284,7 +291,6 @@ h1, h2, h3, h4, h5, h6 {
 // --------------------------------------------------
 
 .pdt-list {
-
   background: @white;
   border-radius: @border-radius-large;
   border: 1px solid @border;
@@ -294,6 +300,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .pdt-lst-itm {
   .clearfix;
+  cursor: pointer;
   height: 70px;
   padding: 11px @padding-large-horizontal;
   line-height: 70px;
@@ -323,6 +330,11 @@ h1, h2, h3, h4, h5, h6 {
   .pdt-name,
   .pdt-price {
     line-height: 48px;
+  }
+
+  .icon-handler {
+    cursor: -webkit-grab;
+    cursor: grab;
   }
 
   .badge {

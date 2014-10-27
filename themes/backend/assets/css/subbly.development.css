@@ -350,7 +350,8 @@ a {
   text-decoration: none;
 }
 a:hover,
-a:focus {
+a:focus,
+a.active {
   color: #616161;
   outline: none;
 }
@@ -372,7 +373,7 @@ ol {
   display: -ms-flex;
   display: flex;
   height: 100%;
-  max-width: 1200px;
+  max-width: 1210px;
   min-width: 980px;
 }
 .main-nav {
@@ -485,7 +486,7 @@ ol {
   margin-left: auto;
   margin-right: auto;
   fill: #fff;
-  margin-bottom: 20px;
+  margin: 10px auto 20px;
 }
 .main-logo li + li,
 .bo-nav li + li {
@@ -558,6 +559,9 @@ ol {
   right: 0;
   bottom: 0;
   left: 0;
+}
+.nano > .nano-content:focus {
+  outline: none;
 }
 .nano > .nano-content::-webkit-scrollbar {
   display: none;
@@ -669,6 +673,9 @@ h6 {
 .c-dgr {
   color: #dc7363;
 }
+.bkgd-wht {
+  background: #ffffff;
+}
 .c-pdg {
   padding: 40px;
 }
@@ -714,6 +721,9 @@ h6 {
 }
 .c-pdg-bas-l {
   padding-left: 16px;
+}
+.c-mrg-bas-l {
+  margin-left: 16px;
 }
 .hr {
   border: 0;
@@ -827,6 +837,7 @@ a.badge:focus {
   width: 100%;
 }
 .pdt-lst-itm {
+  cursor: pointer;
   height: 70px;
   padding: 11px 16px;
   line-height: 70px;
@@ -862,6 +873,10 @@ a.badge:focus {
 .pdt-lst-itm .pdt-name,
 .pdt-lst-itm .pdt-price {
   line-height: 48px;
+}
+.pdt-lst-itm .icon-handler {
+  cursor: -webkit-grab;
+  cursor: grab;
 }
 .pdt-lst-itm .badge {
   background: #aacdf9;
@@ -1095,6 +1110,9 @@ input[type="search"] {
 .btn .icon {
   margin-right: 12px;
 }
+.btn-borderless {
+  border-color: transparent;
+}
 .btn-action {
   background: #a9a9a9;
   border-color: #a9a9a9;
@@ -1150,7 +1168,8 @@ input[type="search"] {
 .thmb .icon-handler {
   opacity: 0;
   filter: alpha(opacity=0);
-  cursor: move;
+  cursor: -webkit-grab;
+  cursor: grab;
   font-size: 18px;
   position: absolute;
   top: 16px;
@@ -1158,6 +1177,9 @@ input[type="search"] {
 }
 .thmb.list .icon-handler {
   left: 16px;
+}
+.thmb.product {
+  height: 217px;
 }
 .thmb.product .icon-handler {
   right: 16px;
@@ -1187,6 +1209,7 @@ input[type="search"] {
 }
 .thmb-capt {
   background: #ffffff;
+  border-radius: 0 0 4px 4px;
   bottom: 0;
   left: 0;
   padding: 20px 25px;
