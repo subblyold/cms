@@ -105,19 +105,19 @@ class UserService extends Service
     public function searchBy(array $options)
     {
         $options = array_replace(array(
-            'global'     => null,
-            'first_name' => null,
-            'last_name'  => null,
-            'email'      => null,
+            'global'    => null,
+            'firstname' => null,
+            'lastname'  => null,
+            'email'     => null,
         ));
 
         $query = User::query();
 
         if ($options['firstname']) {
-            $query->where('first_name', 'LIKE', "%{$options['first_name']}%");
+            $query->where('firstname', 'LIKE', "%{$options['firstname']}%");
         }
         if ($options['lastname']) {
-            $query->where('last_name', 'LIKE', "%{$options['last_name']}%");
+            $query->where('lastname', 'LIKE', "%{$options['lastname']}%");
         }
         if ($options['email']) {
             $query->where('email', 'LIKE', "%{$options['email']}%");
