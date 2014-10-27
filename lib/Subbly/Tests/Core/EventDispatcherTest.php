@@ -2,7 +2,7 @@
 
 namespace Subbly\Tests\Core;
 
-use Subbly\Core\Container;
+use Subbly\Core\EventDispatcher;
 
 class EventDispatcherTest extends \Subbly\Tests\Support\TestCase
 {
