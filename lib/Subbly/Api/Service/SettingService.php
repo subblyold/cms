@@ -15,10 +15,11 @@ class SettingService extends Service
 {
     const CACHE_NAME = 'subbly.settings';
 
+    /** @var \ArrayObject $defaults */
     private $defaults = null;
 
     /**
-     * Initialize the service
+     * Initialize the service.
      */
     protected function init()
     {
@@ -81,7 +82,7 @@ class SettingService extends Service
      *
      * @return mixed
      *
-     * @throws Subbly\Api\Service\Exception
+     * @throws \Subbly\Api\Service\Exception
      *
      * @api
      */
@@ -131,7 +132,7 @@ class SettingService extends Service
      */
     public function update($key, $value)
     {
-        $this->fireEvent('adding', array($key, $value));
+        if ($this->fireEvent('updating', array($key, $value)) === false) return false;
         // TODO check that identifier is defined into default_settings.yml
 
         // TODO check the $value type in function of the default setting informations
@@ -154,7 +155,7 @@ class SettingService extends Service
 
         $this->setCachedSettings($settings);
 
-        $this->fireEvent('added', array($key, $value));
+        $this->fireEvent('updated', array($key, $value));
     }
 
     /**
@@ -163,6 +164,8 @@ class SettingService extends Service
      * @param string|null  $key A setting key (optional)
      *
      * @return array
+     *
+     * @throws \Subbly\Api\Service\Exception
      *
      * @api
      */
@@ -221,11 +224,13 @@ class SettingService extends Service
 
         Cache::put(self::CACHE_NAME, $settings, $expiresAt);
 
-        $this->fireEvent('updated', array($settings));
+        $this->fireEvent('cache_updated', array($settings));
     }
 
     /**
      *
+     *
+     * @return \ArrayObject
      */
     private function initCachedSettings()
     {
