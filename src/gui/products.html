@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Subbly Backend GUI</title>
+  <script src="../../themes/backend/assets/lib/modernizr.js"></script>
+
+  <link rel="stylesheet" href="../../themes/backend/assets/css/subbly.development.css">
+  <style>
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <section class="main-nav">
+      <a href="javascript:;" class="main-logo js-trigger-go-home">
+         <img class src="../../themes/backend/assets/img/subbly-logo.svg" width="100" alt="logo Subbly">
+      </a>
+
+      <div class="user-nav">
+        <div class="user-nav-container">
+          <a href="javascript:;">
+            Le col de Claudine
+          </a>
+          <span class="caret"></span>
+          <ul class="user-nav-sub">
+            <li>
+              <a href="javascript:;">
+                Visit my store
+              </a>
+            </li>
+            <li>
+              <a href="javascript:;">
+                logout
+              </a>
+            </li>
+          </ul><!-- /.user-nav-sub -->
+        </div><!-- /.user-nav-container -->
+      </div><!-- /.user-nav -->
+      <hr>
+      <ul class="bo-nav">
+        <li>
+          <a href="javascript:;" class="fst-nav js-trigger-go-home">
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="javascript:;" class="fst-nav js-trigger-go-orders active">
+            Orders
+          </a>
+          <span class="badge product">9</span>
+        </li>
+        <li>
+          <a href="javascript:;" class="fst-nav js-trigger-go-customers">
+            Customers
+          </a>
+        </li>
+        <li>
+          <a href="javascript:;" class="fst-nav js-trigger-go-products">
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="javascript:;" class="fst-nav js-trigger-go-settings">
+            Settings
+          </a>
+        </li>
+        <li class="fst-nav js-trigger-go-hangard">
+          <a href="javascript:;">
+            Hangar
+          </a>
+        </li>
+      </ul><!-- /.subbly-nav -->
+    </section><!-- /.main-nav -->
+    <section class="main-view">
+      <div class="view-full" style="background:#fff">
+        <div class="nano">
+          <div class="nano-content">
+            <div class="column-title cl-f c-pdg-h c-pdg-t c-pdg-bas-b">
+              <h3 class="f-ttl c-blk fl-l cur-p">
+                All products
+                <span class="caret"></span>
+              </h3>
+
+              <form class="fl-r">
+                <div class="cl-f">
+                  <a href="javascript:;" class="btn btn-action fl-l">
+                    Add product
+                  </a>
+                  <p class="input-search-holder fl-l c-mrg-bas-l">
+                    <input type="search" class="form-input input-search" placeholder="Search by name, ref etc">
+                  </p>
+                </div>
+              </form>
+            </div><!-- /.column-title -->
+            <div class="column-title cl-f c-pdg-h c-pdg-bas-v ta-r">
+              <a href="javascript:;" class="active js-toggle-view" data-view="grid">
+                <i class="icon icon-view-grid"></i>
+              </a>
+              <a href="javascript:;" class="c-mrg-bas-l js-toggle-view" data-view="list" stle="margin-right:6px">
+                <i class="icon icon-view-list"></i>
+              </a>
+            </div><!-- /.column-title -->
+            <div class="c-pdg-h c-pdg-b">
+              <div class="thmb-col js-view-item" id="products-view-grid">
+                <a href="javascript:;" class="thmb list">
+                  <i class="icon icon-handler"></i>
+                  <span class="thmb-img" style="background-image:url(../fixtures/img/product-01.jpg)"></span>
+                  <span class="thmb-capt">
+                    <strong class="pdt-name">Tshirt Dark</strong>
+                    <span class="pdt-price">$30.00</span>
+                    <span class="badge product">13</span>
+                  </span><!-- /.thmb-capt -->
+                </a>
+                <a href="javascript:;" class="thmb list">
+                  <i class="icon icon-handler"></i>
+                  <span class="thmb-img" style="background-image:url(../fixtures/img/product-02.jpg)"></span>
+                  <span class="thmb-capt">
+                    <strong class="pdt-name">Tshirt Dark</strong>
+                    <span class="pdt-price">$30.00</span>
+                    <span class="badge product">13</span>
+                  </span><!-- /.thmb-capt -->
+                </a>
+                <a href="javascript:;" class="thmb list">
+                  <i class="icon icon-handler"></i>
+                  <span class="thmb-img" style="background-image:url(../fixtures/img/product-03.jpg)"></span>
+                  <span class="thmb-capt">
+                    <strong class="pdt-name">Tshirt Dark</strong>
+                    <span class="pdt-price">$30.00</span>
+                    <span class="badge product">13</span>
+                  </span><!-- /.thmb-capt -->
+                </a>
+                <a href="javascript:;" class="thmb list">
+                  <i class="icon icon-handler"></i>
+                  <span class="thmb-img" style="background-image:url(../fixtures/img/product-04.jpg)"></span>
+                  <span class="thmb-capt">
+                    <strong class="pdt-name">Tshirt Dark</strong>
+                    <span class="pdt-price">$30.00</span>
+                    <span class="badge product">13</span>
+                  </span><!-- /.thmb-capt -->
+                </a>
+                <a href="javascript:;" class="thmb list">
+                  <i class="icon icon-handler"></i>
+                  <span class="thmb-img" style="background-image:url(../fixtures/img/product-06.jpg)"></span>
+                  <span class="thmb-capt">
+                    <strong class="pdt-name">30th Anniversary Box Set</strong>
+                    <span class="pdt-price">$199.00</span>
+                    <span class="badge product">13</span>
+                  </span><!-- /.thmb-capt -->
+                </a>
+              </div><!-- /.thmb-col -->
+              <ul class="pdt-list js-view-item dp-n" id="products-view-list">
+                <li class="pdt-lst-itm">
+                  <i class="icon icon-handler fl-l"></i>
+                  <span class="thmb-list alg-l">
+                    <span class="thmb-img" style="background-image:url(../fixtures/img/product-01.jpg)"></span>
+                  </span>
+                  <strong class="pdt-name fl-l">Tshirt Dark</strong>
+                  <span class="pdt-price fl-r">$19 999.00</span>
+                  <span class="badge fl-r">13</span>
+                </li>
+                <li class="pdt-lst-itm">
+                  <i class="icon icon-handler fl-l"></i>
+                  <span class="thmb-list alg-l">
+                    <span class="thmb-img" style="background-image:url(../fixtures/img/product-02.jpg)"></span>
+                  </span>
+                  <span class="bullet fl-l"></span>
+                  <strong class="pdt-name fl-l">Tshirt Dark</strong>
+                  <span class="pdt-price fl-r">$19 999.00</span>
+                  <span class="badge fl-r">13</span>
+                </li>
+                <li class="pdt-lst-itm">
+                  <i class="icon icon-handler fl-l"></i>
+                  <span class="thmb-list alg-l">
+                    <span class="thmb-img" style="background-image:url(../fixtures/img/product-03.jpg)"></span>
+                  </span>
+                  <span class="bullet fl-l"></span>
+                  <strong class="pdt-name fl-l">Tshirt Dark</strong>
+                  <span class="pdt-price fl-r">$19 999.00</span>
+                  <span class="badge fl-r">13</span>
+                </li>
+                <li class="pdt-lst-itm">
+                  <i class="icon icon-handler fl-l"></i>
+                  <span class="thmb-list alg-l">
+                    <span class="thmb-img" style="background-image:url(../fixtures/img/product-04.jpg)"></span>
+                  </span>
+                  <span class="bullet fl-l"></span>
+                  <strong class="pdt-name fl-l">Tshirt Dark</strong>
+                  <span class="pdt-price fl-r">$19 999.00</span>
+                  <span class="badge fl-r">13</span>
+                </li>
+                <li class="pdt-lst-itm">
+                  <i class="icon icon-handler fl-l"></i>
+                  <span class="thmb-list alg-l">
+                    <span class="thmb-img" style="background-image:url(../fixtures/img/product-06.jpg)"></span>
+                  </span>
+                  <strong class="pdt-name fl-l">30th Anniversary Box Set</strong>
+                  <span class="pdt-price fl-r">$19.00</span>
+                  <span class="badge fl-r">13</span>
+                </li>
+              </ul><!-- /.pdt-list -->
+            </div><!-- /.c-pdg-h c-pdg-bas-v -->
+          </div><!-- /.nano-content -->
+        </div><!-- /.nano -->
+      </div>
+    </section><!-- /.main-view -->
+  </div><!-- /. container -->
+  <script src="../../themes/backend/assets/js/subbly.development.js"></script>
+  <script>
+$(function()
+{
+  $('.nano').nanoScroller();
+
+  var $viewItems = $('.js-view-item')
+    , $triggers  = $('a.js-toggle-view')
+    , $window    = $( window )
+
+  $triggers.on('click', function( event )
+  {
+    $viewItems.addClass('dp-n')
+    $triggers.removeClass('active')
+
+    $( document.getElementById( 'products-view-' + event.currentTarget.getAttribute('data-view') ) ).removeClass('dp-n')
+
+    $( event.currentTarget ).addClass('active')
+
+    $window.trigger('resize')
+  })
+
+  // scroll2sicky.init( $('div.view-half-list') )
+})
+  </script>
+</body>
+</html>
