@@ -202,7 +202,7 @@ class SettingService extends Service
      */
     private function getCachedSettings()
     {
-        if (! Cache::has(self::CACHE_NAME))
+        if (!Cache::has(self::CACHE_NAME))
         {
             $this->initCachedSettings();
         }
