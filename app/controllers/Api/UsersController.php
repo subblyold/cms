@@ -43,13 +43,14 @@ class UsersController extends BaseController
      */
     public function search()
     {
-        $users = Subbly::api('subbly.user')->search(array(
-            'global' => Input::get('q'),
+        $users = Subbly::api('subbly.user')->searchBy(Input::get('q'), array(
             'offset' => $this->offset(),
             'limit'  => $this->limit(),
         ));
 
-        return $this->jsonCollectionResponse('users', $users);
+        return $this->jsonCollectionResponse('users', $users, array(
+            'query' => Input::get('q'),
+        ));
     }
 
     /**

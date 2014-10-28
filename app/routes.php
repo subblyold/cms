@@ -51,6 +51,7 @@ Route::group(array(
     Route::get('/welcome', 'WelcomeController@index');
 
     // UsersController
+    Route::get('/users/search', 'UsersController@search');
     Route::resource('/users', 'UsersController', array('except' => array('create', 'edit')));
 
     // ProductsController
