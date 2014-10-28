@@ -181,10 +181,14 @@ class BaseController extends Controller
       */
     protected function jsonErrorResponse($errorMessage, $statusCode = 400, array $httpHeaders = array())
     {
-        return $this->jsonResponse(null, array(
+        $statusTexts = \Symfony\Component\HttpFoundation\Response::$statusTexts;
+
+        return $this->jsonResponse(array(
+            'error' => (string) $errorMessage,
+        ), array(
             'status' => array(
                 'code'    => (int) $statusCode,
-                'message' => (string) $errorMessage,
+                'message' => $statusTexts[$statusCode],
             ),
         ), $httpHeaders);
     }
@@ -198,10 +202,12 @@ class BaseController extends Controller
       */
     protected function jsonNotFoundResponse($message = 'Not Found')
     {
-        return $this->jsonResponse(null, array(
+        return $this->jsonResponse(array(
+            'error' => $message,
+        ), array(
             'status' => array(
                 'code'    => 404,
-                'message' => $message,
+                'message' => 'Not Found',
             ),
         ));
     }
