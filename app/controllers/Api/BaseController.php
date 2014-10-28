@@ -2,7 +2,7 @@
 
 namespace Api;
 
-use App, Controller, Input, Request, Response, Sentry;
+use App, Config, Controller, Input, Request, Response, Sentry;
 
 use Subbly\Subbly;
 use Subbly\Model\Collection;
@@ -142,8 +142,17 @@ class BaseController extends Controller
             'headers'  => $headers,
             'response' => $data,
         );
+
+        // Debug data
+        if (Config::get('app.debug', false) && Input::get('debug', false) == true) {
+            $data['debug'] = array(
+                'query' => \DB::getQueryLog(),
+            );
+        }
+
         $response = Response::make(json_encode($data), $headers['status']['code']);
 
+        // HTTP headers
         foreach ($httpHeaders as $k=>$v) {
             $response->header($k, $v);
         }
@@ -155,19 +164,19 @@ class BaseController extends Controller
     /**
      *
      */
-    public function jsonCollectionResponse($key, Collection $collection)
+    public function jsonCollectionResponse($key, Collection $collection, array $extras = array())
     {
         $key = is_string($key)
             ? $key
             : 'entries'
         ;
 
-        return $this->jsonResponse(array(
+        return $this->jsonResponse(array_replace($extras, array(
             $key     => $collection,
             'offset' => $collection->offset(),
             'limit'  => $collection->limit(),
             'total'  => $collection->total(),
-        ));
+        )));
     }
 
      /**
