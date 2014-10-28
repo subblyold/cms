@@ -5,6 +5,7 @@ namespace Backend;
 use App, Controller, Input, Request, Response, Sentry;
 
 use Subbly\Subbly;
+use Illuminate\Database\Eloquent\Collection;
 
 class BaseController extends Controller
 {
@@ -138,6 +139,25 @@ class BaseController extends Controller
         $response->header('Content-Type', 'application/json');
 
         return $response;
+    }
+
+    /**
+     *
+     */
+    public function jsonCollectionResponse($key, Collection $collection)
+    {
+        $key = is_string($key)
+            ? $key
+            : 'entries'
+        ;
+
+        return $this->jsonResponse(array(
+            $key     => $collection,
+            'offset' => $this->offset(),
+            'limit'  => $this->limit(),
+            // 'total'  => $collection->total(),
+            'total'  => $collection->count(),
+        ));
     }
 
      /**

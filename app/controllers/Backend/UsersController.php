@@ -27,9 +27,12 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        return $this->jsonResponse(array(
-            'users' => Subbly::api('subbly.user')->all(),
+        $users = Subbly::api('subbly.user')->all(array(
+            'offset' => $this->offset(),
+            'limit'  => $this->limit(),
         ));
+
+        return $this->jsonCollectionResponse('users', $users);
     }
 
     /**
