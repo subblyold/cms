@@ -36,6 +36,23 @@ class UsersController extends BaseController
     }
 
     /**
+     * Search one or many User
+     *
+     * @route GET /backend/users/search/?q=
+     * @authentication required
+     */
+    public function search()
+    {
+        $users = Subbly::api('subbly.user')->search(array(
+            'global' => Input::get('q'),
+            'offset' => $this->offset(),
+            'limit'  => $this->limit(),
+        ));
+
+        return $this->jsonCollectionResponse('users', $users);
+    }
+
+    /**
      * Get User datas
      *
      * @route GET /backend/users/{{uid}}
