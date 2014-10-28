@@ -23,7 +23,7 @@ class BaseController extends Controller
      */
     protected function offset()
     {
-        return (int) Input::get('offset', 0);
+        return (int) Input::get('offset');
     }
 
     /**
@@ -33,7 +33,7 @@ class BaseController extends Controller
      */
     protected function limit()
     {
-        return (int) Input::get('limit', 1);
+        return (int) Input::get('limit');
     }
 
     /**

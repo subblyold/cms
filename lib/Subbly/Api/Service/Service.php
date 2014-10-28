@@ -2,8 +2,6 @@
 
 namespace Subbly\Api\Service;
 
-use Illuminate\Database\Eloquent\Builder;
-
 use Subbly\Api\Api;
 use Subbly\Model\ModelInterface;
 use Subbly\Subbly;

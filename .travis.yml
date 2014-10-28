@@ -11,3 +11,8 @@ before_script:
 
 script:
     - phpunit --colors --coverage-text
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
