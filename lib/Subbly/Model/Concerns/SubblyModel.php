@@ -17,6 +17,14 @@ trait SubblyModel
     /**
      *
      */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     *
+     */
     final public function save(array $options = array())
     {
         $this->protectMethod();

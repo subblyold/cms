@@ -83,31 +83,24 @@ class ProductService extends Service
      *         'sku'  => 'p123',
      *         'name' => 'awesome product',
      *     ));
+     *     // OR
+     *     $products = Subbly::api('subbly.product')->searchBy('p123');
      *
-     * @param array $options
+     * @param array|string  $searchQuery    Search params
+     * @param array         $options        Query options
+     * @param string        $statementsType Type of statement null|or|and (default is null)
      *
      * @return \Subbly\Model\Collection
      *
      * @api
      */
-    public function searchBy(array $options)
+    public function searchBy($searchQuery, array $options = array(), $statementsType = null)
     {
-        $options = array_replace(array(
-            'global' => null,
-            'sku'    => null,
-            'name'   => null,
-        ));
-
-        $query = Product::query();
-
-        if ($options['global']) {
-        }
-        if ($options['sku']) {
-            $query->where('sku', 'LIKE', "%{$options['sku']}%");
-        }
-        if ($options['name']) {
-            $query->where('name', 'LIKE', "%{$options['name']}%");
-        }
+        $query = $this->newSearchQuery($searchQuery, array(
+            'sku',
+            'name',
+            'description',
+        ), $statementsType, $options);
 
         return new Collection($query);
     }

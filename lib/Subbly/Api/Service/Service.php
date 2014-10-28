@@ -99,6 +99,56 @@ abstract class Service
     }
 
     /**
+     *
+     */
+    protected function newSearchQuery($searchQuery, array $searchableFields = null, $statementsType = null, array $options = array())
+    {
+        // Query without scopes
+        $instance = new $this->modelClass();
+        $q        = $instance->newQueryWithoutScopes();
+
+        if ($searchableFields === null || empty($searchableFields)) {
+            // TODO
+            $searchableFields = $instance->getVisible();
+        }
+
+        // If search query is a string
+        if (is_string($searchQuery))
+        {
+            $st = strtoupper($statementsType) === 'AND'
+                ? 'where'
+                : 'orWhere'
+            ;
+
+            foreach ($searchableFields as $field) {
+                $q->{$st}($field, 'LIKE', "%{$searchQuery}%");
+            }
+        }
+        // If search query is an array
+        else if (is_array($searchQuery))
+        {
+            $st = strtoupper($statementsType) === 'OR'
+                ? 'orWhere'
+                : 'where'
+            ;
+
+            foreach ($searchableFields as $field)
+            {
+                if (isset($searchQuery[$field])) {
+                    $q->{$st}($field, 'LIKE', "%{$searchQuery[$field]}%");
+                }
+            }
+        }
+        else {
+            // TODO throw an exception
+        }
+
+        return $this->newQuery($options)
+            ->addNestedWhereQuery($q->getQuery())
+        ;
+    }
+
+    /**
      * Fire an event
      *
      * @param string   $eventName Name of the event

@@ -102,33 +102,24 @@ class UserService extends Service
      *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
+     *     // OR
+     *     $users = Subbly::api('subbly.user')->searchBy('Jon');
      *
-     * @param array $options
+     * @param array|string  $searchQuery    Search params
+     * @param array         $options        Query options
+     * @param string        $statementsType Type of statement null|or|and (default is null)
      *
      * @return \Subbly\Model\Collection
      *
      * @api
      */
-    public function searchBy(array $options)
+    public function searchBy($searchQuery, array $options = array(), $statementsType = null)
     {
-        $options = array_replace(array(
-            'global'    => null,
-            'firstname' => null,
-            'lastname'  => null,
-            'email'     => null,
-        ));
-
-        $query = User::query();
-
-        if ($options['firstname']) {
-            $query->where('firstname', 'LIKE', "%{$options['firstname']}%");
-        }
-        if ($options['lastname']) {
-            $query->where('lastname', 'LIKE', "%{$options['lastname']}%");
-        }
-        if ($options['email']) {
-            $query->where('email', 'LIKE', "%{$options['email']}%");
-        }
+        $query = $this->newSearchQuery($searchQuery, array(
+            'first_name',
+            'last_name',
+            'email',
+        ), $statementsType, $options);
 
         return new Collection($query);
     }
