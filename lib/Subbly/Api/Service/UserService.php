@@ -4,10 +4,13 @@ namespace Subbly\Api\Service;
 
 use Sentry;
 
+use Subbly\Model\Collection;
 use Subbly\Model\User;
 
 class UserService extends Service
 {
+    protected $modelClass = 'Subbly\\Model\\User';
+
     /**
      * Return an empty model
      *
@@ -45,13 +48,17 @@ class UserService extends Service
     /**
      * Get all User
      *
-     * @return Illuminate\Database\Eloquent\Collection
+     * @param array $options
+     *
+     * @return \Subbly\Model\Collection
      *
      * @api
      */
-    public function all()
+    public function all(array $options = array())
     {
-        return User::all();
+        $query = $this->newQuery($options);
+
+        return new Collection($query);
     }
 
     /**
@@ -96,9 +103,9 @@ class UserService extends Service
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @param integer $id
+     * @param array $options
      *
-     * @return User
+     * @return \Subbly\Model\Collection
      *
      * @api
      */
@@ -123,7 +130,7 @@ class UserService extends Service
             $query->where('email', 'LIKE', "%{$options['email']}%");
         }
 
-        return $query->get();
+        return new Collection($query);
     }
 
     /**

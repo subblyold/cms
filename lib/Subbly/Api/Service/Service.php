@@ -2,14 +2,23 @@
 
 namespace Subbly\Api\Service;
 
+use Illuminate\Database\Eloquent\Builder;
+
 use Subbly\Api\Api;
 use Subbly\Model\ModelInterface;
 use Subbly\Subbly;
 
 abstract class Service
 {
+    const LIMIT_DEFAULT = 50;
+    const LIMIT_MIN     = 5;
+    const LIMIT_MAX     = 100;
+
     /** @var Subbly\Api\Api $api **/
     private $api;
+
+    /** @var */
+    protected $modelClass;
 
     /**
      * The constructor.
@@ -54,6 +63,40 @@ abstract class Service
      * @api
      */
     protected function init() {}
+
+    /**
+     * Get new query instance
+     *
+     * @param array  $options
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function newQuery(array $options = array())
+    {
+        $options = array_replace(array(
+            'offset' => 0,
+            'limit'  => self::LIMIT_DEFAULT,
+        ), $options);
+
+        $query = call_user_func($this->modelClass . '::query');
+
+        if (is_integer($options['offset'])) {
+            $query->offset((int) $options['offset']);
+        }
+        if (is_integer($options['limit']))
+        {
+            if ($options['limit'] < self::LIMIT_MIN) {
+                $options['limit'] = self::LIMIT_MIN;
+            }
+            else if ($options['limit'] > self::LIMIT_MAX) {
+                $options['limit'] = self::LIMIT_MAX;
+            }
+
+            $query->limit((int) $options['limit']);
+        }
+
+        return $query;
+    }
 
     /**
      * Fire an event

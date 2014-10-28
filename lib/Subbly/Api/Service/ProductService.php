@@ -2,10 +2,13 @@
 
 namespace Subbly\Api\Service;
 
+use Subbly\Model\Collection;
 use Subbly\Model\Product;
 
 class ProductService extends Service
 {
+    protected $modelClass = 'Subbly\\Model\\Product';
+
     /**
      * Return an empty model
      *
@@ -21,13 +24,17 @@ class ProductService extends Service
     /**
      * Get all Product
      *
+     * @param array $options
+     *
      * @return Illuminate\Database\Eloquent\Collection
      *
      * @api
      */
-    public function all()
+    public function all(array $options = array())
     {
-        return Product::all();
+        $query = $this->newQuery($options);
+
+        return new Collection($query);
     }
 
     /**
@@ -77,9 +84,9 @@ class ProductService extends Service
      *         'name' => 'awesome product',
      *     ));
      *
-     * @param integer $id
+     * @param array $options
      *
-     * @return Product
+     * @return \Subbly\Model\Collection
      *
      * @api
      */
@@ -102,7 +109,7 @@ class ProductService extends Service
             $query->where('name', 'LIKE', "%{$options['name']}%");
         }
 
-        return $query->get();
+        return new Collection($query);
     }
 
     /**
