@@ -38,7 +38,7 @@ class UsersController extends BaseController
     /**
      * Get User datas
      *
-     * @route GET /backend/users/:uid
+     * @route GET /backend/users/{{uid}}
      * @authentication required
      */
     public function show($uid)

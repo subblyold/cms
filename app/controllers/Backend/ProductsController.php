@@ -40,7 +40,7 @@ class ProductsController extends BaseController
     /**
      * Get Product datas
      *
-     * @route GET /backend/products/:sku
+     * @route GET /backend/products/{{sku}}
      * @authentication required
      */
     public function show($sku)

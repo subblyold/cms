@@ -16,11 +16,21 @@ class BaseController extends Controller
     {
     }
 
+    /**
+     * Get the offset asked in the request
+     *
+     * @return integer
+     */
     protected function offset()
     {
         return (int) Input::get('offset', 0);
     }
 
+    /**
+     * Get the limit asked in the request
+     *
+     * @return integer
+     */
     protected function limit()
     {
         return (int) Input::get('limit', 1);
@@ -79,6 +89,7 @@ class BaseController extends Controller
      *
      * @param  string  $method
      * @param  array   $parameters
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function callAction($method, $parameters)
@@ -186,7 +197,7 @@ class BaseController extends Controller
       *
       * @return Response
       */
-    protected function jsonNotFoundResponse($message='Not Found')
+    protected function jsonNotFoundResponse($message = 'Not Found')
     {
         return $this->jsonResponse(null, array(
             'status' => array(
