@@ -137,6 +137,7 @@ module.exports = function(grunt)
                   // , 'src/lib/backbone/backbone.js'
                   // , 'src/lib/backbone/backbone-approuter.js'
                   // , 'src/lib/backbone/backbone.controller.js'
+                  // , 'src/lib/backbone/backbone.basicauth.js'
                   // , 'src/lib/handlebars/handlebars-v2.0.0.js'
                   // , 'src/lib/bootstrap/dropdown.js'
                   // , 'src/lib/bootstrap/button.js'
