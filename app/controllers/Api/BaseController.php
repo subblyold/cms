@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 use App, Controller, Input, Request, Response, Sentry;
 

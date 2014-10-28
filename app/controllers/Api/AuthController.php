@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 class AuthController extends BaseController
 {
@@ -17,7 +17,7 @@ class AuthController extends BaseController
     /**
      * Test user credentials
      *
-     * @route GET /backend/auth/test-credentials
+     * @route GET /api/auth/test-credentials
      * @authentication false
      */
     public function testCredentials()

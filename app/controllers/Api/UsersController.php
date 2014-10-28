@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 use Input;
 
@@ -22,7 +22,7 @@ class UsersController extends BaseController
     /**
      * Get User list
      *
-     * @route GET /backend/users
+     * @route GET /api/users
      * @authentication required
      */
     public function index()
@@ -38,7 +38,7 @@ class UsersController extends BaseController
     /**
      * Search one or many User
      *
-     * @route GET /backend/users/search/?q=
+     * @route GET /api/users/search/?q=
      * @authentication required
      */
     public function search()
@@ -55,7 +55,7 @@ class UsersController extends BaseController
     /**
      * Get User datas
      *
-     * @route GET /backend/users/{{uid}}
+     * @route GET /api/users/{{uid}}
      * @authentication required
      */
     public function show($uid)
@@ -71,7 +71,7 @@ class UsersController extends BaseController
     /**
      * Create a new User
      *
-     * @route POST /backend/users/
+     * @route POST /api/users/
      * @authentication required
      */
     public function store()
@@ -96,7 +96,7 @@ class UsersController extends BaseController
     /**
      * Update a User
      *
-     * @route POST /backend/users/
+     * @route POST /api/users/
      * @authentication required
      */
     public function update()

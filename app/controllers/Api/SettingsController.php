@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 use Subbly\Subbly;
 
@@ -20,7 +20,7 @@ class SettingsController extends BaseController
     /**
      * Get Setting list
      *
-     * @route GET /backend/settings
+     * @route GET /api/settings
      * @authentication required
      */
     public function index()

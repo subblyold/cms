@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 use Input;
 
@@ -22,7 +22,7 @@ class ProductsController extends BaseController
     /**
      * Get Product list
      *
-     * @route GET /backend/products
+     * @route GET /api/products
      * @authentication required
      */
     public function index()
@@ -40,7 +40,7 @@ class ProductsController extends BaseController
     /**
      * Get Product datas
      *
-     * @route GET /backend/products/{{sku}}
+     * @route GET /api/products/{{sku}}
      * @authentication required
      */
     public function show($sku)
@@ -57,7 +57,7 @@ class ProductsController extends BaseController
     /**
      * Create a new Product
      *
-     * @route POST /backend/products/
+     * @route POST /api/products/
      * @authentication required
      */
     public function store()
@@ -82,7 +82,7 @@ class ProductsController extends BaseController
     /**
      * Update a Product
      *
-     * @route POST /backend/products/
+     * @route POST /api/products/
      * @authentication required
      */
     public function update()

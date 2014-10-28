@@ -1,6 +1,6 @@
 <?php
 
-namespace Backend;
+namespace Api;
 
 class WelcomeController extends BaseController
 {
@@ -18,7 +18,7 @@ class WelcomeController extends BaseController
     /**
      * Return stats for the dashboard
      *
-     * @route GET /backend/welcome
+     * @route GET /api/welcome
      * @authentication required
      */
     public function index()

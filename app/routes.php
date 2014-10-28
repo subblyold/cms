@@ -41,7 +41,7 @@ Route::post('/test-option', 'TestOptionController@save');
  */
 Route::group(array(
     'prefix'    => Config::get( 'subbly.apiUri', 'api' ),
-    'namespace' => 'Backend',
+    'namespace' => 'Api',
 ), function() {
 
     // AuthController
