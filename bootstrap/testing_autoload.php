@@ -18,7 +18,6 @@ foreach(glob('vendor/*/*', GLOB_ONLYDIR) as $package)
     passthru("./artisan migrate --package={$packageName} --env={$testEnvironment} > /dev/null");
     print('.');
 }
-passthru("./artisan migrate --env={$testEnvironment} > /dev/null");
-print('.' . "\n");
+print("\n");
 
 require('autoload.php'); // run laravel's original bootstap file
