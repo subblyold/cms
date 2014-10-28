@@ -2,8 +2,6 @@
 
 namespace Subbly\Tests\Api\Service;
 
-use Event;
-
 use Subbly\Subbly;
 use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
@@ -36,6 +34,8 @@ class UserServiceTest extends TestCase
         $all = $this->getService()->all();
 
         $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $all);
+
+        // TODO test pagination
     }
 
     public function testFind()
@@ -58,6 +58,8 @@ class UserServiceTest extends TestCase
         ));
 
         $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $user);
+
+        // TODO test pagination
     }
 
     public function testCreate()
@@ -111,6 +113,11 @@ class UserServiceTest extends TestCase
         $this->assertInstanceOf('Subbly\\Model\\User', $user);
         $this->assertInstanceOf('Subbly\\Model\\User', $returnedUser);
         $this->assertEquals($user->id, $returnedUser->id);
+    }
+
+    public function testDelete()
+    {
+        // TODO
     }
 
     public function testName()

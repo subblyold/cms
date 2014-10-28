@@ -28,7 +28,14 @@ abstract class Service
 
         $this->api = $api;
 
+        /**
+         * Initialization
+         */
+        if ($this->fireEvent('initializing', array($this)) === false) return false;
+
         $this->init();
+
+        $this->fireEvent('initialized', array($this));
     }
 
     /**
@@ -51,10 +58,11 @@ abstract class Service
     /**
      * Fire an event
      *
-     * @param string  $eventName Name of the event
-     * @param array   $vars      Event vars
+     * @param string   $eventName Name of the event
+     * @param array    $vars      Event vars
+     * @param boolean  $halt
      *
-     * @return Event
+     * @return array|null
      *
      * @api
      */
@@ -69,7 +77,7 @@ abstract class Service
     /**
      * Get the Api class
      *
-     * @return Subbly\Api\Api
+     * @return \Subbly\Api\Api
      */
     final protected function api()
     {

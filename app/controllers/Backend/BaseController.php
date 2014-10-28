@@ -5,6 +5,7 @@ namespace Backend;
 use App, Controller, Input, Request, Response, Sentry;
 
 use Subbly\Subbly;
+use Illuminate\Database\Eloquent\Collection;
 
 class BaseController extends Controller
 {
@@ -15,11 +16,21 @@ class BaseController extends Controller
     {
     }
 
+    /**
+     * Get the offset asked in the request
+     *
+     * @return integer
+     */
     protected function offset()
     {
         return (int) Input::get('offset', 0);
     }
 
+    /**
+     * Get the limit asked in the request
+     *
+     * @return integer
+     */
     protected function limit()
     {
         return (int) Input::get('limit', 1);
@@ -78,6 +89,7 @@ class BaseController extends Controller
      *
      * @param  string  $method
      * @param  array   $parameters
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function callAction($method, $parameters)
@@ -140,6 +152,25 @@ class BaseController extends Controller
         return $response;
     }
 
+    /**
+     *
+     */
+    public function jsonCollectionResponse($key, Collection $collection)
+    {
+        $key = is_string($key)
+            ? $key
+            : 'entries'
+        ;
+
+        return $this->jsonResponse(array(
+            $key     => $collection,
+            'offset' => $this->offset(),
+            'limit'  => $this->limit(),
+            // 'total'  => $collection->total(),
+            'total'  => $collection->count(),
+        ));
+    }
+
      /**
       * Format a json error Response
       *
@@ -166,7 +197,7 @@ class BaseController extends Controller
       *
       * @return Response
       */
-    protected function jsonNotFoundResponse($message='Not Found')
+    protected function jsonNotFoundResponse($message = 'Not Found')
     {
         return $this->jsonResponse(null, array(
             'status' => array(
