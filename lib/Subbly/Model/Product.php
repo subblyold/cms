@@ -24,7 +24,7 @@ class Product extends Model  implements ModelInterface, SortableInterface
      *
      * @var array
      */
-    protected $visible = array('position', 'status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity', 'images', 'options', 'categories');
+    protected $visible = array('position', 'status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity', 'images', 'options', 'categories', 'created_at', 'updated_at');
 
     protected $fillable = array('status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity');
 
