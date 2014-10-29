@@ -54,25 +54,11 @@ class ProductService extends Service
     public function find($sku, array $options = array())
     {
         $options = array_replace(array(
-            'with_images'     => false,
-            'with_options'    => false,
-            'with_categories' => false,
+            'includes' => array('images', 'categories', 'options'),
         ), $options);
 
-        $query = Product::query();
+        $query = $this->newQuery();
         $query->where('sku', '=', $sku);
-
-        if ($options['with_images'] === true) {
-            $query->with('images');
-        }
-
-        if ($options['with_options'] === true) {
-            $query->with('options');
-        }
-
-        if ($options['with_categories'] === true) {
-            $query->with('categories');
-        }
 
         return $query->firstOrFail();
     }

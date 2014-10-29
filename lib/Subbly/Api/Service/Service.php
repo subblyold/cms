@@ -75,22 +75,39 @@ abstract class Service
     protected function newQuery(array $options = array())
     {
         $options = array_replace(array(
+            'includes' => array(),
         ), $options);
 
         $query = call_user_func($this->modelClass . '::query');
 
+        /**
+         * Includes
+         */
+        if (is_array($options['includes']))
         {
-            }
+            $includes = array_values($options['includes']);
+
+            foreach ($includes as $include)
+            {
+                if (in_array($include, $this->includableRelationships)) {
+                    $query->with($include);
+                }
             }
         }
 
         return $query;
     }
 
+    /**
+     * Get new collection query instance
+     *
+     * @param array  $options
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     protected function newCollectionQuery(array $options = array())
     {
         $options = array_replace(array(
-            'limit'  => self::LIMIT_DEFAULT,
             'limit'  => null,
             'offset' => null,
         ), $options);

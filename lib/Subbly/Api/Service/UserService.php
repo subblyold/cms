@@ -82,20 +82,11 @@ class UserService extends Service
     public function find($uid, array $options = array())
     {
         $options = array_replace(array(
-            'with_addresses' => false,
-            'with_orders'    => false,
+            'includes' => array('addresses', 'orders'),
         ), $options);
 
-        $query = User::query();
+        $query = $this->newQuery($options);
         $query->where('uid', '=', $uid);
-
-        if ($options['with_addresses'] === true) {
-            $query->with('addresses');
-        }
-
-        if ($options['with_orders'] === true) {
-            $query->with('orders');
-        }
 
         return $query->firstOrFail();
     }
