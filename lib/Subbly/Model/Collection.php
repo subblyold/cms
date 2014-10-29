@@ -32,7 +32,7 @@ class Collection extends BaseCollection
         $query = clone $this->query;
 
         foreach (array('orders', 'limit', 'offset') as $field) {
-            $this->{$field} = null;
+            $query->getQuery()->{$field} = null;
         }
 
         $this->total = $query->count();
