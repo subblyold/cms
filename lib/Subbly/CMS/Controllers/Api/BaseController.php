@@ -1,6 +1,6 @@
 <?php
 
-namespace Api;
+namespace Subbly\CMS\Controllers\Api;
 
 use App, Config, Controller, Input, Request, Response, Sentry;
 

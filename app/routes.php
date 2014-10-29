@@ -13,7 +13,7 @@ Route::get( Config::get( 'subbly.backendUri', 'backend' ), function()
  */
 Route::group(array(
     'prefix'    => Config::get( 'subbly.apiUri', 'api' ),
-    'namespace' => 'Api',
+    'namespace' => 'Subbly\\CMS\\Controllers\\Api',
 ), function() {
 
     // AuthController
