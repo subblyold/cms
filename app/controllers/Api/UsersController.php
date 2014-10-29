@@ -32,6 +32,7 @@ class UsersController extends BaseController
         $users = Subbly::api('subbly.user')->all(array(
             'offset'   => $offset,
             'limit'    => $limit,
+            'includes' => $this->includes(),
         ));
 
         return $this->jsonCollectionResponse('users', $users);
@@ -50,6 +51,7 @@ class UsersController extends BaseController
         $users = Subbly::api('subbly.user')->searchBy(Input::get('q'), array(
             'offset'   => $offset,
             'limit'    => $limit,
+            'includes' => $this->includes(),
         ));
 
         return $this->jsonCollectionResponse('users', $users, array(
@@ -67,8 +69,7 @@ class UsersController extends BaseController
     {
         return $this->jsonResponse(array(
             'user' => Subbly::api('subbly.user')->find($uid, array(
-                'with_addresses' => true,
-                'with_orders'    => true,
+                'includes' => $this->includes(),
             )),
         ));
     }

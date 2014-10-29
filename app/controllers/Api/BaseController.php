@@ -67,13 +67,17 @@ class BaseController extends Controller
     }
 
     /**
-     * Setup the layout used by the controller.
+     * Get the includes asked in the request
+     *
+     * @return array|null
      */
-    protected function setupLayout()
+    protected function includes()
     {
-        if (!is_null($this->layout)) {
-            $this->layout = View::make($this->layout);
+        if (Input::has('includes')) {
+            return (array) Input::get('includes');
         }
+
+        return null;
     }
 
     /**

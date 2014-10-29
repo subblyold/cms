@@ -32,6 +32,7 @@ class ProductsController extends BaseController
         $products = Subbly::api('subbly.product')->all(array(
             'offset'   => $offset,
             'limit'    => $limit,
+            'includes' => $this->includes(),
         ));
 
         return $this->jsonCollectionResponse('products', $products);
@@ -47,9 +48,7 @@ class ProductsController extends BaseController
     {
         return $this->jsonResponse(array(
             'product' => Subbly::api('subbly.product')->find($sku, array(
-                'with_images'     => true,
-                'with_options'    => true,
-                'with_categories' => true,
+                'includes' => $this->includes(),
             )),
         ));
     }
