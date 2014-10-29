@@ -184,7 +184,10 @@ class BaseController extends Controller
         foreach ($httpHeaders as $k=>$v) {
             $response->header($k, $v);
         }
-        $response->header('Content-Type', 'application/json');
+        $response
+            ->header('Content-Type', 'application/json')
+            ->setEtag(md5(json_encode($data)))
+        ;
 
         return $response;
     }
