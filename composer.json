@@ -33,9 +33,9 @@
       , "cartalyst/sentry":            "2.1.*"
       , "spatie/eloquent-sortable":    "0.*"
       , "league/oauth2-client":        "~0.3"
-      , "yohang/finite":               "1.0.3"
       , "barryvdh/laravel-debugbar":   "1.*"
       , "pimple/pimple":               "~3.0"
+      , "mustache/mustache":           "2.7.0"
     }
   , "require-dev": {
         "phpunit/phpunit":  "4.3.*"

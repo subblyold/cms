@@ -26,17 +26,6 @@ return array(
 
     /*
     |--------------------------------------------------------------------------
-    | Theme
-    |--------------------------------------------------------------------------
-    |
-    | Selected theme
-    |
-    */
-
-  , 'theme' => 'pocket'
-
-    /*
-    |--------------------------------------------------------------------------
     | Front-end URI list
     |--------------------------------------------------------------------------
     |
@@ -45,28 +34,19 @@ return array(
     */
 
   , 'frontendUri' => array(
-        '/'                                          => 'home'
-      , '/products/{id}/{slug}'                      => 'product'
-      , '/products/{page}/{category}/{subcategory}'  => 'catalog'
-      , '/products/{page}/{category}'                => 'catalog'
-      , '/products'                                  => 'catalog'
-      // , '/add-to-cart'                            => 'AddToCart'
-      // , '/best-seller-2014/:cat_1'                => 'best-seller'
-      // , '/best-seller-2014'                       => 'best-seller'
-      // , '/account'                                => 'Account'
-      // , '/account/auth'                           => 'AccountAuth'
-      // , '/account/create'                         => 'AccountCreate'
-      // , '/account/orders'                         => 'AccountOrders'
-      // , '/account/addresses'                      => 'AccountAddresses'
-      // , '/cart'                                   => 'Cart'
-      // , '/cart/sigin'                             => 'CartSignin'
-      // , '/cart/address'                           => 'CartAddress'
-      // , '/cart/shipping'                          => 'CartShipping'
-      // , '/cart/checkout'                          => 'CartCheckout'
-      // , '/cart/payment'                           => 'CartPayment'
-      // , '/cart/confirm'                           => 'CartConfirm'
-      // , '/cart/cancel'                            => 'CartCancel'
-      , '/about-marmouze'                         => 'marmouze'
+        '/'                                           => 'home'
+      , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
+      , '/products/{id}-{slug}'                       => 'product'
     )
+  
+    /*
+    |--------------------------------------------------------------------------
+    | Theme
+    |--------------------------------------------------------------------------
+    |
+    | Selected theme
+    |
+    */
 
+  , 'theme' => 'pocket'
 );
