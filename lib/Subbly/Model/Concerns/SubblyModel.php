@@ -71,11 +71,33 @@ trait SubblyModel
     /**
      *
      */
+    final public static function setCallerForNext(Service $service)
+    {
+        self::$callerServiceForNext = $service;
+    }
+
+    /**
+     *
+     */
+    final public static function removeCaller()
+    {
+        self::$callerServiceForNext = null;
+    }
+
+    /**
+     *
+     */
     private function protectMethod()
     {
-        if (!App::environment('testing') && !($this->callerService instanceof Service)) {
+        if (!(
+            App::environment('testing')
+            || ($this->callerService instanceof Service)
+            || (self::$callerServiceForNext instanceof Service)
+        )) {
             throw new \Exception('You must use an Subbly\Api\Service\Service to save a Model');
         }
+
+        $this->callerService = null;
     }
 
     /**

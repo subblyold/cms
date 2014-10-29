@@ -44,7 +44,11 @@ class UserService extends Service
      */
     public function authenticate(array $credentials, $remember = false)
     {
-        return Sentry::authenticate($credentials, $remember);
+        User::setCallerForNext($this);
+        $user = Sentry::authenticate($credentials, $remember);
+        User::removeCaller();
+
+        return $user;
     }
 
     /**
