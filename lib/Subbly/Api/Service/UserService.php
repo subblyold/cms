@@ -11,6 +11,8 @@ class UserService extends Service
 {
     protected $modelClass = 'Subbly\\Model\\User';
 
+    protected $includableRelationships = array('addresses', 'orders');
+
     /**
      * Return an empty model
      *
@@ -56,7 +58,7 @@ class UserService extends Service
      */
     public function all(array $options = array())
     {
-        $query = $this->newQuery($options);
+        $query = $this->newCollectionQuery($options);
 
         return new Collection($query);
     }

@@ -18,6 +18,9 @@ abstract class Service
     /** @var */
     protected $modelClass;
 
+    /** @var array  The includable relationships */
+    protected $includableRelationships;
+
     /**
      * The constructor.
      *
@@ -89,8 +92,28 @@ abstract class Service
             else if ($options['limit'] > self::LIMIT_MAX) {
                 $options['limit'] = self::LIMIT_MAX;
             }
+        }
+
+        return $query;
+    }
+
+    protected function newCollectionQuery(array $options = array())
+    {
+        $options = array_replace(array(
+            'limit'  => self::LIMIT_DEFAULT,
+        ), $options);
+
+        $query = $this->newQuery($options);
 
             $query->limit((int) $options['limit']);
+        /**
+         * Offset & limit
+         */
+        if (is_integer($options['limit'])) {
+            $query->limit($options['limit']);
+        }
+        if (is_integer($options['offset']) && is_integer($options['limit'])) {
+            $query->offset($options['offset']);
         }
 
         return $query;
@@ -141,7 +164,7 @@ abstract class Service
             // TODO throw an exception
         }
 
-        return $this->newQuery($options)
+        return $this->newCollectionQuery($options)
             ->addNestedWhereQuery($q->getQuery())
         ;
     }

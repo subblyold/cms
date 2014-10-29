@@ -9,6 +9,8 @@ class ProductService extends Service
 {
     protected $modelClass = 'Subbly\\Model\\Product';
 
+    protected $includableRelationships = array('images', 'options', 'categories');
+
     /**
      * Return an empty model
      *
@@ -32,7 +34,7 @@ class ProductService extends Service
      */
     public function all(array $options = array())
     {
-        $query = $this->newQuery($options);
+        $query = $this->newCollectionQuery($options);
 
         return new Collection($query);
     }
