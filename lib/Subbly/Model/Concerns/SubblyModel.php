@@ -13,6 +13,7 @@ trait SubblyModel
     use Validable;
 
     private $callerService;
+    private static $callerServiceForNext;
 
     /**
      *

@@ -8,14 +8,10 @@ use Subbly\Subbly;
 
 abstract class Service
 {
-    const LIMIT_DEFAULT = 50;
-    const LIMIT_MIN     = 5;
-    const LIMIT_MAX     = 100;
-
     /** @var Subbly\Api\Api $api **/
     private $api;
 
-    /** @var */
+    /** @var string  The model class if the service is used for a model */
     protected $modelClass;
 
     /** @var array  The includable relationships */
@@ -128,7 +124,16 @@ abstract class Service
     }
 
     /**
+     * Get new search query instance
      *
+     * @param string|array  $searchQuery      The search query
+     * @param array         $searchableFields The searchable fields (default: all visible fields in the model)
+     * @param string|null   $statmentsType
+     * @param array         $options          The query options
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     *
+     * @throws \Subbly\Api\Service\Exception
      */
     protected function newSearchQuery($searchQuery, array $searchableFields = null, $statementsType = null, array $options = array())
     {
