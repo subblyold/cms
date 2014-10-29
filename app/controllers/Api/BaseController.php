@@ -4,6 +4,8 @@ namespace Api;
 
 use App, Config, Controller, Input, Request, Response, Sentry;
 
+use Carbon\Carbon;
+
 use Subbly\Subbly;
 use Subbly\Model\Collection;
 
@@ -14,6 +16,7 @@ class BaseController extends Controller
      */
     public function __construct()
     {
+        Carbon::setToStringFormat(\DateTime::ISO8601);
     }
 
     /**
