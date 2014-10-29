@@ -27,9 +27,11 @@ class UsersController extends BaseController
      */
     public function index()
     {
+        list($offset, $limit) = $this->api_offset_limit();
+
         $users = Subbly::api('subbly.user')->all(array(
-            'offset' => $this->offset(),
-            'limit'  => $this->limit(),
+            'offset'   => $offset,
+            'limit'    => $limit,
         ));
 
         return $this->jsonCollectionResponse('users', $users);
@@ -43,9 +45,11 @@ class UsersController extends BaseController
      */
     public function search()
     {
+        list($offset, $limit) = $this->api_offset_limit();
+
         $users = Subbly::api('subbly.user')->searchBy(Input::get('q'), array(
-            'offset' => $this->offset(),
-            'limit'  => $this->limit(),
+            'offset'   => $offset,
+            'limit'    => $limit,
         ));
 
         return $this->jsonCollectionResponse('users', $users, array(

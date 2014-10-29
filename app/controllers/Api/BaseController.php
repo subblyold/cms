@@ -11,6 +11,10 @@ use Subbly\Model\Collection;
 
 class BaseController extends Controller
 {
+    const LIMIT_DEFAULT = 50;
+    const LIMIT_MIN     = 5;
+    const LIMIT_MAX     = 100;
+
     /**
      * The constructor.
      */
@@ -20,23 +24,46 @@ class BaseController extends Controller
     }
 
     /**
-     * Get the offset asked in the request
+     * Get the offset and limit to apply
      *
-     * @return integer
+     * @param array  $options The parameters (optional)
+     *
+     * @return array Return offset and limit
      */
-    protected function offset()
+    protected function api_offset_limit(array $options = null)
     {
-        return (int) Input::get('offset');
-    }
+        if ($options === null) {
+            $options = Input::all();
+        }
 
-    /**
-     * Get the limit asked in the request
-     *
-     * @return integer
-     */
-    protected function limit()
-    {
-        return (int) Input::get('limit');
+        $offset = null;
+
+        if (isset($options['offset']))
+        {
+            $offset = (int) $options['offset'];
+            $offset = $offset < 0 ? 0 : $offset;
+        }
+
+        $limit = isset($options['limit'])
+            ? (int) $options['limit']
+            : 0
+        ;
+        if ($limit < self::LIMIT_MIN) {
+            $limit = self::LIMIT_DEFAULT;
+        }
+        else if ($limit > self::LIMIT_MAX) {
+            $limit = self::LIMIT_MAX;
+        }
+
+        if ($offset === null && isset($options['page']))
+        {
+            $offset = ((int) $options['page'] - 1) * $limit;
+            $offset = $offset < 0 ? 0 : $offset;
+        }
+
+        $offset ?: 0;
+
+        return array($offset, $limit);
     }
 
     /**

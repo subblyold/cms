@@ -27,9 +27,11 @@ class ProductsController extends BaseController
      */
     public function index()
     {
+        list($offset, $limit) = $this->api_offset_limit();
+
         $products = Subbly::api('subbly.product')->all(array(
-            'offset' => $this->offset(),
-            'limit'  => $this->limit(),
+            'offset'   => $offset,
+            'limit'    => $limit,
         ));
 
         return $this->jsonCollectionResponse('products', $products);
