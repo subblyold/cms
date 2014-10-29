@@ -12,7 +12,7 @@ use Subbly\Model\Collection;
 class BaseController extends Controller
 {
     const LIMIT_DEFAULT = 50;
-    const LIMIT_MIN     = 5;
+    const LIMIT_MIN     = 1;
     const LIMIT_MAX     = 100;
 
     /**
@@ -124,8 +124,10 @@ class BaseController extends Controller
      */
     public function callAction($method, $parameters)
     {
+        $response = $parentResponse = null;
+
         try {
-            $response = parent::callAction($method, $parameters);
+            $response = $parentResponse = parent::callAction($method, $parameters);
         }
         catch (\Exception $e) {
             $allowExceptions = array(
@@ -144,7 +146,7 @@ class BaseController extends Controller
         }
 
         if (App::environment('local')) {
-            return parent::callAction($method, $parameters);
+            return $parentResponse ?: parent::callAction($method, $parameters);;
         }
 
         return $response;

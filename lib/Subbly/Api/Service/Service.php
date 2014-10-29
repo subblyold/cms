@@ -91,6 +91,8 @@ abstract class Service
     {
         $options = array_replace(array(
             'limit'  => self::LIMIT_DEFAULT,
+            'limit'  => null,
+            'offset' => null,
         ), $options);
 
         $query = $this->newQuery($options);
