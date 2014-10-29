@@ -175,9 +175,7 @@ class BaseController extends Controller
 
         // Debug data
         if (Config::get('app.debug', false) && Input::get('debug', false) == true) {
-            $data['debug'] = array(
-                'query' => \DB::getQueryLog(),
-            );
+            $data['debug'] = $this->debugDatas();
         }
 
         $response = Response::make(json_encode($data), $headers['status']['code']);
@@ -249,5 +247,20 @@ class BaseController extends Controller
                 'message' => 'Not Found',
             ),
         ));
+    }
+
+    /**
+     *
+     */
+    private function debugDatas()
+    {
+        return array(
+            'db_queries' => \DB::getQueryLog(),
+            'request' => array(
+                'path'    => \Request::path(),
+                'inputs'  => \Input::all(),
+                'headers' => \Request::header(),
+            )
+        );
     }
 }
