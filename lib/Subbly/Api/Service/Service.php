@@ -75,22 +75,12 @@ abstract class Service
     protected function newQuery(array $options = array())
     {
         $options = array_replace(array(
-            'offset' => 0,
-            'limit'  => self::LIMIT_DEFAULT,
         ), $options);
 
         $query = call_user_func($this->modelClass . '::query');
 
-        if (is_integer($options['offset'])) {
-            $query->offset((int) $options['offset']);
-        }
-        if (is_integer($options['limit']))
         {
-            if ($options['limit'] < self::LIMIT_MIN) {
-                $options['limit'] = self::LIMIT_MIN;
             }
-            else if ($options['limit'] > self::LIMIT_MAX) {
-                $options['limit'] = self::LIMIT_MAX;
             }
         }
 
@@ -105,7 +95,6 @@ abstract class Service
 
         $query = $this->newQuery($options);
 
-            $query->limit((int) $options['limit']);
         /**
          * Offset & limit
          */
