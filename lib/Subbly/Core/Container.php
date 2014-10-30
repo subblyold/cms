@@ -20,7 +20,9 @@ class Container extends Pimple\Container
          * Api
          */
         $this['api'] = function($c) {
-            $api = new Api($c, array(
+            $api = new Api($c);
+
+            $api->registerServices(array(
                 'Subbly\\Api\\Service\\CartService',
                 'Subbly\\Api\\Service\\OrderService',
                 'Subbly\\Api\\Service\\ProductService',

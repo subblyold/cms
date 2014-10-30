@@ -18,12 +18,10 @@ class Api
      *
      * @param Container  $container          The container
      */
-    public function __construct(Container $container, array $servicesToRegister)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->services  = new \ArrayObject();
-
-        $this->registerServices($servicesToRegister);
     }
 
     /**
@@ -51,7 +49,7 @@ class Api
      *
      * @param array  $servicesToRegister The list of the services must be registred
      */
-    private function registerServices(array $servicesToRegister)
+    public function registerServices(array $servicesToRegister)
     {
         foreach ($servicesToRegister as $className) {
             $this->registerService($className);
@@ -67,7 +65,7 @@ class Api
      * @throws \Subbly\Api\Exception Throw an exception if the class does not implement \Subbly\Api\Service\Service
      * @throws \Subbly\Api\Exception Throw an exception if service name is already register
      */
-    private function registerService($className)
+    public function registerService($className)
     {
         if (! class_exists($className)) {
             throw new Exception(sprintf(Exception::SERVICE_CLASS_NOT_EXISTS, $className));
