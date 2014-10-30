@@ -43,6 +43,9 @@ class Container extends Pimple\Container
         $this['event_dispatcher'] = function($c) {
             return new EventDispatcher();
         };
+
+        // Fire 'subbly.container:loaded' event
+        $this['event_dispatcher']->fire('subbly.container:loaded');
     }
 
     /**
