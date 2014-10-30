@@ -16,7 +16,9 @@ trait SubblyModel
     private static $callerServiceForNext;
 
     /**
+     * Get visible fields
      *
+     * @return array
      */
     public function getVisible()
     {
@@ -24,7 +26,10 @@ trait SubblyModel
     }
 
     /**
+     * Save the model to the database.
      *
+     * @param  array  $options
+     * @return bool
      */
     final public function save(array $options = array())
     {
@@ -36,7 +41,10 @@ trait SubblyModel
     }
 
     /**
+     * Update the model in the database.
      *
+     * @param  array  $attributes
+     * @return bool|int
      */
     final public function update(array $attributes = array())
     {
@@ -48,7 +56,10 @@ trait SubblyModel
     }
 
     /**
+     * Delete the model from the database.
      *
+     * @return bool|null
+     * @throws \Exception
      */
     final public function delete()
     {
@@ -86,7 +97,9 @@ trait SubblyModel
     }
 
     /**
+     * Protect the model methods
      *
+     * @throws \Exception
      */
     private function protectMethod()
     {
@@ -102,12 +115,13 @@ trait SubblyModel
     }
 
     /**
+     * Process the validation
      *
+     * @throws \Subbly\Model\Exception\UnvalidModelException
      */
     private function processValidation()
     {
-        if ($this->isValid() !== true)
-        {
+        if ($this->isValid() !== true) {
             throw new UnvalidModelException($this);
         }
     }

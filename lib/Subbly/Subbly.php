@@ -12,7 +12,7 @@ class Subbly
     static private $container;
 
     /**
-     * Protection
+     * Protection.
      */
     private function __construct() {}
     private function __clone () {}
@@ -22,7 +22,7 @@ class Subbly
      *
      * @param null|string  $serviceName The name of the service (optional)
      *
-     * @return Subbly\Api\Api|Subbly\Api\Service\Service
+     * @return \Subbly\Api\Api|\Subbly\Api\Service\Service
      *
      * @api
      */
@@ -37,9 +37,10 @@ class Subbly
         return $api;
     }
 
-
     /**
+     * Access to the Subbly events
      *
+     * @return \Subbly\Core\EventDispatcher
      */
     static public function events()
     {
