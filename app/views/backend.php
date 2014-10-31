@@ -5,14 +5,44 @@
   <meta charset="UTF-8">
 
   <title>Subbly Backend GUI</title>
-  <script src="<?= URL::to('/themes/backend/assets/lib/modernizr.js'); ?>"></script>
 
   <link rel="stylesheet" href="<?= URL::to('/themes/backend/assets/css/subbly.development.css'); ?>">
-  <style>
-  </style>
+
+  <script src="<?= URL::to('/themes/backend/assets/lib/modernizr.js'); ?>"></script>
+  <script src="<?= URL::to('/themes/backend/assets/lib/pace.min.js'); ?>"></script>
 
 </head>
 <body>
+  <div class="login -active -logged" id="login">
+    <div class="login-contenair">
+      <img class src="<?= URL::to('/themes/backend/assets/img/logo.svg'); ?>" width="100" alt="logo Subbly">
+      <form action="/void" class="login-box">
+        <p class="login-msg">
+          Say “Hello shop”
+        </p>
+        <div class="form-row">
+          <div class="form-field">
+            <input type="text" class="form-input" placeholder="Email">
+          </div><!-- /.form-field -->
+        </div><!-- /.form-row -->
+        <div class="form-row">
+          <div class="form-field">
+            <input type="password" class="form-input" placeholder="Password">
+          </div><!-- /.form-field -->
+        </div><!-- /.form-row -->
+        <p class="btn-login">
+          <button type="submit" class="btn">
+            Login in
+          </button>
+        </p>
+        <p>
+          <a href="javascript:;">
+            Forget password
+          </a>
+        </p>
+      </form><!-- /.login-box -->
+    </div><!-- /.login-contenair -->
+  </div><!-- /.login -->
   <div class="container">
     <section class="main-nav">
       <a href="javascript:;" class="main-logo js-trigger-go-home">
@@ -75,8 +105,12 @@
       </ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
     <section class="main-view">
-      <div class="view-full" style="background:#fff"> full view</div>
+      <div class="view-full"> full view</div>
     </section><!-- /.main-view -->
   </div><!-- /. container -->
+
+  <!-- Force 3d acceleration always and forever :) -->
+  <div style="-webkit-transform: translateZ(0)"></div>
+  <script src="<?= URL::to('/themes/backend/assets/js/subbly.development.js') ?>"></script>
 </body>
 </html>
