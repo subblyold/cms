@@ -89,4 +89,18 @@ class User extends Model implements ModelInterface//, UserInterface, RemindableI
     public function getLastnameAttribute() {
         return $this->attributes['last_name'];
     }
+
+    /**
+     * Get an attribute array of all arrayable attributes.
+     *
+     * @return array
+     */
+    protected function getArrayableAttributes()
+    {
+        $attributes              = $this->attributes;
+        $attributes['firstname'] = $attributes['first_name'];
+        $attributes['lastname']  = $attributes['last_name'];
+
+        return $this->getArrayableItems($attributes);
+    }
 }
