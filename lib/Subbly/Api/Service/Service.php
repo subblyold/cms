@@ -37,7 +37,7 @@ abstract class Service
         /**
          * Initialization
          */
-        if ($this->fireEvent('initializing', array($this)) === false) return false;
+        $this->fireEvent('initializing', array($this));
 
         $this->init();
 

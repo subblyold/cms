@@ -6,6 +6,10 @@ use Subbly\Model\Order;
 
 class OrderService extends Service
 {
+    protected $modelClass = 'Subbly\\Model\\Order';
+
+    protected $includableRelationships = array('shipping_address', 'billing_address', 'products');
+
     /**
      * Return an empty model
      *

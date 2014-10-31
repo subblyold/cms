@@ -27,13 +27,14 @@ class ProductsController extends BaseController
      */
     public function index()
     {
-        list($offset, $limit) = $this->api_offset_limit();
-
-        $products = Subbly::api('subbly.product')->all(array(
+        list($offset, $limit) = $this->apiOffsetLimit();
+        $options = $this->formatOptions(array(
             'offset'   => $offset,
             'limit'    => $limit,
             'includes' => $this->includes(),
         ));
+
+        $products = Subbly::api('subbly.product')->all($options);
 
         return $this->jsonCollectionResponse('products', $products);
     }
@@ -46,10 +47,12 @@ class ProductsController extends BaseController
      */
     public function show($sku)
     {
+        $options = $this->formatOptions(array(
+            'includes' => $this->includes(),
+        ));
+
         return $this->jsonResponse(array(
-            'product' => Subbly::api('subbly.product')->find($sku, array(
-                'includes' => $this->includes(),
-            )),
+            'product' => Subbly::api('subbly.product')->find($sku, $options),
         ));
     }
 

@@ -45,7 +45,8 @@ class ProductService extends Service
      * @example
      *     $product = Subbly::api('subbly.product')->find('sku');
      *
-     * @param string $sku
+     * @param string  $sku
+     * @param array   $options
      *
      * @return \Subbly\Model\Product
      *
@@ -57,7 +58,7 @@ class ProductService extends Service
             'includes' => array('images', 'categories', 'options'),
         ), $options);
 
-        $query = $this->newQuery();
+        $query = $this->newQuery($options);
         $query->where('sku', '=', $sku);
 
         return $query->firstOrFail();
@@ -147,9 +148,6 @@ class ProductService extends Service
      *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
-     *
-     * @param \Subbly\Model\Product|integer
-     * @param array|null
      *
      * @return \Subbly\Model\Product
      *

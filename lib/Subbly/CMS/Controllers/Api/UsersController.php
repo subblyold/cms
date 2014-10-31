@@ -27,13 +27,14 @@ class UsersController extends BaseController
      */
     public function index()
     {
-        list($offset, $limit) = $this->api_offset_limit();
-
-        $users = Subbly::api('subbly.user')->all(array(
+        list($offset, $limit) = $this->apiOffsetLimit();
+        $options = $this->formatOptions(array(
             'offset'   => $offset,
             'limit'    => $limit,
             'includes' => $this->includes(),
         ));
+
+        $users = Subbly::api('subbly.user')->all($options);
 
         return $this->jsonCollectionResponse('users', $users);
     }
@@ -46,13 +47,14 @@ class UsersController extends BaseController
      */
     public function search()
     {
-        list($offset, $limit) = $this->api_offset_limit();
-
-        $users = Subbly::api('subbly.user')->searchBy(Input::get('q'), array(
+        list($offset, $limit) = $this->apiOffsetLimit();
+        $options = $this->formatOptions(array(
             'offset'   => $offset,
             'limit'    => $limit,
             'includes' => $this->includes(),
         ));
+
+        $users = Subbly::api('subbly.user')->searchBy(Input::get('q'), $options);
 
         return $this->jsonCollectionResponse('users', $users, array(
             'query' => Input::get('q'),
@@ -67,10 +69,12 @@ class UsersController extends BaseController
      */
     public function show($uid)
     {
+        $options = $this->formatOptions(array(
+            'includes' => $this->includes(),
+        ));
+
         return $this->jsonResponse(array(
-            'user' => Subbly::api('subbly.user')->find($uid, array(
-                'includes' => $this->includes(),
-            )),
+            'user' => Subbly::api('subbly.user')->find($uid, $options),
         ));
     }
 
