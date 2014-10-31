@@ -65,6 +65,18 @@ class UserService extends Service
     }
 
     /**
+     * Returns the current user being used by Sentry, if any.
+     *
+     * @return \Cartalyst\Sentry\Users\UserInterface
+     *
+     * @api
+     */
+    public function currentUser()
+    {
+        return Sentry::getUser();
+    }
+
+    /**
      * Get all User
      *
      * @param array $options
