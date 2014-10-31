@@ -19,10 +19,13 @@ $iterator = Finder::create()
 // ;
 
 return new Sami($iterator, array(
-    'theme'                => 'default',
+    // 'theme'                => 'default',
     // 'versions'             => $versions,
     'title'                => 'Subbly API',
-    'build_dir'            => __DIR__.'/../../../build/%version%',
-    'cache_dir'            => __DIR__.'/../../../cache/%version%',
-    'default_opened_level' => 3,
+    'build_dir'            => __DIR__.'/../../../build/master',
+    'cache_dir'            => __DIR__.'/../../../cache/master',
+    // 'build_dir'            => __DIR__.'/../../../build/%version%',
+    // 'cache_dir'            => __DIR__.'/../../../cache/%version%',
+    'default_opened_level' => 2,
+    'include_parent_data'  => true,
 ));
