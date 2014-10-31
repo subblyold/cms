@@ -98,7 +98,8 @@ class UserService extends Service
      * @example
      *     $user = Subbly::api('subbly.user')->find(1);
      *
-     * @param integer $id
+     * @param string  $uid
+     * @param array   $options
      *
      * @return User
      *
@@ -199,9 +200,6 @@ class UserService extends Service
      *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
-     *
-     * @param User|string
-     * @param array|null
      *
      * @return User
      *
