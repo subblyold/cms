@@ -16,7 +16,7 @@
   <div class="login -active -logged" id="login">
     <div class="login-contenair">
       <img class src="<?= URL::to('/themes/backend/assets/img/logo.svg'); ?>" width="100" alt="logo Subbly">
-      <form action="/void" class="login-box">
+      <form class="login-box" method="post" accept-charset="utf-8" target="postFrame" action="<?= url('/void'); ?>">
         <p class="login-msg">
           Say “Hello shop”
         </p>
@@ -111,9 +111,11 @@
 
   <!-- Force 3d acceleration always and forever :) -->
   <div style="-webkit-transform: translateZ(0)"></div>
+  <!-- allow natural autocomplete on ajax form -->
+  <iframe class="dp-n" name="postFrame"></iframe>
   <script>
     // Subbly constants
-    var subblyConst = {
+    var subblyConfig = {
         baseUrl: '<?= URL::to('/'); ?>'
       , apiUrl:  '<?= URL::to('/api/v1'); ?>'
       , env:     '<?= $environment ?>'

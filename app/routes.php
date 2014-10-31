@@ -19,6 +19,9 @@ Route::group(array(
     // AuthController
     Route::get('/auth/test-credentials', 'AuthController@testCredentials');
 
+    // Current User
+    Route::get('/auth/me', 'AuthController@testCurrentUser');
+
     // WelcomeController
     Route::get('/welcome', 'WelcomeController@index');
 
@@ -28,6 +31,22 @@ Route::group(array(
 
     // ProductsController
     Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
+});
+
+// Route::any('/test', 'TestController@showWelcome');
+
+/*
+ * Return empty response.
+ * Allow natural autocomplete on ajax form
+ */
+
+Route::any('/void', function()
+{
+    $response = Response::make( array(), 204 );
+
+    $response->header('Content-Type', 'json');
+
+    return $response;
 });
 
 /*
