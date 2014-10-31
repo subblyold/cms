@@ -30,7 +30,7 @@ class BaseController extends Controller
      *
      * @return array Return offset and limit
      */
-    protected function api_offset_limit(array $options = null)
+    protected function apiOffsetLimit(array $options = null)
     {
         if ($options === null) {
             $options = Input::all();
@@ -78,6 +78,20 @@ class BaseController extends Controller
         }
 
         return null;
+    }
+
+    protected function formatOptions(array $options = array())
+    {
+        $keysToTrim = array('includes');
+
+        foreach ($options as $k=>$v)
+        {
+            if (in_array($k, $keysToTrim) && empty($v)) {
+                unset($options[$k]);
+            }
+        }
+
+        return $options;
     }
 
     /**
