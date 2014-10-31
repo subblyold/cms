@@ -52,6 +52,19 @@ class UserService extends Service
     }
 
     /**
+     * Check to see if the user is logged in and activated,
+     * and hasn't been banned or suspended.
+     *
+     * @return bool
+     *
+     * @api
+     */
+    public function check()
+    {
+        return Sentry::check();
+    }
+
+    /**
      * Get all User
      *
      * @param array $options
