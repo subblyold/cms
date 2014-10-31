@@ -88,6 +88,7 @@ class ProductService extends Service
             'sku',
             'name',
             'description',
+            'price',
         ), $statementsType, $options);
 
         return new Collection($query);

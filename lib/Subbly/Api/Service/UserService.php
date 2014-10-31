@@ -52,6 +52,31 @@ class UserService extends Service
     }
 
     /**
+     * Check to see if the user is logged in and activated,
+     * and hasn't been banned or suspended.
+     *
+     * @return bool
+     *
+     * @api
+     */
+    public function check()
+    {
+        return Sentry::check();
+    }
+
+    /**
+     * Returns the current user being used by Sentry, if any.
+     *
+     * @return \Cartalyst\Sentry\Users\UserInterface
+     *
+     * @api
+     */
+    public function currentUser()
+    {
+        return Sentry::getUser();
+    }
+
+    /**
      * Get all User
      *
      * @param array $options
