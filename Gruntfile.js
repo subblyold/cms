@@ -138,7 +138,7 @@ module.exports = function(grunt)
                   // , 'src/lib/backbone/backbone-approuter.js'
                   // , 'src/lib/backbone/backbone.controller.js'
                   , 'src/lib/backbone/backbone.basicauth.js'
-                  // , 'src/lib/handlebars/handlebars-v2.0.0.js'
+                  , 'src/lib/handlebars/handlebars-v2.0.0.js'
                   // , 'src/lib/bootstrap/dropdown.js'
                   // , 'src/lib/bootstrap/button.js'
                   // , 'src/lib/bootstrap/modal.js'
@@ -146,19 +146,23 @@ module.exports = function(grunt)
                   // , 'src/lib/download/download.js'
 
                   // App
-                  // , 'src/js/helpers.js'
                   , 'src/js/closure.intro.js'
-                  , 'src/js/closure.utils.js'
+                  , 'src/js/helpers/helpers.js'
+                  , 'src/js/helpers/handlebars.js'
+                  , 'src/js/helpers/validation.js'
+                  , 'src/js/helpers/xhr.js'
+                  // , 'src/js/helpers/delete.js'
+                  // , 'src/js/helpers/uploader.js'
 
-                  // , 'src/js/backbone.js'
-                  // , 'src/js/validation.js'
-                  // , 'src/js/delete.js'
-                  // , 'src/js/uploader.js'
-                  // , 'src/js/xhr.js'
+                  , 'src/js/subbly.js'
+                  // , 'src/js/closure.utils.js'
 
-                  // , 'src/js/models/user.js'
+                  , 'src/js/model.js'
+                  , 'src/js/collection.js'
 
-                  // , 'src/js/collections/list.js'
+                  , 'src/js/models/*.js'
+
+                  , 'src/js/collections/*.js'
 
                   // , 'src/js/controllers/admin.js'
 

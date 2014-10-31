@@ -1,13 +1,13 @@
 
   // On DOMready
-  // $(function()
-  // {
-    // console.info('dom ready')
+  $(function()
+  {
+    console.info('dom ready')
     
-    // App = new Tapioca( tapiocaConfig )
+    subbly = new SubblyCore( subblyConfig )
 
-    // window.Tapioca = App
-  // })
+    window.Subbly = subbly
+  })
 
 })(window); // end closure
 

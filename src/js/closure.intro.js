@@ -31,13 +31,16 @@
     , $document     = $( document )
     , $window       = $( window )
     , $body         = $( document.body )
-    , App           = false
+    , subbly        = false
     , AppRouter     = false
-    , Models        = {}
-    , Collections   = {}
-    , Views         = {}
-    , Supervisors   = {}
-    , Controllers   = {}
-    , Components    = {}
-    // , Pubsub        = _.extend( {}, Backbone.Events ) // Pub/Sub channel
     , transitionEnd = whichTransitionEvent()
+
+  var Components = {
+      Model:      {}
+    , Collection: {}
+    , View:       {}
+    , Supervisor: {}
+    , Controller: {}
+    , Component:  {}
+  }
+
