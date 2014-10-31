@@ -28,6 +28,9 @@ Route::group(array(
 
     // ProductsController
     Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
+
+    // SettingsController
+    Route::get('/settings', 'SettingsController@index');
 });
 
 /*
