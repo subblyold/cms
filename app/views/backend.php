@@ -6,7 +6,7 @@
 
   <title>Subbly Backend GUI</title>
 
-  <link rel="stylesheet" href="<?= URL::to('/themes/backend/assets/css/subbly.development.css'); ?>">
+  <link rel="stylesheet" href="<?= URL::to('/themes/backend/assets/css/subbly.' . $environment . '.css'); ?>">
 
   <script src="<?= URL::to('/themes/backend/assets/lib/modernizr.js'); ?>"></script>
   <script src="<?= URL::to('/themes/backend/assets/lib/pace.min.js'); ?>"></script>
@@ -111,6 +111,15 @@
 
   <!-- Force 3d acceleration always and forever :) -->
   <div style="-webkit-transform: translateZ(0)"></div>
-  <script src="<?= URL::to('/themes/backend/assets/js/subbly.development.js') ?>"></script>
+  <script>
+    // Subbly constants
+    var subblyConst = {
+        baseUrl: '<?= URL::to('/'); ?>'
+      , apiUrl:  '<?= URL::to('/api/v1'); ?>'
+      , env:     '<?= $environment ?>'
+    }
+  </script>
+  <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
+
 </body>
 </html>

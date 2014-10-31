@@ -5,7 +5,7 @@
  */
 Route::get( Config::get( 'subbly.backendUri', 'backend' ), function()
 {
-  return View::make('backend');
+    return View::make('backend')->with( 'environment', App::environment() );
 });
 
 /**

@@ -24,11 +24,11 @@ module.exports = function(grunt)
                     strictMath: true
                   , sourceMap: true
                   , outputSourceFiles: true
-                  , sourceMapURL: '<%= pkg.name %>.development.css.map'
-                  , sourceMapFilename: 'themes/backend/assets/css/<%= pkg.name %>.development.css.map'
+                  , sourceMapURL: '<%= pkg.name %>.local.css.map'
+                  , sourceMapFilename: 'themes/backend/assets/css/<%= pkg.name %>.local.css.map'
                 }
               , files: {
-                  'themes/backend/assets/css/<%= pkg.name %>.development.css': 'src/less/subbly.less'
+                  'themes/backend/assets/css/<%= pkg.name %>.local.css': 'src/less/subbly.less'
                 }
             }
           , staging: 
@@ -62,11 +62,11 @@ module.exports = function(grunt)
                 }
               , files: 
                 {
-                    'themes/backend/assets/css/<%= pkg.name %>.development.css': [
+                    'themes/backend/assets/css/<%= pkg.name %>.local.css': [
                         'src/less/subbly.less'
                     ]
                 }
-              , src: 'themes/backend/assets/css/<%= pkg.name %>.development.css'
+              , src: 'themes/backend/assets/css/<%= pkg.name %>.local.css'
             }
         }
       , csslint: 
@@ -75,7 +75,7 @@ module.exports = function(grunt)
             {
               csslintrc: 'src/less/.csslintrc'
             }
-          , src: [ 'themes/backend/assets/css/<%= pkg.name %>.development.css' ]
+          , src: [ 'themes/backend/assets/css/<%= pkg.name %>.local.css' ]
         }
       , cssmin: 
         {
@@ -88,7 +88,7 @@ module.exports = function(grunt)
             {
                 files: 
                 {
-                  'themes/backend/assets/css/<%= pkg.name %>.production.css': 'themes/backend/assets/css/<%= pkg.name %>.development.css'
+                  'themes/backend/assets/css/<%= pkg.name %>.production.css': 'themes/backend/assets/css/<%= pkg.name %>.local.css'
                 }
             }
         }
@@ -133,11 +133,11 @@ module.exports = function(grunt)
                   // , 'src/lib/jquery/jquery.ui.widget.js'
                   , 'src/lib/jquery/jquery.nanoscroller.js'
                   // , 'src/lib/jquery/jquery.fileupload.js'
-                  // , 'src/lib/underscore/underscore.js'
-                  // , 'src/lib/backbone/backbone.js'
+                  , 'src/lib/underscore/underscore.js'
+                  , 'src/lib/backbone/backbone.js'
                   // , 'src/lib/backbone/backbone-approuter.js'
                   // , 'src/lib/backbone/backbone.controller.js'
-                  // , 'src/lib/backbone/backbone.basicauth.js'
+                  , 'src/lib/backbone/backbone.basicauth.js'
                   // , 'src/lib/handlebars/handlebars-v2.0.0.js'
                   // , 'src/lib/bootstrap/dropdown.js'
                   // , 'src/lib/bootstrap/button.js'
@@ -177,7 +177,7 @@ module.exports = function(grunt)
 
                   , 'src/js/scroll2sicky.js'
                 ]
-              , dest: 'themes/backend/assets/js/<%= pkg.name %>.development.js'
+              , dest: 'themes/backend/assets/js/<%= pkg.name %>.local.js'
             }
         }
       , uglify: 
@@ -192,7 +192,7 @@ module.exports = function(grunt)
               }
             , files: 
               {
-                  'themes/backend/assets/js/<%= pkg.name %>.staging.js': 'themes/backend/assets/js/<%= pkg.name %>.development.js'
+                  'themes/backend/assets/js/<%= pkg.name %>.staging.js': 'themes/backend/assets/js/<%= pkg.name %>.local.js'
               }            
           }
         , production:
@@ -204,7 +204,7 @@ module.exports = function(grunt)
               }
             , files: 
               {
-                  'themes/backend/assets/js/<%= pkg.name %>.production.js': 'themes/backend/assets/js/<%= pkg.name %>.development.js'
+                  'themes/backend/assets/js/<%= pkg.name %>.production.js': 'themes/backend/assets/js/<%= pkg.name %>.local.js'
               }            
           }
         }
