@@ -6,5 +6,4 @@ use Illuminate\Events\Dispatcher;
 
 class EventDispatcher extends Dispatcher
 {
-
 }

@@ -14,7 +14,7 @@ class ProductService extends Service
     /**
      * Return an empty model
      *
-     * @return Subbly\Model\Product
+     * @return \Subbly\Model\Product
      *
      * @api
      */
@@ -28,7 +28,7 @@ class ProductService extends Service
      *
      * @param array $options
      *
-     * @return Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Collection
      *
      * @api
      */
@@ -47,7 +47,7 @@ class ProductService extends Service
      *
      * @param string $sku
      *
-     * @return Product
+     * @return \Subbly\Model\Product
      *
      * @api
      */
@@ -105,9 +105,9 @@ class ProductService extends Service
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @param Product|array $product
+     * @param \Subbly\Model\Product|array $product
      *
-     * @return Product
+     * @return \Subbly\Model\Product
      *
      * @api
      */
@@ -147,10 +147,10 @@ class ProductService extends Service
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @param Product|integer
+     * @param \Subbly\Model\Product|integer
      * @param array|null
      *
-     * @return Product
+     * @return \Subbly\Model\Product
      *
      * @api
      */

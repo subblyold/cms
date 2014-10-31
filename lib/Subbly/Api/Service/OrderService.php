@@ -9,7 +9,7 @@ class OrderService extends Service
     /**
      * Return an empty model
      *
-     * @return Subbly\Model\Order
+     * @return \Subbly\Model\Order
      *
      * @api
      */

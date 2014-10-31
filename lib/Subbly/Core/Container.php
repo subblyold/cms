@@ -16,8 +16,13 @@ class Container extends Pimple\Container
     {
         $c = $this;
 
+        /**
+         * Api
+         */
         $this['api'] = function($c) {
-            $api = new Api($c, array(
+            $api = new Api($c);
+
+            $api->registerServices(array(
                 'Subbly\\Api\\Service\\CartService',
                 'Subbly\\Api\\Service\\OrderService',
                 'Subbly\\Api\\Service\\ProductService',
@@ -32,9 +37,15 @@ class Container extends Pimple\Container
             return $api;
         };
 
+        /**
+         * Event dispatcher
+         */
         $this['event_dispatcher'] = function($c) {
             return new EventDispatcher();
         };
+
+        // Fire 'subbly.container:loaded' event
+        $this['event_dispatcher']->fire('subbly.container:loaded');
     }
 
     /**

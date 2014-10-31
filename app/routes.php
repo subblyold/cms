@@ -12,8 +12,8 @@ Route::get( Config::get( 'subbly.backendUri', 'backend' ), function()
  * Backend proxy API routes
  */
 Route::group(array(
-    'prefix'    => Config::get( 'subbly.apiUri', 'api' ),
-    'namespace' => 'Api',
+    'prefix'    => Config::get('subbly.apiUri', 'api') . '/v1',
+    'namespace' => 'Subbly\\CMS\\Controllers\\Api',
 ), function() {
 
     // AuthController

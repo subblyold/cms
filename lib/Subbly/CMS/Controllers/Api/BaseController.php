@@ -1,6 +1,6 @@
 <?php
 
-namespace Api;
+namespace Subbly\CMS\Controllers\Api;
 
 use App, Config, Controller, Input, Request, Response, Sentry;
 
@@ -199,7 +199,13 @@ class BaseController extends Controller
     }
 
     /**
+     * Format a json collection Response
      *
+     * @param string                    $key        JSON key for the collection
+     * @param \Subbly\Model\Collection  $collection The entries collection
+     * @param array                     $extras     Extras values
+     *
+     * @return Response
      */
     public function jsonCollectionResponse($key, Collection $collection, array $extras = array())
     {
@@ -259,7 +265,9 @@ class BaseController extends Controller
     }
 
     /**
+     * Get the debug datas
      *
+     * @return array
      */
     private function debugDatas()
     {

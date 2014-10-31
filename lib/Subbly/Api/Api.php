@@ -9,31 +9,29 @@ class Api
 {
     /** @var Subbly\Core\Container $container */
     private $container;
+
     /** @var ArrayObject $services */
     private $services;
 
     /**
-     * The constructor
+     * The constructor.
      *
      * @param Container  $container          The container
-     * @param array      $servicesToRegister The list of the services must be registred
      */
-    public function __construct(Container $container, array $servicesToRegister)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->services  = new \ArrayObject();
-
-        $this->registerServices($servicesToRegister);
     }
 
     /**
-     * Get a service
+     * Get a service.
      *
      * @param string  $name The name of the service
      *
-     * @return Subbly\Api\Service\Service
+     * @return \Subbly\Api\Service\Service
      *
-     * @throws Subbly\Api\Exception Throw an exception if the service name does not exists
+     * @throws \Subbly\Api\Exception Throw an exception if the service name does not exists
      *
      * @api
      */
@@ -47,11 +45,11 @@ class Api
     }
 
     /**
-     * Process to the services registration
+     * Process to the services registration.
      *
      * @param array  $servicesToRegister The list of the services must be registred
      */
-    private function registerServices(array $servicesToRegister)
+    public function registerServices(array $servicesToRegister)
     {
         foreach ($servicesToRegister as $className) {
             $this->registerService($className);
@@ -59,15 +57,15 @@ class Api
     }
 
     /**
-     * Process the registration of one service
+     * Process the registration of one service.
      *
      * @param string  $className The class name of the service
      *
-     * @throws Subbly\Api\Exception Throw an exception if class name does not exists
-     * @throws Subbly\Api\Exception Throw an exception if the class does not implement Subbly\Api\Service\Service
-     * @throws Subbly\Api\Exception Throw an exception if service name is already register
+     * @throws \Subbly\Api\Exception Throw an exception if class name does not exists
+     * @throws \Subbly\Api\Exception Throw an exception if the class does not implement \Subbly\Api\Service\Service
+     * @throws \Subbly\Api\Exception Throw an exception if service name is already register
      */
-    private function registerService($className)
+    public function registerService($className)
     {
         if (! class_exists($className)) {
             throw new Exception(sprintf(Exception::SERVICE_CLASS_NOT_EXISTS, $className));
