@@ -21,6 +21,13 @@
   background: @btn-action-bg;
   border-color: @btn-action-border;
   color: @btn-action-color;
+
+  &:hover,
+  &:focus {
+    background: darken( @btn-action-bg, 10%);
+    border-color: darken( @btn-action-border, 10% );
+    color: @btn-action-color;
+  }
 }
 
 .btn-valid {
@@ -30,6 +37,8 @@
 
   &:hover,
   &:focus {
+    background: darken( @btn-valid-bg, 10%);
+    border-color: darken( @btn-valid-border, 10% );
     color: @btn-valid-color;
   }
 }

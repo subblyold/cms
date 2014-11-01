@@ -413,9 +413,8 @@ ol {
   border-top: 1px solid #323336;
   height: 0;
   float: left;
-  margin-bottom: 20px;
-  margin-left: 40px;
-  width: 15px;
+  margin: 15px 0 20px 40px;
+  width: 25px;
 }
 .user-nav {
   height: 40px;
@@ -1225,6 +1224,12 @@ input[type="search"] {
   border-color: #a9a9a9;
   color: #ffffff;
 }
+.btn-action:hover,
+.btn-action:focus {
+  background: #909090;
+  border-color: #909090;
+  color: #ffffff;
+}
 .btn-valid {
   background: #36bb4c;
   border-color: #36bb4c;
@@ -1232,6 +1237,8 @@ input[type="search"] {
 }
 .btn-valid:hover,
 .btn-valid:focus {
+  background: #2b933c;
+  border-color: #2b933c;
   color: #ffffff;
 }
 .btn-icon {
