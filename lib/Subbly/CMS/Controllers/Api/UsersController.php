@@ -64,7 +64,7 @@ class UsersController extends BaseController
     /**
      * Get User datas
      *
-     * @route GET /api/users/{{uid}}
+     * @route GET /api/users/{uid}
      * @authentication required
      */
     public function show($uid)
@@ -106,19 +106,16 @@ class UsersController extends BaseController
     /**
      * Update a User
      *
-     * @route POST /api/users/
+     * @route PUT|PATCH /api/users/{uid}
      * @authentication required
      */
-    public function update()
+    public function update($uid)
     {
-        if (!Input::has('user_uid')) {
-            return $this->jsonErrorResponse('"user_uid" is required.');
-        }
         if (!Input::has('user')) {
             return $this->jsonErrorResponse('"user" is required.');
         }
 
-        $user = Subbly::api('subbly.user')->update(Input::get('user_uid'), Input::get('user'));
+        $user = Subbly::api('subbly.user')->update($uid, Input::get('user'));
 
         return $this->jsonResponse(array(
             'user' => $user,

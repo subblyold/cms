@@ -42,7 +42,7 @@ class ProductsController extends BaseController
     /**
      * Get Product datas
      *
-     * @route GET /api/products/{{sku}}
+     * @route GET /api/products/{sku}
      * @authentication required
      */
     public function show($sku)
@@ -84,19 +84,16 @@ class ProductsController extends BaseController
     /**
      * Update a Product
      *
-     * @route POST /api/products/
+     * @route PUT|PATCH /api/products/{sku}
      * @authentication required
      */
-    public function update()
+    public function update($sku)
     {
-        if (!Input::has('product_sku')) {
-            return $this->jsonErrorResponse('"product_sku" is required.');
-        }
         if (!Input::has('product')) {
             return $this->jsonErrorResponse('"product" is required.');
         }
 
-        $product = Subbly::api('subbly.product')->update(Input::get('product_sku'), Input::get('product'));
+        $product = Subbly::api('subbly.product')->update($sku, Input::get('product'));
 
         return $this->jsonResponse(array(
             'product' => $product,
