@@ -1,6 +1,6 @@
 <?php
 
-// use Subbly;
+use Subbly\Subbly;
 
 class TestController extends BaseController {
 
@@ -20,8 +20,13 @@ class TestController extends BaseController {
 	public function showWelcome()
 	{
 		// Subbly\Subbly::init();
-		echo Config::get('subbly.backendUri', 'backend');
-
+		// echo Config::get('subbly.backendUri', 'backend');
+		$credentials   = array(
+		    'login'    => 'michael@scenedata.com',
+		    'password' => 'michael',
+		);
+		$authenticated = Subbly::api('subbly.user')->authenticate($credentials);
+var_dump($authenticated);
 		// return View::make('hello');
 	}
 

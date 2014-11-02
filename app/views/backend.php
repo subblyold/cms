@@ -4,7 +4,7 @@
 
   <meta charset="UTF-8">
 
-  <title>Subbly Backend GUI</title>
+  <title>Subbly - Backend</title>
 
   <link rel="stylesheet" href="<?= URL::to('/themes/backend/assets/css/subbly.' . $environment . '.css'); ?>">
 
@@ -16,22 +16,22 @@
   <div class="login -active -logged" id="login">
     <div class="login-contenair">
       <img class src="<?= URL::to('/themes/backend/assets/img/logo.svg'); ?>" width="100" alt="logo Subbly">
-      <form class="login-box" method="post" accept-charset="utf-8" target="postFrame" action="<?= url('/void'); ?>">
+      <form class="login-box" method="post" accept-charset="utf-8" target="postFrame" action="<?= url('/void'); ?>" id="login-form">
         <p class="login-msg">
           Say “Hello shop”
         </p>
         <div class="form-row">
           <div class="form-field">
-            <input type="text" class="form-input" placeholder="Email">
+            <input type="text" class="form-input" name="email" placeholder="Email" id="login-email">
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <div class="form-row">
           <div class="form-field">
-            <input type="password" class="form-input" placeholder="Password">
+            <input type="password" class="form-input" name="password" placeholder="Password">
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <p class="btn-login">
-          <button type="submit" class="btn">
+          <button type="submit" class="btn" id="login-submit" data-loading-text="loading">
             Login in
           </button>
         </p>
@@ -52,17 +52,17 @@
       <div class="user-nav">
         <div class="user-nav-container">
           <a href="javascript:;">
-            Le col de Claudine
+            My Shop
           </a>
           <span class="caret"></span>
           <ul class="user-nav-sub">
             <li>
-              <a href="javascript:;">
+              <a href="<?= URL::to('/' ); ?>" target="_blank">
                 Visit my store
               </a>
             </li>
             <li>
-              <a href="javascript:;">
+              <a href="javascript:;" class="js-trigger-logout">
                 logout
               </a>
             </li>
@@ -70,7 +70,7 @@
         </div><!-- /.user-nav-container -->
       </div><!-- /.user-nav -->
       <hr>
-      <ul class="bo-nav">
+      <ul class="bo-nav" id="bo-nav">
         <li>
           <a href="javascript:;" class="fst-nav js-trigger-go-home">
             Dashboard
@@ -104,8 +104,8 @@
         </li>
       </ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
-    <section class="main-view">
-      <div class="view-full"> full view</div>
+    <section class="main-view" id="main-view">
+      <div class="view-full">full view</div>
     </section><!-- /.main-view -->
   </div><!-- /. container -->
 
@@ -116,12 +116,43 @@
   <script>
     // Subbly constants
     var subblyConfig = {
-        baseUrl: '<?= URL::to('/'); ?>'
-      , apiUrl:  '<?= URL::to('/api/v1'); ?>'
+        baseUrl: '/<?= Config::get( 'subbly.backendUri', 'backend' ); ?>/'
+      , apiUrl:  '<?= URL::to('/api/v1'); ?>/'
       , env:     '<?= $environment ?>'
+      , debug:   <?= (bool) Config::get('app.debug'); ?>
+
     }
   </script>
   <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
+  <script>
+//   $(function()
+//   {
+//     var users = Subbly.api('Collection.Users')
+// console.log( users )
+//     users.fetch({
+//         // data: {limit: 2},
+//         success: function( collection, response )
+//         {
+// console.log( collection )
+// console.log( response )
+//         }
+//     }); 
 
+
+//     var user = Subbly.api('Model.User', {
+//       uid: '48cc9851f125ea646d7dd3e26988abae'
+//     })
+// console.log( user )
+
+//     user.fetch({
+//         data: {includes: ['addresses', 'orders']}
+//       , success: function( model, response )
+//         {
+// console.log( model.displayName() )
+// console.log( response )
+//         }
+//     });    
+//   })
+  </script>
 </body>
 </html>

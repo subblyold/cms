@@ -13189,6 +13189,306 @@ return jQuery;
 
 }));
 
+(function(){
+  'use strict';
+
+  _.extend(Backbone.Router.prototype, Backbone.Events,
+  {
+    namedParam: /(:\w+|\*)/g,
+
+// var namedParam    = /:\w+/g;
+// var splatParam    = /\*\w+/g;
+
+    /**
+     * give method name and it return the associated routes
+     *
+     * @param   string  method name
+     * @return  array
+     */
+    reverse: function(_method)
+    {
+      var matching = [];
+      for(var path in this.routes)
+      {
+        if(this.routes[path] == _method)
+        {
+          matching.push(path);
+        }
+      }
+      return matching;
+    },
+
+    /**
+     * @param   string  route pattern
+     * @param   array   arguments
+     * @return  string
+     */
+    createUri: function(_route, _hash)
+    {
+      var replace = _route.match( this.namedParam );
+
+      if(!_.isNull(replace))
+      {
+        for(var i = -1, l = _hash.length; ++i< l;)
+        {  
+          _route = _route.replace(replace[i], encodeURIComponent(_hash[i]));
+        }
+      }
+      
+      _route = _route.replace(this.namedParam, '').replace(/\/$/, '');
+
+      if(!_.isUndefined(Backbone.history.options))
+      {
+        _route = Backbone.history.options.root+_route;
+      }
+
+      return _route;
+    },
+
+    /**
+     * wrap reverse and createUri methods in a single call
+     * if multiple possibilities, try to find the good route
+     * by comparing the numbers of arguments with giving hash 
+     *
+     * @param   string  route pattern
+     * @param   array   arguments
+     * @return  string
+     */
+    setRoute: function(_method, _hash)
+    {
+      var routes   = this.reverse(_method),
+          _hash    = _hash || [],
+          nbArgs   = _hash.length,
+          nbRoutes = routes.length;
+
+      if(nbRoutes == 1)
+      {
+        return this.createUri(routes[0], _hash);
+      }
+      else
+      {
+        for(var i = -1; ++i< nbRoutes;)
+        {
+          var _l = routes[i].match(this.namedParam);
+
+          if(!_.isNull(_l) && _l.length == nbArgs)
+          {
+            // console.log('found %d args in route %s', _l.length, routes[i])
+            return this.createUri(routes[i], _hash);
+          }
+        }
+      }
+
+      return false;
+    },
+
+    /**
+     * return the arguments list for
+     * a route method
+     *
+     * @param   string  route pattern
+     * @return  array
+     */
+    getArgs: function(_route)
+    {
+      var route  = (_.isArray(_route)) ? _route[0] : _route,
+          args   = _route[0].match(this.namedParam),
+          nbArgs = args.length;
+
+      if(!_.isNull(args) && nbArgs > 0)
+      {
+        for(var i = -1; ++i < nbArgs;)
+        {
+          args[i] = args[i].replace(':', '');
+        }
+        return args;
+      }
+      return false;
+    }
+  });
+
+}).call(this);
+
+//     Backbone.Controller 0.3.0
+//     (c) Artyom Trityak
+//     Backbone.Controller may be freely distributed under the MIT license.
+//     For all details and documentation:
+//     https://github.com/artyomtrityak/backbone.controller
+
+(function(root, factory) {
+
+  // Set up Backbone.Controller appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd) {
+    define(['underscore', 'backbone', 'exports'], function(_, Backbone, exports) {
+      // Export global even in AMD case in case this script is loaded with
+      // others that may still expect a global Backbone.
+      root.Backbone.Controller = factory(root, exports, _, Backbone);
+      return root.Backbone.Controller;
+    });
+
+  // Next for Node.js or CommonJS.
+  } else if (typeof exports !== 'undefined') {
+    var _ = require('underscore'),
+        Backbone = require('backbone');
+    module.exports = factory(root, exports, _, Backbone);
+
+  // Finally, as a browser global.
+  } else {
+    root.Backbone.Controller = factory(root, {}, root._, root.Backbone);
+  }
+
+}(this, function(root, exports, _, Backbone) {
+
+  // Binds your routes to Backbone router.
+  // Allows define routes separated in each controller.
+  // For example:
+  //
+  //  Backbone.Controller.extend({
+  //    routes: {
+  //      '': 'index',
+  //      'cat/:query/p:page': 'showCat'
+  //    },
+  //
+  //    initialize: function() {
+  //      // do init stuff
+  //    },
+  //
+  //    index: function() {
+  //      // create index model and view
+  //    },
+  //
+  //    showCat: function(query, page) {
+  //      // create cat model and view
+  //      // if something - call navigate as proxy to Backbone.Router.navigate
+  //      this.navigate('dogs/', {trigger: true});
+  //    }
+  //  });
+  //
+  //  For router initialization router option should be given.
+  //  For example:
+  //
+  //  var Application = Backbone.Router.extend({
+  //    controllers: {},
+  //
+  //    initialize: function() {
+  //      this.controllers.home = new HomeController({router: this});
+  //      this.controllers.search = new SearchController({router: this});
+  //
+  //      Backbone.history.start();
+  //    }
+  //  });
+  //   
+  //  ========
+  //
+  //  Auto router
+  //
+  //  var CatsController = Backbone.Controller.extend({
+  //    routes: {
+  //      '': 'index',
+  //      'cat/:query/p:page': 'showCat'
+  //    },
+  //
+  //    onBeforeRequest: function(url, param1, param2 ...) {
+  //      // do before request actions
+  //    },
+  //
+  //    onAfterRequest: function(url, param1, param2 ...) {
+  //      // do after request actions
+  //    },
+  //
+  //    remove: function() {
+  //      // make cleanup
+  //    }
+  //    ...
+  //  });
+  //
+  //  var cats = new CatsController({router: true});
+  //
+  var bindRoutes = function(Router) {
+    for (var url in this.routes) {
+      // Using default Backbone.js route method.
+      // Same URLs from different controllers are not allowed.
+      // Last controller with same URL will be used.
+      Router.route(url, url, _.bind(onRoute, this, url));
+    }
+  },
+  onRoute = function() {
+    var self = this,
+        args = _.toArray(arguments),
+        url = args[0],
+        methodName = this.routes[url],
+        params = args.slice(1),
+        triggerRouteAndAfterRoute = function() {
+          // Call route method with routing parameters like :id, *path etc
+          self[methodName].apply(self, params);
+
+          // Call onAfterRoute after route
+          if ( _.isFunction(self.onAfterRoute)) {
+            self.onAfterRoute.apply(self, args);
+          }
+        },
+        beforeRouteResult, isPromiseObj;
+
+    // Call remove if router goes to another controller
+    if (cachedController && cachedController !== this &&
+      typeof cachedController.remove === 'function') {
+
+      cachedController.remove.apply(cachedController);
+    }
+    cachedController = this;
+
+    // Call onBeforeRoute before route
+    if ( _.isFunction(this.onBeforeRoute) ) {
+      beforeRouteResult = this.onBeforeRoute.apply(this, args);
+    }
+
+    if (beforeRouteResult === false || beforeRouteResult === null) return this;
+    isPromiseObj = beforeRouteResult && beforeRouteResult.done && _.isFunction(beforeRouteResult.done);
+
+    if (isPromiseObj) {
+      beforeRouteResult.done(triggerRouteAndAfterRoute);
+    } else {
+      triggerRouteAndAfterRoute();
+    }
+  },
+  cachedRouter,
+  cachedController;
+
+  Backbone.Controller = function(options){
+    this.options = options || {};
+    if (_.isFunction(this.initialize)){
+      this.initialize(this.options);
+    }
+    if (this.options.router === true) {
+      // Save/get to/from closure router instance for binding routes
+      cachedRouter = cachedRouter || new Backbone.Router();
+      this.options.router = cachedRouter;
+    }
+    if (this.options.router) {
+      cachedRouter = this.options.router;
+      bindRoutes.call(this, this.options.router);
+    }
+  };
+
+  // Method uses cached Backbone Router and allows navigate to another route
+  Backbone.Controller.prototype.navigate = function() {
+    var params = _.toArray(arguments).slice(0);
+    cachedRouter.navigate.apply(this, params);
+  };
+  
+  Backbone.Controller.extend = Backbone.Router.extend;
+  
+  // Supporting default Backbone events like on, off, trigger, listenTo etc
+  // Provides remove method which can be called on controller removal.
+  _.extend(Backbone.Controller.prototype, Backbone.Events, {
+    remove: function() {
+      this.stopListening();
+    }
+  });
+
+  return Backbone.Controller;
+
+}));
 /*!
  * backbone.basicauth.js v0.4.0
  *
@@ -16368,6 +16668,142 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
   return __module0__;
 }));
 
+/* ========================================================================
+ * Bootstrap: button.js v3.2.0
+ * http://getbootstrap.com/javascript/#buttons
+ * ========================================================================
+ * Copyright 2011-2014 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // BUTTON PUBLIC CLASS DEFINITION
+  // ==============================
+
+  var Button = function (element, options) {
+    this.$element  = $(element)
+    this.options   = $.extend({}, Button.DEFAULTS, options)
+    this.isLoading = false
+  }
+
+  Button.VERSION  = '3.2.0'
+
+  Button.DEFAULTS = {
+    loadingText: 'loading...'
+  }
+
+  Button.prototype.setState = function (state) {
+    var d    = 'disabled'
+    var $el  = this.$element
+    var val  = $el.is('input') ? 'val' : 'html'
+    var data = $el.data()
+
+    state = state + 'Text'
+
+    if (data.resetText == null) $el.data('resetText', $el[val]())
+
+    $el[val](data[state] == null ? this.options[state] : data[state])
+
+    // push to event loop to allow forms to submit
+    setTimeout($.proxy(function () {
+      if (state == 'loadingText') {
+        this.isLoading = true
+        $el.addClass(d).attr(d, d)
+      } else if (this.isLoading) {
+        this.isLoading = false
+        $el.removeClass(d).removeAttr(d)
+      }
+    }, this), 0)
+  }
+
+  Button.prototype.toggle = function () {
+    var changed = true
+    var $parent = this.$element.closest('[data-toggle="buttons"]')
+
+    if ($parent.length) {
+      var $input = this.$element.find('input')
+      if ($input.prop('type') == 'radio') {
+        if ($input.prop('checked') && this.$element.hasClass('active')) changed = false
+        else $parent.find('.active').removeClass('active')
+      }
+      if (changed) $input.prop('checked', !this.$element.hasClass('active')).trigger('change')
+    } else {
+      this.$element.attr('aria-pressed', !this.$element.hasClass('active'))
+    }
+
+    if (changed) this.$element.toggleClass('active')
+  }
+
+
+  // BUTTON PLUGIN DEFINITION
+  // ========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.button')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.button', (data = new Button(this, options)))
+
+      if (option == 'toggle') data.toggle()
+      else if (option) data.setState(option)
+    })
+  }
+
+  var old = $.fn.button
+
+  $.fn.button             = Plugin
+  $.fn.button.Constructor = Button
+
+
+  // BUTTON NO CONFLICT
+  // ==================
+
+  $.fn.button.noConflict = function () {
+    $.fn.button = old
+    return this
+  }
+
+
+  // BUTTON DATA-API
+  // ===============
+
+  $(document)
+    .on('click.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      var $btn = $(e.target)
+      if (!$btn.hasClass('btn')) $btn = $btn.closest('.btn')
+      Plugin.call($btn, 'toggle')
+      e.preventDefault()
+    })
+    .on('focus.bs.button.data-api blur.bs.button.data-api', '[data-toggle^="button"]', function (e) {
+      $(e.target).closest('.btn').toggleClass('focus', e.type == 'focus')
+    })
+
+}(jQuery);
+
+
+// Collect plugins to initialize them 
+// in App Router
+
+var SubblyPlugins = 
+{
+    list: []
+
+  , register: function( plugin )
+    {
+      SubblyPlugins.list.push( plugin )
+    }
+
+  , getList: function()
+    {
+      return SubblyPlugins.list
+    }
+}
+
 
 ;(function (window, undefined) 
 {
@@ -16387,12 +16823,8 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
         }
 
     for( t in transitions )
-    {
-      if( el.style[ t ] !== undefined ) 
-      {
-        return transitions[t];
-      }
-    }
+      if( el.style[ t ] !== undefined )
+        return transitions[ t ]
   }
 
   // Prepare our Variables
@@ -16861,73 +17293,6 @@ console.info( 'xhr url', url )
   return xhr
 }
 
-var SubblyCore = function( config )
-{
-  console.info('init Subbly object', config)
-
-  // enviroment config
-  this._config      = config
-
-  // current user model
-  this._user        = false
-
-  // current user credentials
-  // this._credentials = false
-  this._credentials = {
-      username: 'michael@scenedata.com',
-      password: 'michael'
-  }
-
-  // Pub/Sub channel
-  this.event  = _.extend( {}, Backbone.Events )
-}
-
-/*
- * Format full URL to API service
- *
- * @params  string  service
- * @return  string
- */
-
-SubblyCore.prototype.apiUrl = function( url )
-{
-  return this._config.apiUrl + '/' + url
-}
-
-/*
- * Call service protected by closure
- *
- * @params  string  service name
- * @return  mixed
- */
-
-SubblyCore.prototype.api = function( serviceName, args )
-{
-  var service = Helpers.getNested( Components, serviceName, false )
-    , args    = args || {}
-
-  if( !service )
-    throw new Error( 'Subbly API do not include ' + serviceName )
-
-  return new service( args )
-}
-
-/*
- * Return current user credentials object
- *
- * @return  object
- */
-
-SubblyCore.prototype.getCredentials = function()
-{
-  if( !this._credentials )
-    throw new Error( 'User credentials are not set' )
-
-  return this._credentials
-}
-
-
-
 // Subbly's Backbone base model
 
 var SubblyModel = Backbone.Model.extend(
@@ -17119,6 +17484,577 @@ Components.Collection.Users = Components.Collection.List.extend(
     }
 })
 
+Components.Controller.Customers = Backbone.Controller.extend(
+{
+    routes: {
+        'customers':      'list'
+      , 'customers/:uid': 'details'
+    }
+
+  , initialize: function() 
+    {
+console.log('customers Controller initialized')
+//       this.collection = subbly.api('Collection.Users')
+
+//       this.collection.fetch(
+//       {
+//         success: function( collection, response )
+//         {
+// console.log( collection )
+// console.log( response )
+//         }
+//       })
+    }
+
+  , fetch: function()
+    {
+      subbly.event.trigger( 'loader::show' )
+
+      this.collection.fetch(
+      {
+        success: function()
+        {
+          subbly.event.trigger( 'pagination::changed' )
+        } 
+      })
+    }
+
+  , list: function() 
+    {
+      console.info('customers list')
+    }
+
+  , details: function( uid ) 
+    {
+
+    }
+})
+
+SubblyPlugins.register( 'Customers' )
+
+Components.View.FormView = Backbone.View.extend(
+{
+    form:             false
+
+  , events: {
+        'click button[type="submit"]'                        : 'submit'
+      , 'click button[type="reset"]'                         : 'cancel'
+      , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
+      , 'change :input'                                      : 'removeWarning'
+    }
+
+    // usefull to override event's method
+    // ---------------------------------------
+    
+  , _void: function()
+    {
+      return
+    }
+
+    // events related methods
+    // -------------------------
+
+  , onEnter: function( event )
+    {
+      this.removeWarning( event )
+
+      subbly.event.trigger( 'form::changed' )
+
+      if (event.keyCode != 13) 
+          return
+
+      // prevent bubbling
+      event.stopPropagation()
+      event.preventDefault()
+
+      this.submit( event )
+    }
+
+  , cancel: function()
+    {
+      if( this.onCancel )
+      {
+        this.onCancel()
+      }
+
+      subbly.event.trigger( 'form::reset' )
+    }
+
+  , removeWarning: function( event )
+    {
+      event.target.classList.remove('warning')
+    }
+
+    // Form definition
+    // -------------------------
+
+  , setForm: function( options )
+    {
+      options = options || {}
+
+      if( _.isUndefined( options.id ) )
+        return
+
+      this.form = {
+          id:       options.id
+        , element:  document.getElementById( options.id )
+        , data:     options.data      || {}
+        , extra:    options.extra     || {}
+        , rules:    options.rules     || []
+        , skip:     ( _.isUndefined( options.skip ) ) ? true  : options.skip      // ignore blank fields 
+      }
+
+      this.form.$el = $( this.form.element )
+    }
+
+  , setRules: function( rules )
+    {
+      if( this.form )
+        this.form.rules = rules
+    }
+    
+  , setExtra: function( key, value, init )
+    {
+      Helpers.setNested( this.form.extra, key, value )
+    }
+
+  , validateForm: function()
+    {
+      if( !this.form )
+        return
+
+      this.form.$el.find(':input').removeClass('warning')
+
+      var formData = form2js( this.form.id , '.', this.form.skip )
+
+      this.form.data = Helpers.deepMerge( formData, this.form.extra )
+
+      this.errors = []
+  
+      for( var key in this.form.rules )
+      {
+        this._validateField( this.form.rules[ key ] )
+      }
+
+      if (this.errors.length > 0)
+      {
+        this.displayErrors()
+        return false
+      }
+
+      return true
+    }
+
+    // validation
+    // -------------
+
+  , displayErrors: function()
+    {
+      console.info('displayErrors', this.errors )
+
+      for( var i = -1, l = this.errors.length; ++i < l; )
+      {
+        var $input = $( this.errors[ i ].element )
+
+        $input.addClass('warning')
+      }
+    }
+
+  , addRules: function(fields)
+    {
+      if( this.form )
+      {
+        for (var i = -1, l = fields.length; ++i < l;) 
+        {
+          var field = fields[ i ]
+
+          this.form.rules.push({
+              name:    field.name
+            , rules:   field.rules
+            , value:   null
+          })
+        }
+      }
+
+      return this
+    }
+
+    // @private
+    // Looks at the fields value and evaluates it against the given rules
+  , _validateField: function( field )
+    {
+      var rules = field.rules.split('|')
+
+      field.value = Helpers.getNested( this.form.data, field.name )
+
+      // If the value is null and not required, we don't need to run through validation             
+      if( field.rules.indexOf('required') === -1 
+          && ( !field.value || field.value === '' || field.value === undefined ) )
+          return
+
+      // Run through the rules and execute the validation methods as needed
+      for( var i = -1, ruleLength = rules.length; ++i < ruleLength; )
+      {
+        var method = rules[i]
+          , param  = null
+          , failed = false
+          , parts
+
+        // If the rule has a parameter (i.e. matches[param]) split it out
+        if( parts = Validation.ruleRegex.exec( method ) )
+            method = parts[1]
+          , param  = parts[2]
+
+        // If the hook is defined, run it to find any validation errors                
+        if( typeof Validation._hooks[ method ] === 'function' )
+        {
+          if( !Validation._hooks[ method ].apply( this, [ field, param ] ) )
+          {
+            failed = true
+          }
+        }
+        else if( method.substring(0, 9) === 'callback_' )
+        {
+          // Custom method. Execute the handler if it was registered
+          method = method.substring( 9, method.length );
+          
+          if( typeof this.handlers[ method ] === 'function' )
+          {
+            if( this.handlers[ method ].apply( this, [ field.value ] ) === false )
+            {
+              failed = true
+            }
+          }
+        }
+        
+        // If the hook failed, add a message to the errors array                 
+        if( failed )
+        {
+          var args = null
+
+          // ( this.fields[param] ) ? this.fields[param].display : 
+          if( param )
+            args = param
+          
+          var _obj = {
+                  field:   field
+                , element: this.form.element.querySelector('[name="'+ field.name + '"]')
+              }
+          
+          this.errors.push( _obj )
+
+          // Break out so as to not spam with validation errors (i.e. required and valid_email)
+          break
+        }
+      }
+    }
+})
+
+
+Components.View.Login = Components.View.FormView.extend(
+{
+    el: '#login'
+
+  , initialize: function()
+    {
+      var rules = [
+          {
+              display: ''
+            , name:    'password'
+            , rules:   'required'
+          }
+        , {
+              display: ''
+            , name:    'email'
+            , rules:   'required|valid_email'
+          }
+      ]
+
+      this.$btn = $( document.getElementById('login-submit') )
+
+      // !! always set form after html render
+      this.setForm({
+          id:       'login-form'
+        , rules:    rules
+        , autoSave: false
+        , skip:     false
+      })
+
+      var login = this
+
+      subbly.event.on( 'view::app', function()
+      {
+        login.$el.reset()
+        login.btnReset()
+      })
+
+      return this
+    }
+
+  , display: function()
+    {
+      this.$el.addClass('active')
+
+      document.getElementById('login-email').focus()
+      
+      subbly.event.trigger( 'loader::hide' )
+    }
+
+  , btnReset: function()
+    {
+      this.$btn.button('reset')
+    }
+
+  , submit: function( event )
+    {
+      this.$btn.button('loading')
+
+      if( !_.isUndefined( event ) )
+          event.preventDefault()
+
+console.log('ok')
+return
+      if( this.validateForm() )
+      {
+        subbly.event.trigger( 'form::reset' )
+        
+        // var url   = API_URL + 'oauth' 
+        //   , jqxhr = $.post( url, this.form.data )
+        //   , login = this
+
+        // jqxhr.success( function( obj )
+        // {
+        //   App.session.storeToken( obj )
+        //   subbly.event.trigger( 'app::getToken' )
+        // })
+
+        // jqxhr.fail( function( response )
+        // {
+        //   App.feedback.add( 'error', JSON.parse( response.responseText ).error )
+        //   login.btnReset()
+        // })
+        return
+      }
+
+      this.btnReset()
+    }
+})
+
+
+var Router = Backbone.Router.extend(
+{
+    controllers:  {}
+  , viewspointer: {}
+
+  , routes: {
+        '':       'default'
+      , 'login':  'login'
+      , 'logout': 'logout'
+    }
+
+  , initialize: function() 
+    {
+      var controllers = SubblyPlugins.getList()
+
+      _.each( controllers, function( controller )
+      {
+        this.controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+      }, this )
+
+
+      this.viewspointer.login = subbly.api('View.Login')
+  
+      Backbone.history.start({
+          hashChange: true 
+        , pushState:  true 
+        , root:       subbly.getConfig( 'baseUrl' )
+      })
+
+      return this
+    }
+
+  , default: function()
+    {
+      console.info('default controller')
+    }      
+
+  , login: function()
+    {
+      this.viewspointer.login.display()
+      // if( App.mApp )
+      // {
+      //   Pubsub.trigger( 'hash::change', '' )
+      //   Pubsub.trigger( 'loader::hide' )
+      //   return
+      // }
+    }
+
+  , logout: function()
+    {
+      subbly.logout()
+    }
+})
+
+var SubblyCore = function( config )
+{
+  console.info('init Subbly object', config)
+
+  // enviroment config
+  this._config          = config
+
+  // current user model
+  this._user            = false
+  this._changesAreSaved = true
+
+  // current user credentials
+  // this._credentials = false
+  this._credentials = {
+      username: 'michael@scenedata.com',
+      password: 'michael'
+  }
+
+  // Pub/Sub channel
+  this.event  = _.extend( {}, Backbone.Events )
+}
+
+
+/*
+ * Initialize App router
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.init = function()
+{
+  this._router = new Router()
+
+  var scope = this
+
+  this.event.on( 'hash::change', function( href )
+  {
+console.info('hash changed: ' + href )
+    if( scope._changesAreSaved )
+    {
+      scope._router.navigate( href, { trigger: true } )
+    }
+    else
+    {
+      // display confirm modal
+      // App.changesModal = new Views.Modal(
+      // {
+      //     message:  __('label.form_leave')
+      //   , success:  __('label.leave')
+      //   , onSubmit: function()
+      //     {
+      //       Pubsub.trigger( 'form::reset' )
+      //       AppRouter.navigate( href, { trigger: true } )
+      //     }
+      // })
+    }
+  })
+  
+  this.event.trigger( 'hash::change', 'login' )
+return
+  var isLogged = new xhrCall({
+      url:       'auth/test-credentials'
+    , onSuccess: function( response )
+      {
+console.log( response )
+      }
+    , onError:   function( response )
+      {
+        var route = scope._router.setRoute( 'login' )
+
+console.log( route )
+        scope.event.trigger( 'hash::change', 'login' )
+      }
+  })
+}
+
+/*
+ * Get config value
+ *
+ * @return  mixed
+ */
+
+SubblyCore.prototype.getConfig = function( path, defaults )
+{
+  return Helpers.getNested( this._config, path, defaults || false ) 
+}
+
+/*
+ * Set config value
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.setConfig = function( path, value )
+{
+  return Helpers.setNested( this._config, path, value ) 
+}
+
+/*
+ * Set user credentials
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.setCredentials = function( credentials )
+{
+  this._credentials = credentials
+}
+
+/*
+ * Format full URL to API service
+ *
+ * @params  string  service
+ * @return  string
+ */
+
+SubblyCore.prototype.apiUrl = function( url )
+{
+  return this._config.apiUrl + url
+}
+
+/*
+ * Call service protected by closure
+ *
+ * @params  string  service name
+ * @return  mixed
+ */
+
+SubblyCore.prototype.api = function( serviceName, args )
+{
+  var service = Helpers.getNested( Components, serviceName, false )
+    , args    = args || {}
+
+  if( !service )
+    throw new Error( 'Subbly API do not include ' + serviceName )
+
+  // if it's a backbone element (model, collection, view)
+  // we create a new instance
+  if( _.isFunction( service ) )
+    return new service( args )
+
+  return service
+}
+
+/*
+ * Return current user credentials object
+ *
+ * @return  object
+ */
+
+SubblyCore.prototype.getCredentials = function()
+{
+  if( !this._credentials )
+    throw new Error( 'User credentials are not set' )
+
+  return this._credentials
+}
+
+
+
   // On DOMready
   $(function()
   {
@@ -17127,13 +18063,15 @@ Components.Collection.Users = Components.Collection.List.extend(
     subbly = new SubblyCore( subblyConfig )
 
     window.Subbly = subbly
+
+    subbly.init()
   })
 
 })(window); // end closure
 
 
 // Plugins holder
-var subblyPlugins = {}
+// var subblyPlugins = {}
 
 
 // In case we forget to take out console statements. 

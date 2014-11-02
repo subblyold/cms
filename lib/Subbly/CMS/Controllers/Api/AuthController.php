@@ -11,7 +11,7 @@ class AuthController extends BaseController
     {
         parent::__construct();
 
-        // $this->beforeFilter('@processAuthentication');
+        $this->beforeFilter('@processAuthentication');
     }
 
     /**

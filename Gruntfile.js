@@ -135,15 +135,18 @@ module.exports = function(grunt)
                   // , 'src/lib/jquery/jquery.fileupload.js'
                   , 'src/lib/underscore/underscore.js'
                   , 'src/lib/backbone/backbone.js'
-                  // , 'src/lib/backbone/backbone-approuter.js'
-                  // , 'src/lib/backbone/backbone.controller.js'
+                  , 'src/lib/backbone/backbone-approuter.js'
+                  , 'src/lib/backbone/backbone.controller.js'
                   , 'src/lib/backbone/backbone.basicauth.js'
                   , 'src/lib/handlebars/handlebars-v2.0.0.js'
                   // , 'src/lib/bootstrap/dropdown.js'
-                  // , 'src/lib/bootstrap/button.js'
+                  , 'src/lib/bootstrap/button.js'
                   // , 'src/lib/bootstrap/modal.js'
                   // , 'src/lib/momentjs/moment.js'
                   // , 'src/lib/download/download.js'
+
+                  // Plugins collector
+                  , 'src/js/plugins.js'
 
                   // App
                   , 'src/js/closure.intro.js'
@@ -153,20 +156,15 @@ module.exports = function(grunt)
                   , 'src/js/helpers/xhr.js'
                   // , 'src/js/helpers/delete.js'
                   // , 'src/js/helpers/uploader.js'
-
-                  , 'src/js/subbly.js'
                   // , 'src/js/closure.utils.js'
 
                   , 'src/js/model.js'
                   , 'src/js/collection.js'
 
                   , 'src/js/models/*.js'
-
                   , 'src/js/collections/*.js'
-
-                  // , 'src/js/controllers/admin.js'
-
-                  // , 'src/js/views/form.js'
+                  , 'src/js/controllers/*.js'
+                  , 'src/js/views/*.js'
                   // , 'src/js/views/list.js'
                   // , 'src/js/views/sortable.js'
                   // , 'src/js/views/login.js'
@@ -176,7 +174,8 @@ module.exports = function(grunt)
                   // , 'src/js/session.js'
                   // , 'src/js/feedback.js'
 
-                  // , 'src/js/router.js'
+                  , 'src/js/router.js'
+                  , 'src/js/subbly.js'
                   , 'src/js/closure.outro.js'
 
                   , 'src/js/scroll2sicky.js'

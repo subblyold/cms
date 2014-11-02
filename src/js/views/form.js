@@ -1,11 +1,5 @@
 
-/*
- * validation inspired by validate.js by Rick Harrison, http://rickharrison.me
- * validate.js is open sourced under the MIT license.
- * Portions of validate.js are inspired by CodeIgniter.
- */
-
-Views.FormView = Backbone.View.extend(
+Components.View.FormView = Backbone.View.extend(
 {
     form:             false
 
@@ -31,7 +25,7 @@ Views.FormView = Backbone.View.extend(
     {
       this.removeWarning( event )
 
-      Pubsub.trigger( 'form::changed' )
+      subbly.event.trigger( 'form::changed' )
 
       if (event.keyCode != 13) 
           return
@@ -50,7 +44,7 @@ Views.FormView = Backbone.View.extend(
         this.onCancel()
       }
 
-      Pubsub.trigger( 'form::reset' )
+      subbly.event.trigger( 'form::reset' )
     }
 
   , removeWarning: function( event )
@@ -74,8 +68,10 @@ Views.FormView = Backbone.View.extend(
         , data:     options.data      || {}
         , extra:    options.extra     || {}
         , rules:    options.rules     || []
-        , skip:     ( _.isUndefined( options.skip ))     ? true  : options.skip      // ignore blank fields 
+        , skip:     ( _.isUndefined( options.skip ) ) ? true  : options.skip      // ignore blank fields 
       }
+
+      this.form.$el = $( this.form.element )
     }
 
   , setRules: function( rules )
@@ -94,7 +90,7 @@ Views.FormView = Backbone.View.extend(
       if( !this.form )
         return
 
-      $( this.form.element ).find(':input').removeClass('warning')
+      this.form.$el.find(':input').removeClass('warning')
 
       var formData = form2js( this.form.id , '.', this.form.skip )
 

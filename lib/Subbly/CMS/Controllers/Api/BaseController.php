@@ -124,9 +124,9 @@ class BaseController extends Controller
                 return $this->jsonErrorResponse($e->getMessage());
             }
 
-            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array(
-                'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
-            ));
+            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, array());
+            //     'WWW-Authenticate' => 'Basic realm="Subbly authentication"',
+            // ));
         }
 
         // TODO Check if is admin

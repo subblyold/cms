@@ -7,13 +7,15 @@
     subbly = new SubblyCore( subblyConfig )
 
     window.Subbly = subbly
+
+    subbly.init()
   })
 
 })(window); // end closure
 
 
 // Plugins holder
-var subblyPlugins = {}
+// var subblyPlugins = {}
 
 
 // In case we forget to take out console statements. 

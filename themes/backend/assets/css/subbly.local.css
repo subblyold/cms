@@ -584,7 +584,6 @@ ol {
   right: 0;
   top: 0;
   z-index: 2000;
-  display: none;
 }
 .login.active {
   background: #f4d8e4;
@@ -631,7 +630,6 @@ ol {
 .login-box .form-input {
   border-radius: 2px;
   height: 48px;
-  line-height: 48px;
   padding: 0 18px;
 }
 .login-msg {
@@ -650,6 +648,10 @@ ol {
   height: 50px;
   line-height: 50px;
   padding: 0 66px;
+}
+.btn-login .btn:hover,
+.btn-login .btn:focus {
+  background: #3a7d58;
 }
 .nano {
   position: relative;
@@ -1362,6 +1364,7 @@ input[type="search"] {
 .ordr-row:hover,
 .ordr-row.active {
   background: #aacdf9;
+  border-top: 1px solid #aacdf9;
 }
 .ordr-row:hover *,
 .ordr-row.active * {

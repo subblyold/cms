@@ -3,14 +3,24 @@
 /*
  * Register Backend routes before public routes.
  */
-Route::get( Config::get( 'subbly.backendUri', 'backend' ), function()
-{
-    return View::make('backend')->with( 'environment', App::environment() );
+
+Route::group(array(
+    'prefix' => Config::get( 'subbly.backendUri', '/backend' )
+), function() {
+
+    $displayBackend = function()
+    {
+        return View::make('backend')->with( 'environment', App::environment() );
+    };
+
+    Route::get( '/' ,     $displayBackend );
+    Route::get( '{url}' , $displayBackend )->where('url', '.*');
 });
 
 /**
  * Backend proxy API routes
  */
+
 Route::group(array(
     'prefix'    => Config::get('subbly.apiUri', 'api') . '/v1',
     'namespace' => 'Subbly\\CMS\\Controllers\\Api',
