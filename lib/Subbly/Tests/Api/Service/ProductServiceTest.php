@@ -28,6 +28,10 @@ class ProductServiceTest extends \Subbly\Tests\Support\TestCase
         $this->assertInstanceOf('Subbly\\Model\\Product', $instance);
     }
 
+    /**
+     * TODO test creation with valid and unvalid price format and check model validation
+     */
+
     public function testName()
     {
         $this->assertEquals($this->getService()->name(), 'subbly.product');

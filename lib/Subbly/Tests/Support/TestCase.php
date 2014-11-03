@@ -4,6 +4,8 @@ namespace Subbly\Tests\Support;
 
 use Illuminate\Support\Facades\Artisan;
 
+use Subbly\Model\ModelInterface;
+
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
     private static $fixtures;
@@ -27,7 +29,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /**
      *
      */
-    public static function addFixture($name, $value)
+    public static function addFixture($name, ModelInterface $value)
     {
         self::fixtures()->offsetSet($name, $value);
     }
