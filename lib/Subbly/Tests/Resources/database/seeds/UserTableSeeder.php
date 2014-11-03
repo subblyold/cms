@@ -3,7 +3,6 @@
 namespace Subbly\Tests\Resources\database\seeds;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 use Subbly\Model\User;
 use Subbly\Tests\Support\TestCase;
@@ -12,10 +11,10 @@ class UserTableSeeder extends Seeder {
 
     public function run()
     {
-        $faker = \Faker\Factory::create();
+        $faker = TestCase::faker();
 
-        DB::table('users')->delete();
-
+// var_dump($faker->getProviders());
+// exit;
         $user = User::create(array(
             'email'     => 'jon.snow@test.subbly.com',
             'password'  => 'hodor123',
@@ -28,9 +27,9 @@ class UserTableSeeder extends Seeder {
         // generate some others users
         for ($i=1; $i <= 10; $i++)
         {
-            User::create(array(
+            $user = User::create(array(
                 'email'     => $faker->email,
-                'password'  => $faker->text(45),
+                'password'  => $faker->password(),
                 'firstname' => $faker->firstName,
                 'lastname'  => $faker->lastName,
                 'activated' => $i === 0 ? true : rand(0, 1),

@@ -11,8 +11,6 @@ class SettingTableSeeder extends Seeder {
 
     public function run()
     {
-        DB::table('settings')->delete();
-
         Subbly::api('subbly.setting')->all();
     }
 
