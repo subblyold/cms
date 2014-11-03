@@ -43,6 +43,10 @@ Route::group(array(
     Route::get('/products/search', 'ProductsController@search');
     Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
 
+    // OrdersController
+    Route::get('/orders/search', 'OrdersController@search');
+    Route::resource('/orders', 'OrdersController', array('except' => array('create', 'edit')));
+
     // SettingsController
     Route::get('/settings', 'SettingsController@index');
     Route::match(array('PATCH', 'PUT'), '/settings/{setting_key}', 'SettingsController@update');
