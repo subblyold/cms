@@ -40,6 +40,28 @@ class ProductsController extends BaseController
     }
 
     /**
+     * Search one or many Product
+     *
+     * @route GET /api/products/search/?q=
+     * @authentication required
+     */
+    public function search()
+    {
+        list($offset, $limit) = $this->apiOffsetLimit();
+        $options = $this->formatOptions(array(
+            'offset'   => $offset,
+            'limit'    => $limit,
+            'includes' => $this->includes(),
+        ));
+
+        $products = Subbly::api('subbly.product')->searchBy(Input::get('q'), $options);
+
+        return $this->jsonCollectionResponse('products', $products, array(
+            'query' => Input::get('q'),
+        ));
+    }
+
+    /**
      * Get Product datas
      *
      * @route GET /api/products/{sku}

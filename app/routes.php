@@ -40,6 +40,7 @@ Route::group(array(
     Route::resource('/users', 'UsersController', array('except' => array('create', 'edit')));
 
     // ProductsController
+    Route::get('/products/search', 'ProductsController@search');
     Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
 
     // SettingsController
