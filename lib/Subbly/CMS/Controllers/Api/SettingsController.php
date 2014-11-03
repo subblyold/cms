@@ -2,7 +2,7 @@
 
 namespace Subbly\CMS\Controllers\Api;
 
-use Input;
+use Illuminate\Support\Facades\Input;
 
 use Subbly\Subbly;
 
