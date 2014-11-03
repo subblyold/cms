@@ -135,8 +135,9 @@ module.exports = function(grunt)
                   // , 'src/lib/jquery/jquery.fileupload.js'
                   , 'src/lib/underscore/underscore.js'
                   , 'src/lib/backbone/backbone.js'
-                  , 'src/lib/backbone/backbone-approuter.js'
                   , 'src/lib/backbone/backbone.controller.js'
+                  , 'src/lib/backbone/backbone-approuter.js'
+                  , 'src/lib/backbone/backbone-appready.js'
                   , 'src/lib/backbone/backbone.basicauth.js'
                   , 'src/lib/handlebars/handlebars-v2.0.0.js'
                   // , 'src/lib/bootstrap/dropdown.js'
@@ -176,6 +177,7 @@ module.exports = function(grunt)
 
                   , 'src/js/router.js'
                   , 'src/js/subbly.js'
+                  , 'src/js/closure.utils.js'
                   , 'src/js/closure.outro.js'
 
                   , 'src/js/scroll2sicky.js'

@@ -1,3 +1,14 @@
+/*!
+ * backbone-approuter.js v0.1.0
+ *
+ * Extends Backbone.Router to get back a route pattern
+ * and construct an URL with arguments 
+ * docs available at: 
+ * https://github.com/michael-lefebvre/Backbone-AppRouter
+ *
+ * Copyright 2012, Michael Lefebvre (michael@scenedata.com)
+ * backbone-approuter.js may be freely distributed under the MIT license.
+ */
 (function(){
   'use strict';
 

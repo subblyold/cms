@@ -2,6 +2,7 @@
 Components.View.FormView = Backbone.View.extend(
 {
     form:             false
+  , $formInputs:      false
 
   , events: {
         'click button[type="submit"]'                        : 'submit'
@@ -85,14 +86,29 @@ Components.View.FormView = Backbone.View.extend(
       Helpers.setNested( this.form.extra, key, value )
     }
 
+  , getFormValue: function( key, defaults )
+    {
+      defaults = defaults || false
+
+      // if( _.isUndefined( key ) )
+      //   throw new Error( 'getFormValue need a key' )
+
+      if( !this.form.data[ key ] )
+        return defaults
+
+      return this.form.data[ key ]
+    }
+
   , validateForm: function()
     {
       if( !this.form )
         return
 
-      this.form.$el.find(':input').removeClass('warning')
+      this.$formInputs = this.form.$el.find(':input[name]')
 
-      var formData = form2js( this.form.id , '.', this.form.skip )
+      this.$formInputs.removeClass('warning')
+
+      var formData = this.$formInputs.serializeObject( this.form.skip )
 
       this.form.data = Helpers.deepMerge( formData, this.form.extra )
 

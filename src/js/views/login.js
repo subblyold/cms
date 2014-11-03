@@ -28,24 +28,41 @@ Components.View.Login = Components.View.FormView.extend(
         , skip:     false
       })
 
-      var login = this
-
-      subbly.event.on( 'view::app', function()
+      subbly.event.on( 'user::loggedIn', function()
       {
-        login.$el.reset()
-        login.btnReset()
-      })
+        this.hide()
+        this.form.$el.reset()
+        this.btnReset()
+
+      }, this)
 
       return this
     }
 
   , display: function()
     {
-      this.$el.addClass('active')
+      var login = this
 
-      document.getElementById('login-email').focus()
-      
-      subbly.event.trigger( 'loader::hide' )
+      window.setTimeout(function()
+      {
+        login.$el.show().addClass('active')
+
+        document.getElementById('login-email').focus()
+        
+        subbly.event.trigger( 'loader::hide' )
+      }, 500)
+    }
+
+  , hide: function()
+    {
+      var login = this
+
+      this.$el
+        .one( transitionEnd, function()
+        {
+          login.$el.hide()
+        })
+        .addClass('logged')
     }
 
   , btnReset: function()
@@ -60,27 +77,35 @@ Components.View.Login = Components.View.FormView.extend(
       if( !_.isUndefined( event ) )
           event.preventDefault()
 
-console.log('ok')
-return
       if( this.validateForm() )
       {
-        subbly.event.trigger( 'form::reset' )
+        var credentials  = 
+            {
+                username: this.form.data.email
+              , password: this.form.data.password 
+            }
+          , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
+          , login        = this
+          , authenticate = new xhrCall(
+            {
+                url:       'auth/test-credentials'
+              , headers: {
+                  Authorization: 'Basic ' + encode
+                }
+              , success: function( response )
+                {
+                  subbly.setCredentials( credentials )
+                }
+              , error:   function( jqXHR, textStatus, errorThrown )
+                {
+                  $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
+
+                  login.$formInputs.addClass('warning')
+                  document.getElementById('login-email').focus()
+                  login.btnReset()
+                }
+            })
         
-        // var url   = API_URL + 'oauth' 
-        //   , jqxhr = $.post( url, this.form.data )
-        //   , login = this
-
-        // jqxhr.success( function( obj )
-        // {
-        //   App.session.storeToken( obj )
-        //   subbly.event.trigger( 'app::getToken' )
-        // })
-
-        // jqxhr.fail( function( response )
-        // {
-        //   App.feedback.add( 'error', JSON.parse( response.responseText ).error )
-        //   login.btnReset()
-        // })
         return
       }
 
