@@ -43,23 +43,23 @@ class OrderService extends Service
      * Find a Order by $id
      *
      * @example
-     *     $order = Subbly::api('subbly.order')->find('sku');
+     *     $order = Subbly::api('subbly.order')->find($id);
      *
-     * @param string  $sku
+     * @param string  $id
      * @param array   $options
      *
      * @return \Subbly\Model\Order
      *
      * @api
      */
-    public function find($sku, array $options = array())
+    public function find($id, array $options = array())
     {
         $options = array_replace(array(
             'includes' => array('images', 'categories', 'options'),
         ), $options);
 
         $query = $this->newQuery($options);
-        $query->where('sku', '=', $sku);
+        $query->where('id', '=', $id);
 
         return $query->firstOrFail();
     }
@@ -69,11 +69,10 @@ class OrderService extends Service
      *
      * @example
      *     $orders = Subbly::api('subbly.order')->searchBy(array(
-     *         'sku'  => 'p123',
-     *         'name' => 'awesome order',
+     *         'status' => Order::STATUS_DRAFT,
      *     ));
      *     // OR
-     *     $orders = Subbly::api('subbly.order')->searchBy('p123');
+     *     $orders = Subbly::api('subbly.order')->searchBy('some words');
      *
      * @param array|string  $searchQuery    Search params
      * @param array         $options        Query options
@@ -86,10 +85,7 @@ class OrderService extends Service
     public function searchBy($searchQuery, array $options = array(), $statementsType = null)
     {
         $query = $this->newSearchQuery($searchQuery, array(
-            'sku',
-            'name',
-            'description',
-            'price',
+            'status',
         ), $statementsType, $options);
 
         return new Collection($query);
