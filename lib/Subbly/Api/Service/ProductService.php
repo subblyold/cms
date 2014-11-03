@@ -73,7 +73,7 @@ class ProductService extends Service
      *         'name' => 'awesome product',
      *     ));
      *     // OR
-     *     $products = Subbly::api('subbly.product')->searchBy('p123');
+     *     $products = Subbly::api('subbly.product')->searchBy('some words');
      *
      * @param array|string  $searchQuery    Search params
      * @param array         $options        Query options
@@ -86,6 +86,7 @@ class ProductService extends Service
     public function searchBy($searchQuery, array $options = array(), $statementsType = null)
     {
         $query = $this->newSearchQuery($searchQuery, array(
+            'status',
             'sku',
             'name',
             'description',

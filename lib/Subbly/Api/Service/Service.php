@@ -142,7 +142,6 @@ abstract class Service
         $q        = $instance->newQueryWithoutScopes();
 
         if ($searchableFields === null || empty($searchableFields)) {
-            // TODO
             $searchableFields = $instance->getVisible();
         }
 
@@ -174,7 +173,11 @@ abstract class Service
             }
         }
         else {
-            // TODO throw an exception
+            throw new \ErrorException(sprintf('%s::%s() expects parameter 1 to be string or array, %s given'),
+                __CLASS__,
+                __METHOD__,
+                gettype($searchQuery)
+            );
         }
 
         return $this->newCollectionQuery($options)

@@ -126,7 +126,7 @@ class UserService extends Service
      *         'lastname'  => 'Snow',
      *     ));
      *     // OR
-     *     $users = Subbly::api('subbly.user')->searchBy('Jon');
+     *     $users = Subbly::api('subbly.user')->searchBy('some words');
      *
      * @param array|string  $searchQuery    Search params
      * @param array         $options        Query options
