@@ -38,9 +38,18 @@ class OrderServiceTest extends \Subbly\Tests\Support\TestCase
         $this->assertEquals(10, $all->count());
         $this->assertEquals(10, $all->total());
 
-        // TODO test pagination
         $all = $this->getService()->all(array(
             'limit' => 1,
+        ));
+        $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $all);
+        $this->assertCount(1, $all);
+        $this->assertEquals(1, $all->count());
+        $this->assertEquals(10, $all->total());
+        $this->assertEquals(10, $all->total());
+
+        $all = $this->getService()->all(array(
+            'limit'  => 2,
+            'offset' => 9,
         ));
         $this->assertInstanceOf('Illuminate\\Database\\Eloquent\\Collection', $all);
         $this->assertCount(1, $all);
@@ -59,6 +68,21 @@ class OrderServiceTest extends \Subbly\Tests\Support\TestCase
         $this->assertEquals($fixture->user, $order->user);
         $this->assertEquals($fixture->total_price, $order->total_price);
         $this->assertEquals($fixture->status, $order->status);
+    }
+
+    public function testSearchBy()
+    {
+        // TODO
+    }
+
+    public function testCreate()
+    {
+        // TODO
+    }
+
+    public function testUpdate()
+    {
+        // TODO
     }
 
     public function testName()
