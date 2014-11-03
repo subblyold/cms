@@ -13189,126 +13189,6 @@ return jQuery;
 
 }));
 
-(function(){
-  'use strict';
-
-  _.extend(Backbone.Router.prototype, Backbone.Events,
-  {
-    namedParam: /(:\w+|\*)/g,
-
-// var namedParam    = /:\w+/g;
-// var splatParam    = /\*\w+/g;
-
-    /**
-     * give method name and it return the associated routes
-     *
-     * @param   string  method name
-     * @return  array
-     */
-    reverse: function(_method)
-    {
-      var matching = [];
-      for(var path in this.routes)
-      {
-        if(this.routes[path] == _method)
-        {
-          matching.push(path);
-        }
-      }
-      return matching;
-    },
-
-    /**
-     * @param   string  route pattern
-     * @param   array   arguments
-     * @return  string
-     */
-    createUri: function(_route, _hash)
-    {
-      var replace = _route.match( this.namedParam );
-
-      if(!_.isNull(replace))
-      {
-        for(var i = -1, l = _hash.length; ++i< l;)
-        {  
-          _route = _route.replace(replace[i], encodeURIComponent(_hash[i]));
-        }
-      }
-      
-      _route = _route.replace(this.namedParam, '').replace(/\/$/, '');
-
-      if(!_.isUndefined(Backbone.history.options))
-      {
-        _route = Backbone.history.options.root+_route;
-      }
-
-      return _route;
-    },
-
-    /**
-     * wrap reverse and createUri methods in a single call
-     * if multiple possibilities, try to find the good route
-     * by comparing the numbers of arguments with giving hash 
-     *
-     * @param   string  route pattern
-     * @param   array   arguments
-     * @return  string
-     */
-    setRoute: function(_method, _hash)
-    {
-      var routes   = this.reverse(_method),
-          _hash    = _hash || [],
-          nbArgs   = _hash.length,
-          nbRoutes = routes.length;
-
-      if(nbRoutes == 1)
-      {
-        return this.createUri(routes[0], _hash);
-      }
-      else
-      {
-        for(var i = -1; ++i< nbRoutes;)
-        {
-          var _l = routes[i].match(this.namedParam);
-
-          if(!_.isNull(_l) && _l.length == nbArgs)
-          {
-            // console.log('found %d args in route %s', _l.length, routes[i])
-            return this.createUri(routes[i], _hash);
-          }
-        }
-      }
-
-      return false;
-    },
-
-    /**
-     * return the arguments list for
-     * a route method
-     *
-     * @param   string  route pattern
-     * @return  array
-     */
-    getArgs: function(_route)
-    {
-      var route  = (_.isArray(_route)) ? _route[0] : _route,
-          args   = _route[0].match(this.namedParam),
-          nbArgs = args.length;
-
-      if(!_.isNull(args) && nbArgs > 0)
-      {
-        for(var i = -1; ++i < nbArgs;)
-        {
-          args[i] = args[i].replace(':', '');
-        }
-        return args;
-      }
-      return false;
-    }
-  });
-
-}).call(this);
-
 //     Backbone.Controller 0.3.0
 //     (c) Artyom Trityak
 //     Backbone.Controller may be freely distributed under the MIT license.
@@ -13489,6 +13369,189 @@ return jQuery;
   return Backbone.Controller;
 
 }));
+/*!
+ * backbone-approuter.js v0.1.0
+ *
+ * Extends Backbone.Router to get back a route pattern
+ * and construct an URL with arguments 
+ * docs available at: 
+ * https://github.com/michael-lefebvre/Backbone-AppRouter
+ *
+ * Copyright 2012, Michael Lefebvre (michael@scenedata.com)
+ * backbone-approuter.js may be freely distributed under the MIT license.
+ */
+(function(){
+  'use strict';
+
+  _.extend(Backbone.Router.prototype, Backbone.Events,
+  {
+    namedParam: /(:\w+|\*)/g,
+
+// var namedParam    = /:\w+/g;
+// var splatParam    = /\*\w+/g;
+
+    /**
+     * give method name and it return the associated routes
+     *
+     * @param   string  method name
+     * @return  array
+     */
+    reverse: function(_method)
+    {
+      var matching = [];
+      for(var path in this.routes)
+      {
+        if(this.routes[path] == _method)
+        {
+          matching.push(path);
+        }
+      }
+      return matching;
+    },
+
+    /**
+     * @param   string  route pattern
+     * @param   array   arguments
+     * @return  string
+     */
+    createUri: function(_route, _hash)
+    {
+      var replace = _route.match( this.namedParam );
+
+      if(!_.isNull(replace))
+      {
+        for(var i = -1, l = _hash.length; ++i< l;)
+        {  
+          _route = _route.replace(replace[i], encodeURIComponent(_hash[i]));
+        }
+      }
+      
+      _route = _route.replace(this.namedParam, '').replace(/\/$/, '');
+
+      if(!_.isUndefined(Backbone.history.options))
+      {
+        _route = Backbone.history.options.root+_route;
+      }
+
+      return _route;
+    },
+
+    /**
+     * wrap reverse and createUri methods in a single call
+     * if multiple possibilities, try to find the good route
+     * by comparing the numbers of arguments with giving hash 
+     *
+     * @param   string  route pattern
+     * @param   array   arguments
+     * @return  string
+     */
+    setRoute: function(_method, _hash)
+    {
+      var routes   = this.reverse(_method),
+          _hash    = _hash || [],
+          nbArgs   = _hash.length,
+          nbRoutes = routes.length;
+
+      if(nbRoutes == 1)
+      {
+        return this.createUri(routes[0], _hash);
+      }
+      else
+      {
+        for(var i = -1; ++i< nbRoutes;)
+        {
+          var _l = routes[i].match(this.namedParam);
+
+          if(!_.isNull(_l) && _l.length == nbArgs)
+          {
+            // console.log('found %d args in route %s', _l.length, routes[i])
+            return this.createUri(routes[i], _hash);
+          }
+        }
+      }
+
+      return false;
+    },
+
+    /**
+     * return the arguments list for
+     * a route method
+     *
+     * @param   string  route pattern
+     * @return  array
+     */
+    getArgs: function(_route)
+    {
+      var route  = (_.isArray(_route)) ? _route[0] : _route,
+          args   = _route[0].match(this.namedParam),
+          nbArgs = args.length;
+
+      if(!_.isNull(args) && nbArgs > 0)
+      {
+        for(var i = -1; ++i < nbArgs;)
+        {
+          args[i] = args[i].replace(':', '');
+        }
+        return args;
+      }
+      return false;
+    }
+  });
+
+}).call(this);
+
+/*!
+ * backbone.app-ready.js v0.1.0
+ *
+ * Trigger your App route when you decided it!
+ *
+ * Copyright 2014, Michael Lefebvre (michael@scenedata.com)
+ * backbone-appready.js may be freely distributed under the MIT license.
+ */
+(function(){
+  'use strict';
+
+  _.extend(Backbone.Router.prototype, Backbone.Events,
+  {
+    instance: false,
+    requestedCallback: null,
+    requestedArgs: [],
+
+    ready: function()
+    {
+      this.instance = true;
+      if(this.requestedCallback !== null)
+      {
+        this.requestedCallback.apply(this, this.requestedArgs);
+        this.requestedCallback = null;
+      }
+    },
+
+    route: function(route, name, callback) {
+      Backbone.history || (Backbone.history = new Backbone.History);
+      if (!_.isRegExp(route)) route = this._routeToRegExp(route);
+      if (!callback) callback = this[name];
+      Backbone.history.route(route, _.bind(function(fragment) {
+        var args = this._extractParameters(route, fragment);
+        if(this.instance)
+        {
+          callback && callback.apply(this, args);
+        }
+        else
+        {
+          this.requestedCallback = callback;
+          this.requestedArgs  = args;
+        }
+        this.trigger.apply(this, ['route:' + name].concat(args));
+        Backbone.history.trigger('route', this, name, args);
+      }, this));
+      return this;
+    }
+
+  });
+
+}).call(this);
+
 /*!
  * backbone.basicauth.js v0.4.0
  *
@@ -17267,9 +17330,9 @@ var xhrCall = function( options )
   if( !options.url )
     throw new Error('no URL provided')
 
+  options.url = subbly.apiUrl( options.url )
+
   var settings = $.extend( {}, defaults, options )
-  
-  var url = subbly.apiUrl( options.url )
 
   if( settings.queryString )
   {
@@ -17279,16 +17342,7 @@ var xhrCall = function( options )
     }
   }
 
-console.info( 'xhr url', url )
-
-  var xhr = $.ajax({
-      url:     url
-    , type:    settings.type
-    , data:    settings.data
-    , cache:   settings.cache
-    , success: settings.onSuccess
-    , error:   settings.onError
-  })
+  var xhr = $.ajax( settings )
 
   return xhr
 }
@@ -17494,16 +17548,6 @@ Components.Controller.Customers = Backbone.Controller.extend(
   , initialize: function() 
     {
 console.log('customers Controller initialized')
-//       this.collection = subbly.api('Collection.Users')
-
-//       this.collection.fetch(
-//       {
-//         success: function( collection, response )
-//         {
-// console.log( collection )
-// console.log( response )
-//         }
-//       })
     }
 
   , fetch: function()
@@ -17519,14 +17563,43 @@ console.log('customers Controller initialized')
       })
     }
 
+  , getCollection: function()
+    {
+      if( !this.collection )
+        this.collection = subbly.api('Collection.Users')
+    }
+
   , list: function() 
     {
-      console.info('customers list')
+console.info('call customer list')
+      this.getCollection()
+
+      this.collection.fetch(
+      {
+          success: function( collection, response )
+          {
+  console.log( collection )
+  console.log( response )
+          }
+      })
     }
 
   , details: function( uid ) 
     {
+      this.getCollection()
+      
+      var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
+  console.log( user )
 
+      user.fetch(
+      {
+          data: { includes: ['addresses', 'orders'] }
+        , success: function( model, response )
+          {
+  console.log( model.displayName() )
+  console.log( response )
+          }
+      })
     }
 })
 
@@ -17535,6 +17608,7 @@ SubblyPlugins.register( 'Customers' )
 Components.View.FormView = Backbone.View.extend(
 {
     form:             false
+  , $formInputs:      false
 
   , events: {
         'click button[type="submit"]'                        : 'submit'
@@ -17618,14 +17692,29 @@ Components.View.FormView = Backbone.View.extend(
       Helpers.setNested( this.form.extra, key, value )
     }
 
+  , getFormValue: function( key, defaults )
+    {
+      defaults = defaults || false
+
+      // if( _.isUndefined( key ) )
+      //   throw new Error( 'getFormValue need a key' )
+
+      if( !this.form.data[ key ] )
+        return defaults
+
+      return this.form.data[ key ]
+    }
+
   , validateForm: function()
     {
       if( !this.form )
         return
 
-      this.form.$el.find(':input').removeClass('warning')
+      this.$formInputs = this.form.$el.find(':input[name]')
 
-      var formData = form2js( this.form.id , '.', this.form.skip )
+      this.$formInputs.removeClass('warning')
+
+      var formData = this.$formInputs.serializeObject( this.form.skip )
 
       this.form.data = Helpers.deepMerge( formData, this.form.extra )
 
@@ -17780,24 +17869,41 @@ Components.View.Login = Components.View.FormView.extend(
         , skip:     false
       })
 
-      var login = this
-
-      subbly.event.on( 'view::app', function()
+      subbly.event.on( 'user::loggedIn', function()
       {
-        login.$el.reset()
-        login.btnReset()
-      })
+        this.hide()
+        this.form.$el.reset()
+        this.btnReset()
+
+      }, this)
 
       return this
     }
 
   , display: function()
     {
-      this.$el.addClass('active')
+      var login = this
 
-      document.getElementById('login-email').focus()
-      
-      subbly.event.trigger( 'loader::hide' )
+      window.setTimeout(function()
+      {
+        login.$el.show().addClass('active')
+
+        document.getElementById('login-email').focus()
+        
+        subbly.event.trigger( 'loader::hide' )
+      }, 500)
+    }
+
+  , hide: function()
+    {
+      var login = this
+
+      this.$el
+        .one( transitionEnd, function()
+        {
+          login.$el.hide()
+        })
+        .addClass('logged')
     }
 
   , btnReset: function()
@@ -17812,27 +17918,35 @@ Components.View.Login = Components.View.FormView.extend(
       if( !_.isUndefined( event ) )
           event.preventDefault()
 
-console.log('ok')
-return
       if( this.validateForm() )
       {
-        subbly.event.trigger( 'form::reset' )
+        var credentials  = 
+            {
+                username: this.form.data.email
+              , password: this.form.data.password 
+            }
+          , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
+          , login        = this
+          , authenticate = new xhrCall(
+            {
+                url:       'auth/test-credentials'
+              , headers: {
+                  Authorization: 'Basic ' + encode
+                }
+              , success: function( response )
+                {
+                  subbly.setCredentials( credentials )
+                }
+              , error:   function( jqXHR, textStatus, errorThrown )
+                {
+                  $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
+
+                  login.$formInputs.addClass('warning')
+                  document.getElementById('login-email').focus()
+                  login.btnReset()
+                }
+            })
         
-        // var url   = API_URL + 'oauth' 
-        //   , jqxhr = $.post( url, this.form.data )
-        //   , login = this
-
-        // jqxhr.success( function( obj )
-        // {
-        //   App.session.storeToken( obj )
-        //   subbly.event.trigger( 'app::getToken' )
-        // })
-
-        // jqxhr.fail( function( response )
-        // {
-        //   App.feedback.add( 'error', JSON.parse( response.responseText ).error )
-        //   login.btnReset()
-        // })
         return
       }
 
@@ -17903,15 +18017,12 @@ var SubblyCore = function( config )
   this._config          = config
 
   // current user model
-  this._user            = false
-  this._changesAreSaved = true
+  this._user              = false
+  this._changesAreSaved   = true
+  this._credentialsCookie = 'SubblyCredentials'
 
   // current user credentials
-  // this._credentials = false
-  this._credentials = {
-      username: 'michael@scenedata.com',
-      password: 'michael'
-  }
+  this._credentials = false
 
   // Pub/Sub channel
   this.event  = _.extend( {}, Backbone.Events )
@@ -17932,7 +18043,6 @@ SubblyCore.prototype.init = function()
 
   this.event.on( 'hash::change', function( href )
   {
-console.info('hash changed: ' + href )
     if( scope._changesAreSaved )
     {
       scope._router.navigate( href, { trigger: true } )
@@ -17952,23 +18062,10 @@ console.info('hash changed: ' + href )
       // })
     }
   })
-  
-  this.event.trigger( 'hash::change', 'login' )
-return
-  var isLogged = new xhrCall({
-      url:       'auth/test-credentials'
-    , onSuccess: function( response )
-      {
-console.log( response )
-      }
-    , onError:   function( response )
-      {
-        var route = scope._router.setRoute( 'login' )
 
-console.log( route )
-        scope.event.trigger( 'hash::change', 'login' )
-      }
-  })
+  this.isLogin()
+
+  this._router.ready()
 }
 
 /*
@@ -18002,7 +18099,74 @@ SubblyCore.prototype.setConfig = function( path, value )
 SubblyCore.prototype.setCredentials = function( credentials )
 {
   this._credentials = credentials
+
+  // not safe at all
+  // TODO: find a client side crypto lib
+  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; expires=0; path=/'
+
+  this.event.trigger('user::loggedIn')
+
+  this.event.trigger( 'hash::change', 'customers' )
 }
+
+/*
+ * Return current user credentials object
+ *
+ * @return  object
+ */
+
+SubblyCore.prototype.getCredentials = function()
+{
+  if( !this._credentials )
+    throw new Error( 'User credentials are not set' )
+
+  return this._credentials
+}
+
+/*
+ * Check if current user is logged in
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.isLogin = function()
+{
+  if( !document.cookie )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  // retrive credentials from cookies
+  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
+    , result      = regexp.exec( document.cookie )
+    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
+
+  if( _.isNull( credentials ) )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  this.setCredentials( credentials )
+}
+
+/*
+ * Unset user credentials
+ * Trigger logout event
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.logout = function()
+{
+  this._credentials = false
+
+  document.cookie = this._credentialsCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+
+  this.event.trigger('user::logout')
+}
+
 
 /*
  * Format full URL to API service
@@ -18039,21 +18203,101 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
-/*
- * Return current user credentials object
- *
- * @return  object
- */
-
-SubblyCore.prototype.getCredentials = function()
-{
-  if( !this._credentials )
-    throw new Error( 'User credentials are not set' )
-
-  return this._credentials
-}
 
 
+
+
+  // Remove empty properties / falsy values from Object with Underscore.js
+  // http://stackoverflow.com/a/14058408
+  _.mixin(
+  {
+      compactObject: function( o ) 
+      {
+        _.each( o, function( v, k )
+        {
+           if( !v )
+            delete o[ k ]
+        })
+        return o
+      }
+  })
+
+  // Length of Javascript Object
+  // http://stackoverflow.com/questions/5223/length-of-javascript-object-ie-associative-array
+  Object.size = function( obj )
+  {
+    var size = 0
+      , key
+
+    for ( key in obj )
+    {
+      if ( obj.hasOwnProperty( key ) ) 
+        ++size
+    }
+
+    return size
+  }
+
+  // Convert form data to JS object with jQuery
+  // http://stackoverflow.com/a/1186309/3908378
+  $.fn.serializeObject = function( skipEmpty )
+  {
+    var obj       = {}
+      , arr       = this.serializeArray()
+      , skipEmpty = skipEmpty || false
+
+    $.each( arr, function() 
+    {
+      var value = this.value.trim()
+        , empty = _.isEmpty( value )
+
+      if( skipEmpty && empty )
+        return
+
+      if( empty )
+        value = ''
+
+      if( obj[ this.name ] !== undefined )
+      {
+        if( !obj[ this.name ].push )
+          obj[ this.name ] = [ obj[ this.name ] ]
+
+        obj[ this.name ].push( value )
+      }
+      else
+      {
+        obj[ this.name ] = value
+      }
+    })
+
+    return obj
+  }
+
+  // form reset jQuery compliant
+  $.fn.reset = function()
+  {
+    this[0].reset()
+
+    return this
+  }
+
+  $.fn.addAttr = function( key )
+  {
+    this.attr( key, key )
+  }
+
+  $window.on('resize', function( event )
+  {
+    // update viewport
+    var viewport = {
+        height: $window.height()
+      , width:  $window.width()
+    }
+
+    // publish jQuery event + viewport 
+    subbly.event.trigger( 'window::resize', event, viewport )
+  })
+  
 
   // On DOMready
   $(function()

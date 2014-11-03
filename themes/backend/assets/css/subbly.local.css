@@ -1071,6 +1071,20 @@ textarea.form-input {
   min-height: 140px;
   resize: none;
 }
+.form-input.warning {
+  border-color: #dc7363 !important;
+  color: #dc7363;
+}
+.form-input.warning::-moz-placeholder {
+  color: #dc7363;
+  opacity: 1;
+}
+.form-input.warning:-ms-input-placeholder {
+  color: #dc7363;
+}
+.form-input.warning::-webkit-input-placeholder {
+  color: #dc7363;
+}
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1217,6 +1231,9 @@ input[type="search"] {
 }
 .btn .icon {
   margin-right: 12px;
+}
+.btn:focus {
+  outline: 0;
 }
 .btn-borderless {
   border-color: transparent;

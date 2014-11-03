@@ -17,7 +17,7 @@
     <div class="login-contenair">
       <img class src="<?= URL::to('/themes/backend/assets/img/logo.svg'); ?>" width="100" alt="logo Subbly">
       <form class="login-box" method="post" accept-charset="utf-8" target="postFrame" action="<?= url('/void'); ?>" id="login-form">
-        <p class="login-msg">
+        <p class="login-msg" id="login-msg">
           Say “Hello shop”
         </p>
         <div class="form-row">

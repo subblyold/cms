@@ -18,9 +18,9 @@ var xhrCall = function( options )
   if( !options.url )
     throw new Error('no URL provided')
 
+  options.url = subbly.apiUrl( options.url )
+
   var settings = $.extend( {}, defaults, options )
-  
-  var url = subbly.apiUrl( options.url )
 
   if( settings.queryString )
   {
@@ -30,16 +30,7 @@ var xhrCall = function( options )
     }
   }
 
-console.info( 'xhr url', url )
-
-  var xhr = $.ajax({
-      url:     url
-    , type:    settings.type
-    , data:    settings.data
-    , cache:   settings.cache
-    , success: settings.onSuccess
-    , error:   settings.onError
-  })
+  var xhr = $.ajax( settings )
 
   return xhr
 }

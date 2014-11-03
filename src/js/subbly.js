@@ -7,15 +7,12 @@ var SubblyCore = function( config )
   this._config          = config
 
   // current user model
-  this._user            = false
-  this._changesAreSaved = true
+  this._user              = false
+  this._changesAreSaved   = true
+  this._credentialsCookie = 'SubblyCredentials'
 
   // current user credentials
-  // this._credentials = false
-  this._credentials = {
-      username: 'michael@scenedata.com',
-      password: 'michael'
-  }
+  this._credentials = false
 
   // Pub/Sub channel
   this.event  = _.extend( {}, Backbone.Events )
@@ -36,7 +33,6 @@ SubblyCore.prototype.init = function()
 
   this.event.on( 'hash::change', function( href )
   {
-console.info('hash changed: ' + href )
     if( scope._changesAreSaved )
     {
       scope._router.navigate( href, { trigger: true } )
@@ -56,23 +52,10 @@ console.info('hash changed: ' + href )
       // })
     }
   })
-  
-  this.event.trigger( 'hash::change', 'login' )
-return
-  var isLogged = new xhrCall({
-      url:       'auth/test-credentials'
-    , onSuccess: function( response )
-      {
-console.log( response )
-      }
-    , onError:   function( response )
-      {
-        var route = scope._router.setRoute( 'login' )
 
-console.log( route )
-        scope.event.trigger( 'hash::change', 'login' )
-      }
-  })
+  this.isLogin()
+
+  this._router.ready()
 }
 
 /*
@@ -106,7 +89,74 @@ SubblyCore.prototype.setConfig = function( path, value )
 SubblyCore.prototype.setCredentials = function( credentials )
 {
   this._credentials = credentials
+
+  // not safe at all
+  // TODO: find a client side crypto lib
+  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; expires=0; path=/'
+
+  this.event.trigger('user::loggedIn')
+
+  this.event.trigger( 'hash::change', 'customers' )
 }
+
+/*
+ * Return current user credentials object
+ *
+ * @return  object
+ */
+
+SubblyCore.prototype.getCredentials = function()
+{
+  if( !this._credentials )
+    throw new Error( 'User credentials are not set' )
+
+  return this._credentials
+}
+
+/*
+ * Check if current user is logged in
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.isLogin = function()
+{
+  if( !document.cookie )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  // retrive credentials from cookies
+  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
+    , result      = regexp.exec( document.cookie )
+    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
+
+  if( _.isNull( credentials ) )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  this.setCredentials( credentials )
+}
+
+/*
+ * Unset user credentials
+ * Trigger logout event
+ *
+ * @return  void
+ */
+
+SubblyCore.prototype.logout = function()
+{
+  this._credentials = false
+
+  document.cookie = this._credentialsCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+
+  this.event.trigger('user::logout')
+}
+
 
 /*
  * Format full URL to API service
@@ -143,17 +193,4 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
-/*
- * Return current user credentials object
- *
- * @return  object
- */
-
-SubblyCore.prototype.getCredentials = function()
-{
-  if( !this._credentials )
-    throw new Error( 'User credentials are not set' )
-
-  return this._credentials
-}
 

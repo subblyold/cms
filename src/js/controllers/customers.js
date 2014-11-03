@@ -9,16 +9,6 @@ Components.Controller.Customers = Backbone.Controller.extend(
   , initialize: function() 
     {
 console.log('customers Controller initialized')
-//       this.collection = subbly.api('Collection.Users')
-
-//       this.collection.fetch(
-//       {
-//         success: function( collection, response )
-//         {
-// console.log( collection )
-// console.log( response )
-//         }
-//       })
     }
 
   , fetch: function()
@@ -34,14 +24,43 @@ console.log('customers Controller initialized')
       })
     }
 
+  , getCollection: function()
+    {
+      if( !this.collection )
+        this.collection = subbly.api('Collection.Users')
+    }
+
   , list: function() 
     {
-      console.info('customers list')
+console.info('call customer list')
+      this.getCollection()
+
+      this.collection.fetch(
+      {
+          success: function( collection, response )
+          {
+  console.log( collection )
+  console.log( response )
+          }
+      })
     }
 
   , details: function( uid ) 
     {
+      this.getCollection()
+      
+      var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
+  console.log( user )
 
+      user.fetch(
+      {
+          data: { includes: ['addresses', 'orders'] }
+        , success: function( model, response )
+          {
+  console.log( model.displayName() )
+  console.log( response )
+          }
+      })
     }
 })
 
