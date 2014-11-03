@@ -32,9 +32,10 @@ class Product extends Model  implements ModelInterface, SortableInterface
         'status' => 'required',
         'name'   => 'required',
         'sku'    => 'required|unique:products,sku,{{self_id}}',
+        'price'  => 'required|regex:/^\d+(\.\d{1,2})?$/',
     );
 
-    protected $defaultAttributes = array(
+    protected $defaultValues = array(
         'status' => self::STATUS_DRAFT,
     );
 

@@ -45,7 +45,7 @@ trait Validable
     /**
      * Get the error messages
      *
-     * @return array
+     * @return \Illuminate\Support\MessageBag
      */
     public function errorMessages()
     {

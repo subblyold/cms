@@ -12,11 +12,11 @@ trait DefaultValues
     public function bootIfNotBooted()
     {
         if (
-            isset($this->defaultAttributes)
-            || is_array($this->defaultAttributes)
-            || !empty($this->defaultAttributes)
+            isset($this->defaultValues)
+            || is_array($this->defaultValues)
+            || !empty($this->defaultValues)
         ) {
-            $attributes = array_replace_recursive($this->defaultAttributes, $this->attributes);
+            $attributes = array_replace_recursive($this->defaultValues, $this->attributes);
 
             $this->fill($attributes);
         }

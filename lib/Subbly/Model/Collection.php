@@ -2,7 +2,7 @@
 
 namespace Subbly\Model;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Collection as BaseCollection;
 
 class Collection extends BaseCollection
@@ -15,7 +15,7 @@ class Collection extends BaseCollection
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query The Eloquent query
      */
-    public function __construct(Builder $query)
+    public function __construct(QueryBuilder $query)
     {
         $this->query = $query;
         $this->hydrate();
