@@ -152,9 +152,9 @@ SubblyCore.prototype.logout = function()
 {
   this._credentials = false
 
-  document.cookie = this._credentialsCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+  document.cookie = this._credentialsCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/'
 
-  this.event.trigger('user::logout')
+  this.event.trigger( 'hash::change', 'login' )
 }
 
 
