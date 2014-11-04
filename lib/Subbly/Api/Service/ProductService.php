@@ -120,22 +120,22 @@ class ProductService extends Service
             $product = new Product($product);
         }
 
-        if ($this->fireEvent('creating', array($product)) === false) return false;
+        if ($product instanceof Product)
+        {
+            if ($this->fireEvent('creating', array($product)) === false) return false;
 
-        if ($product instanceof Product) {
             $product->setCaller($this);
             $product->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
-                'Subbly\\Model\\Product',
-                $this->name()
-            ));
+
+            $this->fireEvent('created', array($product));
+
+            return $product;
         }
 
-        $this->fireEvent('created', array($product));
-
-        return $product;
+        throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
+            'Subbly\\Model\\Product',
+            $this->name()
+        ));
     }
 
     /**
@@ -168,23 +168,22 @@ class ProductService extends Service
             $product->fill($args[1]);
         }
 
-        if ($this->fireEvent('updating', array($product)) === false) return false;
-
         if ($product instanceof Product)
         {
+            if ($this->fireEvent('updating', array($product)) === false) return false;
+
             $product->setCaller($this);
             $product->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
-                'Subbly\\Model\\Product',
-                $this->name()
-            ));
+
+            $this->fireEvent('updated', array($product));
+
+            return $product;
         }
 
-        $this->fireEvent('updated', array($product));
-
-        return $product;
+        throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
+            'Subbly\\Model\\Product',
+            $this->name()
+        ));
     }
 
     /**

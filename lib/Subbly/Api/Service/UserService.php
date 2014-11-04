@@ -163,6 +163,8 @@ class UserService extends Service
      *
      * @return User
      *
+     * @throws \Subbly\Api\Service\Exception
+     *
      * @api
      */
     public function create($user)
@@ -171,22 +173,22 @@ class UserService extends Service
             $user = new User($user);
         }
 
-        if ($this->fireEvent('creating', array($user)) === false) return false;
+        if ($user instanceof User)
+        {
+            if ($this->fireEvent('creating', array($user)) === false) return false;
 
-        if ($user instanceof User) {
             $user->setCaller($this);
             $user->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
-                'Subbly\\Model\\User',
-                $this->name()
-            ));
+
+            $this->fireEvent('created', array($user));
+
+            return $user;
         }
 
-        $this->fireEvent('created', array($user));
-
-        return $user;
+        throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
+            $this->modelClass,
+            $this->name()
+        ));
     }
 
     /**
@@ -219,23 +221,22 @@ class UserService extends Service
             $user->fill($args[1]);
         }
 
-        if ($this->fireEvent('updating', array($user)) === false) return false;
-
         if ($user instanceof User)
         {
+            if ($this->fireEvent('updating', array($user)) === false) return false;
+
             $user->setCaller($this);
             $user->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
-                'Subbly\\Model\\User',
-                $this->name()
-            ));
+
+            $this->fireEvent('updated', array($user));
+
+            return $user;
         }
 
-        $this->fireEvent('updated', array($user));
-
-        return $user;
+        throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
+            'Subbly\\Model\\User',
+            $this->name()
+        ));
     }
 
     /**
@@ -253,13 +254,14 @@ class UserService extends Service
             $user = $this->find($user);
         }
 
-        if ($this->fireEvent('deleting', array($user)) === false) return false;
+        if ($user instanceof User)
+        {
+            if ($this->fireEvent('deleting', array($user)) === false) return false;
 
-        if ($user instanceof User) {
             $user->delete($this);
-        }
 
-        $this->fireEvent('deleted', array($user));
+            $this->fireEvent('deleted', array($user));
+        }
     }
 
     /**

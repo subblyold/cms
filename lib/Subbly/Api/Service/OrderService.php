@@ -115,22 +115,22 @@ class OrderService extends Service
             $order = new Order($order);
         }
 
-        if ($this->fireEvent('creating', array($order)) === false) return false;
+        if ($order instanceof Order)
+        {
+            if ($this->fireEvent('creating', array($order)) === false) return false;
 
-        if ($order instanceof Order) {
             $order->setCaller($this);
             $order->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
-                'Subbly\\Model\\Order',
-                $this->name()
-            ));
+
+            $this->fireEvent('created', array($order));
+
+            return $order;
         }
 
-        $this->fireEvent('created', array($order));
-
-        return $order;
+        throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
+            'Subbly\\Model\\Order',
+            $this->name()
+        ));
     }
 
     /**
@@ -163,23 +163,22 @@ class OrderService extends Service
             $order->fill($args[1]);
         }
 
-        if ($this->fireEvent('updating', array($order)) === false) return false;
-
         if ($order instanceof Order)
         {
+            if ($this->fireEvent('updating', array($order)) === false) return false;
+
             $order->setCaller($this);
             $order->save();
-        }
-        else {
-            throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
-                'Subbly\\Model\\Order',
-                $this->name()
-            ));
+
+            $this->fireEvent('updated', array($order));
+
+            return $order;
         }
 
-        $this->fireEvent('updated', array($order));
-
-        return $order;
+        throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
+            'Subbly\\Model\\Order',
+            $this->name()
+        ));
     }
 
     /**
