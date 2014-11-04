@@ -16,9 +16,10 @@ var Router = Backbone.Router.extend(
       var controllers = SubblyPlugins.getList()
         , router      = this
 
-      _.each( controllers, function( controller ) //, name ) // Components.Controller
+      _.each( Components.Controller, function( controller, name )
       {
-        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+// console.log( name, controller )
+        this._controllers[ name ] = new Components.Controller[ name ]( { router: this } )
       }, this )
 
       // new Components.Controller.Customers( { router: this } )

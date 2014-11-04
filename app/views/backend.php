@@ -122,5 +122,7 @@
     }
   </script>
   <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
+  <script src="<?= URL::to('/themes/plugins/customers.js') ?>"></script>
+  <script src="<?= URL::to('/themes/plugins/dashboard.js') ?>"></script>
 </body>
 </html>

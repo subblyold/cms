@@ -17529,7 +17529,7 @@ var SubblyController = Backbone.Controller.extend(
         })
       }
 
-console.log( this._viewsPointers)
+console.log( this._viewsPointers )
 
     }
 
@@ -17646,7 +17646,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this.event.trigger('user::loggedIn')
 
-  this.event.trigger( 'hash::change', 'customers' )
+  this.event.trigger( 'hash::change', 'dashboard' )
 }
 
 /*
@@ -17731,6 +17731,7 @@ SubblyCore.prototype.api = function( serviceName, args )
 {
   var service = Helpers.getNested( Components, serviceName, false )
     , args    = args || {}
+console.log( service, Components, serviceName )
 
   if( !service )
     throw new Error( 'Subbly API do not include ' + serviceName )
@@ -17743,19 +17744,59 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
-
 /*
  * Extend Subbly Components
  *
  * @params  {string}  component type
  * @params  {string}  component name
- * @params  {object}  component
- * @return  {string}
+ * @params  {object}  component object
+ * @return  {void}
  */
 
 SubblyCore.prototype.extend = function( type, name, obj )
 {
-  Components[ type ][ name ] = SubblyController.extend( obj )
+  var allowedType = [ 'Model', 'Collection', 'View', 'Controller' ]
+
+  if( allowedType.indexOf( type ) == -1 )
+    throw new Error( 'Extend can not accept "' + type + '" as extend' )
+
+  if( Components[ type ][ name ] )
+    throw new Error( type + '.'  + name + ' already exist' )
+
+  var alias
+
+  switch( type )
+  {
+    case 'Controller':
+        alias = SubblyController
+      break
+    case 'View':
+        alias = SubblyView
+      break
+    case 'Model':
+        alias = SubblyModel
+      break
+    case 'Collection':
+        alias = SubblyCollection
+      break
+  }
+console.log( type, name )
+  Components[ type ][ name ] = alias.extend( obj )
+}
+
+/*
+ * Register Plugin
+ *
+ * @params  {object}  plugin object
+ * @return  {void}
+ */
+
+SubblyCore.prototype.register = function( plugin )
+{
+  _.each( plugin.components, function( component, key )
+  {
+    this.extend( key, plugin.name, component )
+  }, this )
 }
 
 // Global Init
@@ -17895,84 +17936,108 @@ Components.Collection.Users = Components.Collection.List.extend(
     }
 })
 
-Components.Controller.Customers = SubblyController.extend(
-// var Customers = 
-{
-    _tplStructure:   'half' // full|half|third
-  , _viewsNames:     [ 'Users', 'User' ]
-  , _controllerName: 'customers'
+// (function( window )
+// {
+//   var Customers = 
+//   {
+//       _tplStructure:   'half' // full|half|third
+//     , _viewsNames:     [ 'Users', 'User' ]
+//     , _controllerName: 'customers'
 
-  , onInitialize: function()
-    {
-console.log( 'onInitialize Customers')
-    }
+//     , onInitialize: function()
+//       {
+//   console.log( 'onInitialize Customers')
+//       }
 
-  , routes: {
-        'customers':      'list'
-      , 'customers/:uid': 'details'
-    }
+//     , routes: {
+//           'customers':      'list'
+//         , 'customers/:uid': 'details'
+//       }
 
-  , fetch: function()
-    {
-      subbly.event.trigger( 'loader::show' )
+//     // Local method
+//     // , fetch: function()
+//     //   {
+//     //     subbly.event.trigger( 'loader::show' )
 
-      this.collection.fetch(
-      {
-        success: function()
-        {
-          subbly.event.trigger( 'pagination::changed' )
-        } 
-      })
-    }
+//     //     this.collection.fetch(
+//     //     {
+//     //       success: function()
+//     //       {
+//     //         subbly.event.trigger( 'pagination::changed' )
+//     //       } 
+//     //     })
+//     //   }
 
-  , getCollection: function()
-    {
-      if( !this.collection )
-        this.collection = subbly.api('Collection.Users')
-    }
+//     // Local method
+//     // , getCollection: function()
+//     //   {
+//     //     if( !this.collection )
+//     //       this.collection = subbly.api('Collection.Users')
+//     //   }
 
-    // Routes
-    //-------------------------------
+//       // Routes
+//       //-------------------------------
 
-  , list: function() 
-    {
-      this._mainRouter._currentView = this
-      // return
-console.info('call customer list')
-      this.getCollection()
+//     , list: function() 
+//       {
+//         this._mainRouter._currentView = this
+//         // return
+//   console.info('call customer list')
+//         this.getCollection()
 
-      this.collection.fetch(
-      {
-          success: function( collection, response )
-          {
-  console.log( collection )
-  console.log( response )
-          }
-      })
-    }
+//         this.collection.fetch(
+//         {
+//             success: function( collection, response )
+//             {
+//     console.log( collection )
+//     console.log( response )
+//             }
+//         })
+//       }
 
-  , details: function( uid ) 
-    {
-      this.getCollection()
-      
-      var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
-  console.log( user )
+//     , details: function( uid ) 
+//       {
+//         this.getCollection()
+        
+//         var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
+//     console.log( user )
 
-      user.fetch(
-      {
-          data: { includes: ['addresses', 'orders'] }
-        , success: function( model, response )
-          {
-  console.log( model.displayName() )
-  console.log( response )
-          }
-      })
-    }
-// }
-})
-// console.log( subbly )
-SubblyPlugins.register( 'Customers' )
-// subbly.extend( 'Controller', 'Customers', Customers )
+//         user.fetch(
+//         {
+//             data: { includes: ['addresses', 'orders'] }
+//           , success: function( model, response )
+//             {
+//     console.log( model.displayName() )
+//     console.log( response )
+//             }
+//         })
+//       }
+//   }
+
+
+//   var CustomersUsers = 
+//   {
+//       _viewName: 'Users'
+//   }
+
+//   var CustomersUser = 
+//   {
+//       _viewName: 'User'
+//   }
+
+//   // subbly.extend( 'Controller', 'Customers', Customers )
+
+//   // window.subbly.register({
+//   //     name: 'Customers'
+//   //   , components: {
+//   //         Controller: Customers
+//   //       , View: [
+//   //             CustomersUsers
+//   //           , CustomersUser
+//   //         ]
+//   //     }
+//   // })
+// })( window )
 
 
 Components.View.Users = SubblyView.extend(
@@ -18356,9 +18421,10 @@ var Router = Backbone.Router.extend(
       var controllers = SubblyPlugins.getList()
         , router      = this
 
-      _.each( controllers, function( controller ) //, name ) // Components.Controller
+      _.each( Components.Controller, function( controller, name )
       {
-        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+// console.log( name, controller )
+        this._controllers[ name ] = new Components.Controller[ name ]( { router: this } )
       }, this )
 
       // new Components.Controller.Customers( { router: this } )

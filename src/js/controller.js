@@ -101,7 +101,7 @@ var SubblyController = Backbone.Controller.extend(
         })
       }
 
-console.log( this._viewsPointers)
+console.log( this._viewsPointers )
 
     }
 

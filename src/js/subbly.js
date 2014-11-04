@@ -99,7 +99,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this.event.trigger('user::loggedIn')
 
-  this.event.trigger( 'hash::change', 'customers' )
+  this.event.trigger( 'hash::change', 'dashboard' )
 }
 
 /*
@@ -184,6 +184,7 @@ SubblyCore.prototype.api = function( serviceName, args )
 {
   var service = Helpers.getNested( Components, serviceName, false )
     , args    = args || {}
+console.log( service, Components, serviceName )
 
   if( !service )
     throw new Error( 'Subbly API do not include ' + serviceName )
@@ -196,19 +197,59 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
-
 /*
  * Extend Subbly Components
  *
  * @params  {string}  component type
  * @params  {string}  component name
- * @params  {object}  component
- * @return  {string}
+ * @params  {object}  component object
+ * @return  {void}
  */
 
 SubblyCore.prototype.extend = function( type, name, obj )
 {
-  Components[ type ][ name ] = SubblyController.extend( obj )
+  var allowedType = [ 'Model', 'Collection', 'View', 'Controller' ]
+
+  if( allowedType.indexOf( type ) == -1 )
+    throw new Error( 'Extend can not accept "' + type + '" as extend' )
+
+  if( Components[ type ][ name ] )
+    throw new Error( type + '.'  + name + ' already exist' )
+
+  var alias
+
+  switch( type )
+  {
+    case 'Controller':
+        alias = SubblyController
+      break
+    case 'View':
+        alias = SubblyView
+      break
+    case 'Model':
+        alias = SubblyModel
+      break
+    case 'Collection':
+        alias = SubblyCollection
+      break
+  }
+console.log( type, name )
+  Components[ type ][ name ] = alias.extend( obj )
+}
+
+/*
+ * Register Plugin
+ *
+ * @params  {object}  plugin object
+ * @return  {void}
+ */
+
+SubblyCore.prototype.register = function( plugin )
+{
+  _.each( plugin.components, function( component, key )
+  {
+    this.extend( key, plugin.name, component )
+  }, this )
 }
 
 // Global Init
