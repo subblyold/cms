@@ -92,7 +92,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   // not safe at all
   // TODO: find a client side crypto lib
-  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; expires=0; path=/'
+  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
 
   this.event.trigger('user::loggedIn')
 
@@ -152,7 +152,7 @@ SubblyCore.prototype.logout = function()
 {
   this._credentials = false
 
-  document.cookie = this._credentialsCookie + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/'
+  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
 
   this.event.trigger( 'hash::change', 'login' )
 }
