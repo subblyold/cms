@@ -184,7 +184,7 @@ class UserService extends Service
             ));
         }
 
-        $event = $this->fireEvent('created', array($user));
+        $this->fireEvent('created', array($user));
 
         return $user;
     }
@@ -233,7 +233,7 @@ class UserService extends Service
             ));
         }
 
-        $event = $this->fireEvent('updated', array($user));
+        $this->fireEvent('updated', array($user));
 
         return $user;
     }
@@ -259,7 +259,7 @@ class UserService extends Service
             $user->delete($this);
         }
 
-        $event = $this->fireEvent('deleted', array($user));
+        $this->fireEvent('deleted', array($user));
     }
 
     /**

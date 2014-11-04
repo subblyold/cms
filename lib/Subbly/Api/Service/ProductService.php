@@ -133,7 +133,7 @@ class ProductService extends Service
             ));
         }
 
-        $event = $this->fireEvent('created', array($product));
+        $this->fireEvent('created', array($product));
 
         return $product;
     }

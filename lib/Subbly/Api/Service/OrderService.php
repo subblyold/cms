@@ -128,7 +128,7 @@ class OrderService extends Service
             ));
         }
 
-        $event = $this->fireEvent('created', array($order));
+        $this->fireEvent('created', array($order));
 
         return $order;
     }
