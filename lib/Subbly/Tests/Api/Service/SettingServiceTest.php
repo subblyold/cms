@@ -1,13 +1,12 @@
 <?php
 
-namespace Subbly\Tests\Api\Service;
-
 use Subbly\Subbly;
 use Subbly\Api\Api;
 use Subbly\Api\Service\SettingService;
 use Subbly\Core\Container;
+use Subbly\Tests\Support\TestCase;
 
-class SettingServiceTest extends \Subbly\Tests\Support\TestCase
+class SettingServiceTest extends TestCase
 {
     private function getService()
     {

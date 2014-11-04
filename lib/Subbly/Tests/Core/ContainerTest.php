@@ -1,10 +1,9 @@
 <?php
 
-namespace Subbly\Tests\Core;
-
 use Subbly\Core\Container;
+use Subbly\Tests\Support\TestCase;
 
-class ContainerTest extends \Subbly\Tests\Support\TestCase
+class ContainerTest extends TestCase
 {
     public function testConstruct()
     {

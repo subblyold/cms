@@ -1,10 +1,9 @@
 <?php
 
-namespace Subbly\Tests;
-
 use Subbly\Subbly;
+use Subbly\Tests\Support\TestCase;
 
-class SubblyTest extends \Subbly\Tests\Support\TestCase
+class SubblyTest extends TestCase
 {
     public function testVersion()
     {
@@ -30,5 +29,10 @@ class SubblyTest extends \Subbly\Tests\Support\TestCase
         catch (\Subbly\Api\Exception $e) {
             $this->assertTrue(true);
         }
+    }
+
+    public function testEvents()
+    {
+        // TODO
     }
 }

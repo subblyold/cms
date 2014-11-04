@@ -1,10 +1,9 @@
 <?php
 
-namespace Subbly\Tests\Api\Service;
-
 use Subbly\Api\Service;
+use Subbly\Tests\Support\TestCase;
 
-class ServiceTest extends \Subbly\Tests\Support\TestCase
+class ServiceTest extends TestCase
 {
     public function testConstruct()
     {

@@ -1,10 +1,9 @@
 <?php
 
-namespace Subbly\Tests\Core;
-
 use Subbly\Core\EventDispatcher;
+use Subbly\Tests\Support\TestCase;
 
-class EventDispatcherTest extends \Subbly\Tests\Support\TestCase
+class EventDispatcherTest extends TestCase
 {
     public function testConstruct()
     {

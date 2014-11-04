@@ -1,7 +1,5 @@
 <?php
 
-namespace Subbly\Tests\Api\Service;
-
 use Subbly\Subbly;
 use Subbly\Api\Api;
 use Subbly\Api\Service\UserService;
