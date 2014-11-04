@@ -173,11 +173,11 @@ abstract class Service
             }
         }
         else {
-            throw new \ErrorException(sprintf('%s::%s() expects parameter 1 to be string or array, %s given'),
+            throw new \ErrorException(sprintf('%s::%s() expects parameter 1 to be string or array, %s given',
                 __CLASS__,
                 __METHOD__,
                 gettype($searchQuery)
-            );
+            ));
         }
 
         return $this->newCollectionQuery($options)
