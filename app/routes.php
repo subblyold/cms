@@ -28,8 +28,6 @@ Route::group(array(
 
     // AuthController
     Route::get('/auth/test-credentials', 'AuthController@testCredentials');
-
-    // Current User
     Route::get('/auth/me', 'AuthController@testCurrentUser');
 
     // WelcomeController
@@ -70,7 +68,7 @@ Route::any('/void', function()
 
 /*
  * Register template driven Frontend
- * Comment this part if you want to user 
+ * Comment this part if you want to user
  * your own controller
  */
 
