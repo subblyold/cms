@@ -4,12 +4,9 @@ namespace Subbly\Tests\Support;
 
 use Illuminate\Support\Facades\Artisan;
 
-use Subbly\Model\ModelInterface;
-
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
-    private static $fixtures;
-    private static $faker;
+    use AssertionsTrait, FixturesTrait, ApplicationTrait;
 
     protected $useDatabase = true;
 
@@ -24,46 +21,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $testEnvironment = 'testing';
 
         return require __DIR__.'/../../../../bootstrap/start.php';
-    }
-
-    /**
-     *
-     */
-    public static function addFixture($name, ModelInterface $value)
-    {
-        self::fixtures()->offsetSet($name, $value);
-    }
-
-    /**
-     *
-     */
-    public static function getFixture($name)
-    {
-        return self::fixtures()->offsetGet($name);
-    }
-
-    /**
-     *
-     */
-    private static function fixtures()
-    {
-        if (!isset(self::$fixtures)) {
-            self::$fixtures = new \ArrayObject;
-        }
-
-        return self::$fixtures;
-    }
-
-    /**
-     *
-     */
-    public static function faker()
-    {
-        if (!isset(self::$faker)) {
-            self::$faker = \Faker\Factory::create();;
-        }
-
-        return self::$faker;
     }
 
     /**
