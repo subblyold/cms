@@ -47,6 +47,10 @@ class ProductsController extends BaseController
      */
     public function search()
     {
+        if (!Input::has('q')) {
+            return $this->jsonErrorResponse('"q" is required.');
+        }
+
         list($offset, $limit) = $this->apiOffsetLimit();
         $options = $this->formatOptions(array(
             'offset'   => $offset,

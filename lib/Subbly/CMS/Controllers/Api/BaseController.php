@@ -170,7 +170,7 @@ class BaseController extends Controller
             $response = $this->jsonErrorResponse('Fatal error!');
         }
 
-        if (App::environment('local')) {
+        if (App::environment('local', 'testing')) {
             return $parentResponse ?: parent::callAction($method, $parameters);;
         }
 
@@ -193,6 +193,7 @@ class BaseController extends Controller
                 'code'    => 200,
                 'message' => 'OK',
             ),
+            'version' => 'v1',
         ), $headers);
 
         $data = array(
