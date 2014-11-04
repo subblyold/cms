@@ -64,23 +64,25 @@ class UserServiceTest extends TestCase
 
     public function testCreate()
     {
-        $email = 'jon.snow@subbly.com';
+        $email = 'jon.snow2@test.subbly.com';
 
         // Events
-        Subbly::events()->listen($this->getService()->name() . ':created', function($user) use ($email)
-        {
-            $this->assertEquals($email, $user->email);
-        });
         Subbly::events()->listen($this->getService()->name() . ':creating', function($user) use ($email)
         {
             $this->assertEquals($email, $user->email);
+            Subbly::events()->forget($this->getService()->name() . ':creating');
+        });
+        Subbly::events()->listen($this->getService()->name() . ':created', function($user) use ($email)
+        {
+            $this->assertEquals($email, $user->email);
+            Subbly::events()->forget($this->getService()->name() . ':created');
         });
 
         $user = $this->getService()->newUser();
-        $user->email      = $email;
+        $user->email     = $email;
         $user->firstname = 'Jon';
         $user->lastname  = 'Snow';
-        $user->password   = uniqid();
+        $user->password  = uniqid();
 
         $returnedUser = $this->getService()->create($user);
 
@@ -96,13 +98,15 @@ class UserServiceTest extends TestCase
         $user = TestCase::getFixture('users.user_1');
 
         // Events
-        Subbly::events()->listen($this->getService()->name() . ':updated', function($model) use ($user)
-        {
-            $this->assertEquals($user->id, $model->id);
-        });
         Subbly::events()->listen($this->getService()->name() . ':updating', function($model) use ($user)
         {
             $this->assertEquals($user->id, $model->id);
+            Subbly::events()->forget($this->getService()->name() . ':updating');
+        });
+        Subbly::events()->listen($this->getService()->name() . ':updated', function($model) use ($user)
+        {
+            $this->assertEquals($user->id, $model->id);
+            Subbly::events()->forget($this->getService()->name() . ':updated');
         });
 
         $user->firstname = TestCase::faker()->firstname;

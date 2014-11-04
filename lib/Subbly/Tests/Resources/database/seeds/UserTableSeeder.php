@@ -13,8 +13,6 @@ class UserTableSeeder extends Seeder {
     {
         $faker = TestCase::faker();
 
-// var_dump($faker->getProviders());
-// exit;
         $user = User::create(array(
             'email'     => 'jon.snow@test.subbly.com',
             'password'  => 'hodor123',
