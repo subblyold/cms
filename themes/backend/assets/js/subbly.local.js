@@ -17409,6 +17409,363 @@ var SubblyCollection = Backbone.Collection.extend(
     }
 })
 
+// Subbly's Backbone base model
+
+var SubblyView = Backbone.View.extend(
+{
+    _viewId:   false
+  , _viewName: false
+
+  , initialize: function( options )
+    {
+      this._viewId   = options.viewId
+
+      console.log(' initialize ' + this._viewName, this._viewId, this.el)
+
+      return this
+    }
+})
+
+
+var SubblyController = Backbone.Controller.extend(
+{
+    _tplStructure:   'full' // full|half|third
+  , _tplLenght:      0
+  , _tplPointers:    {} // references to the sub views
+  , _viewsPointers:  {}
+  , _viewsNames:     []
+  , _tplDisplayed:   false
+  , el:              null
+  , $el:             null
+  , _parentView:     false
+  , _controllerName: null
+  , _mainRouter:     false
+
+  , initialize: function() 
+    {
+      this._mainRouter = this.options.router
+
+      if( this.onInitialize )
+        this.onInitialize()
+    }
+
+  , onBeforeRoute: function()
+    {
+      this.displayViews()
+    }
+
+    // Clean DOM and JS memory
+  , remove: function() 
+    {
+      // Nested views
+      if( this._tplLenght )
+      {
+        _( this._viewsPointers )
+          .forEach( function( v )
+          {
+            this._viewsPointers[ v._viewId ].close()
+          }, this)
+        
+        if( this._parentView )
+          this.el.removeChild( this._parentView )
+      }
+      // Single view
+      else
+      {
+        this._viewsPointers.close()
+      }
+
+      this._parentView    = false
+      this._viewsPointers = {}
+    }
+
+    // create DOM elements
+    // and attach views to
+  , displayViews: function()
+    {
+      this.el  = document.getElementById('main-view')
+      this.$el = $( this.el )
+
+      var fragment     = document.createDocumentFragment()
+        , parentViewId = this._controllerName + '-parent'
+      
+      this._parentView = this.buildView( 'full', parentViewId )
+
+      this.$el.html( this._parentView )
+
+      // default full view
+      var index  = -1
+
+      switch( this._tplStructure )
+      {
+        case 'half':
+        case 'third':
+          this._tplLenght = 2
+          break
+      }
+
+      // Nested views
+      if( this._tplLenght )
+      {
+        while( ++index < this._tplLenght )
+        {
+          var viewId = this._controllerName + '-' + index
+            , view   = this.buildView( this._tplStructure, viewId )
+
+          this._parentView.appendChild( view )
+
+          this._viewsPointers[ viewId ] = subbly.api( 'View.' + this._viewsNames[ index ], {
+              el:     view
+            , viewId: viewId
+          })
+        }
+      }
+      // Single view
+      else
+      {
+        this._viewsPointers = subbly.api( 'View.' + this._viewsNames, {
+            el:     this._parentView
+          , viewId: parentViewId
+        })
+      }
+
+console.log( this._viewsPointers)
+
+    }
+
+    // return single DOM element
+  , buildView: function( className, id )
+    {
+      var div = document.createElement('div')
+
+      div.className = 'view-' + className
+      div.id        = 'view-' + id
+
+      return div
+    }
+})
+
+
+var SubblyCore = function( config )
+{
+  console.info('init Subbly object', config)
+
+  // enviroment config
+  this._config          = config
+
+  // current user model
+  this._user              = false
+  this._changesAreSaved   = true
+  this._credentialsCookie = 'SubblyCredentials'
+
+  // current user credentials
+  this._credentials = false
+
+  // Pub/Sub channel
+  this.event  = _.extend( {}, Backbone.Events )
+
+  return this
+}
+
+
+/*
+ * Initialize App router
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.init = function()
+{
+  this._router = new Router()
+
+  var scope = this
+
+  this.event.on( 'hash::change', function( href )
+  {
+    if( scope._changesAreSaved )
+    {
+      scope.event.trigger( 'hash::changed' )
+      scope._router.navigate( href, { trigger: true } )
+    }
+    else
+    {
+      // display confirm modal
+      // App.changesModal = new Views.Modal(
+      // {
+      //     message:  __('label.form_leave')
+      //   , success:  __('label.leave')
+      //   , onSubmit: function()
+      //     {
+      //       Pubsub.trigger( 'form::reset' )
+      //       AppRouter.navigate( href, { trigger: true } )
+      //     }
+      // })
+    }
+  })
+
+  this.isLogin()
+
+  this._router.ready()
+}
+
+/*
+ * Get config value
+ *
+ * @return  {mixed}
+ */
+
+SubblyCore.prototype.getConfig = function( path, defaults )
+{
+  return Helpers.getNested( this._config, path, defaults || false ) 
+}
+
+/*
+ * Set config value
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.setConfig = function( path, value )
+{
+  return Helpers.setNested( this._config, path, value ) 
+}
+
+/*
+ * Set user credentials
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.setCredentials = function( credentials )
+{
+  this._credentials = credentials
+
+  // not safe at all
+  // TODO: find a client side crypto lib
+  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
+
+  this.event.trigger('user::loggedIn')
+
+  this.event.trigger( 'hash::change', 'customers' )
+}
+
+/*
+ * Return current user credentials object
+ *
+ * @return  {object}
+ */
+
+SubblyCore.prototype.getCredentials = function()
+{
+  if( !this._credentials )
+    throw new Error( 'User credentials are not set' )
+
+  return this._credentials
+}
+
+/*
+ * Check if current user is logged in
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.isLogin = function()
+{
+  if( !document.cookie )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  // retrive credentials from cookies
+  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
+    , result      = regexp.exec( document.cookie )
+    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
+
+  if( _.isNull( credentials ) )
+  {
+    this.event.trigger( 'hash::change', 'login' )
+    return
+  }
+
+  this.setCredentials( credentials )
+}
+
+/*
+ * Unset user credentials
+ * Trigger logout event
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.logout = function()
+{
+  this._credentials = false
+
+  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
+
+  this.event.trigger( 'hash::change', 'login' )
+}
+
+
+/*
+ * Format full URL to API service
+ *
+ * @params  {string}  service
+ * @return  {string}
+ */
+
+SubblyCore.prototype.apiUrl = function( url )
+{
+  return this._config.apiUrl + url
+}
+
+/*
+ * Call service protected by closure
+ *
+ * @params  {string}  service name
+ * @return  {mixed}
+ */
+
+SubblyCore.prototype.api = function( serviceName, args )
+{
+  var service = Helpers.getNested( Components, serviceName, false )
+    , args    = args || {}
+
+  if( !service )
+    throw new Error( 'Subbly API do not include ' + serviceName )
+
+  // if it's a backbone element (model, collection, view)
+  // we create a new instance
+  if( _.isFunction( service ) )
+    return new service( args )
+
+  return service
+}
+
+
+/*
+ * Extend Subbly Components
+ *
+ * @params  {string}  component type
+ * @params  {string}  component name
+ * @params  {object}  component
+ * @return  {string}
+ */
+
+SubblyCore.prototype.extend = function( type, name, obj )
+{
+  Components[ type ][ name ] = SubblyController.extend( obj )
+}
+
+// Global Init
+
+subbly = new SubblyCore( subblyConfig )
+
+window.Subbly = subbly
+
+
+
 Components.Model.User = SubblyModel.extend(
 {
     idAttribute:  'uid'
@@ -17538,16 +17895,21 @@ Components.Collection.Users = Components.Collection.List.extend(
     }
 })
 
-Components.Controller.Customers = Backbone.Controller.extend(
+Components.Controller.Customers = SubblyController.extend(
+// var Customers = 
 {
-    routes: {
-        'customers':      'list'
-      , 'customers/:uid': 'details'
+    _tplStructure:   'half' // full|half|third
+  , _viewsNames:     [ 'Users', 'User' ]
+  , _controllerName: 'customers'
+
+  , onInitialize: function()
+    {
+console.log( 'onInitialize Customers')
     }
 
-  , initialize: function() 
-    {
-console.log('customers Controller initialized')
+  , routes: {
+        'customers':      'list'
+      , 'customers/:uid': 'details'
     }
 
   , fetch: function()
@@ -17569,8 +17931,13 @@ console.log('customers Controller initialized')
         this.collection = subbly.api('Collection.Users')
     }
 
+    // Routes
+    //-------------------------------
+
   , list: function() 
     {
+      this._mainRouter._currentView = this
+      // return
 console.info('call customer list')
       this.getCollection()
 
@@ -17601,9 +17968,23 @@ console.info('call customer list')
           }
       })
     }
+// }
+})
+// console.log( subbly )
+SubblyPlugins.register( 'Customers' )
+// subbly.extend( 'Controller', 'Customers', Customers )
+
+
+Components.View.Users = SubblyView.extend(
+{
+    _viewName: 'Users'
 })
 
-SubblyPlugins.register( 'Customers' )
+Components.View.User = SubblyView.extend(
+{
+    _viewName: 'User'
+})
+
 
 Components.View.FormView = Backbone.View.extend(
 {
@@ -17886,7 +18267,10 @@ Components.View.Login = Components.View.FormView.extend(
 
       window.setTimeout(function()
       {
-        login.$el.show().addClass('active')
+        login.$el
+          .show()
+          .removeClass('logged')
+          .addClass('active')
 
         document.getElementById('login-email').focus()
         
@@ -17957,8 +18341,9 @@ Components.View.Login = Components.View.FormView.extend(
 
 var Router = Backbone.Router.extend(
 {
-    controllers:  {}
-  , viewspointer: {}
+    _controllers:  {}
+  , _viewspointer: {}
+  , _currentView:  false
 
   , routes: {
         '':       'default'
@@ -17969,14 +18354,16 @@ var Router = Backbone.Router.extend(
   , initialize: function() 
     {
       var controllers = SubblyPlugins.getList()
+        , router      = this
 
-      _.each( controllers, function( controller )
+      _.each( controllers, function( controller ) //, name ) // Components.Controller
       {
-        this.controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
       }, this )
 
+      // new Components.Controller.Customers( { router: this } )
 
-      this.viewspointer.login = subbly.api('View.Login')
+      this._viewspointer.login = subbly.api('View.Login')
   
       Backbone.history.start({
           hashChange: true 
@@ -17984,8 +18371,25 @@ var Router = Backbone.Router.extend(
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
+      subbly.event.on( 'hash::changed', this.closeCurrent, this )
+
       return this
     }
+
+    // Methods
+    // ----------------------------
+
+  , closeCurrent: function()
+    {
+      if(
+             this._currentView 
+          && this._currentView.remove 
+        )
+        this._currentView.remove()
+    }
+
+    // Routes
+    // ----------------------------
 
   , default: function()
     {
@@ -17994,13 +18398,9 @@ var Router = Backbone.Router.extend(
 
   , login: function()
     {
-      this.viewspointer.login.display()
-      // if( App.mApp )
-      // {
-      //   Pubsub.trigger( 'hash::change', '' )
-      //   Pubsub.trigger( 'loader::hide' )
-      //   return
-      // }
+      // this._currentView = this._viewspointer.login
+
+      this._viewspointer.login.display()
     }
 
   , logout: function()
@@ -18009,203 +18409,20 @@ var Router = Backbone.Router.extend(
     }
 })
 
-var SubblyCore = function( config )
-{
-  console.info('init Subbly object', config)
 
-  // enviroment config
-  this._config          = config
-
-  // current user model
-  this._user              = false
-  this._changesAreSaved   = true
-  this._credentialsCookie = 'SubblyCredentials'
-
-  // current user credentials
-  this._credentials = false
-
-  // Pub/Sub channel
-  this.event  = _.extend( {}, Backbone.Events )
-}
-
-
-/*
- * Initialize App router
- *
- * @return  void
- */
-
-SubblyCore.prototype.init = function()
-{
-  this._router = new Router()
-
-  var scope = this
-
-  this.event.on( 'hash::change', function( href )
+  // Zombies! RUN!
+  // Managing Page Transitions In Backbone Apps
+  // http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
+  Backbone.View.prototype.close = function()
   {
-    if( scope._changesAreSaved )
-    {
-      scope._router.navigate( href, { trigger: true } )
-    }
-    else
-    {
-      // display confirm modal
-      // App.changesModal = new Views.Modal(
-      // {
-      //     message:  __('label.form_leave')
-      //   , success:  __('label.leave')
-      //   , onSubmit: function()
-      //     {
-      //       Pubsub.trigger( 'form::reset' )
-      //       AppRouter.navigate( href, { trigger: true } )
-      //     }
-      // })
-    }
-  })
+console.log('close view', this)
+    if ( this.onClose )
+      this.onClose()
 
-  this.isLogin()
-
-  this._router.ready()
-}
-
-/*
- * Get config value
- *
- * @return  mixed
- */
-
-SubblyCore.prototype.getConfig = function( path, defaults )
-{
-  return Helpers.getNested( this._config, path, defaults || false ) 
-}
-
-/*
- * Set config value
- *
- * @return  void
- */
-
-SubblyCore.prototype.setConfig = function( path, value )
-{
-  return Helpers.setNested( this._config, path, value ) 
-}
-
-/*
- * Set user credentials
- *
- * @return  void
- */
-
-SubblyCore.prototype.setCredentials = function( credentials )
-{
-  this._credentials = credentials
-
-  // not safe at all
-  // TODO: find a client side crypto lib
-  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
-
-  this.event.trigger('user::loggedIn')
-
-  this.event.trigger( 'hash::change', 'customers' )
-}
-
-/*
- * Return current user credentials object
- *
- * @return  object
- */
-
-SubblyCore.prototype.getCredentials = function()
-{
-  if( !this._credentials )
-    throw new Error( 'User credentials are not set' )
-
-  return this._credentials
-}
-
-/*
- * Check if current user is logged in
- *
- * @return  void
- */
-
-SubblyCore.prototype.isLogin = function()
-{
-  if( !document.cookie )
-  {
-    this.event.trigger( 'hash::change', 'login' )
-    return
+    this.remove()
+    this.unbind()
+    this.undelegateEvents()
   }
-
-  // retrive credentials from cookies
-  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
-    , result      = regexp.exec( document.cookie )
-    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
-
-  if( _.isNull( credentials ) )
-  {
-    this.event.trigger( 'hash::change', 'login' )
-    return
-  }
-
-  this.setCredentials( credentials )
-}
-
-/*
- * Unset user credentials
- * Trigger logout event
- *
- * @return  void
- */
-
-SubblyCore.prototype.logout = function()
-{
-  this._credentials = false
-
-  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
-
-  this.event.trigger( 'hash::change', 'login' )
-}
-
-
-/*
- * Format full URL to API service
- *
- * @params  string  service
- * @return  string
- */
-
-SubblyCore.prototype.apiUrl = function( url )
-{
-  return this._config.apiUrl + url
-}
-
-/*
- * Call service protected by closure
- *
- * @params  string  service name
- * @return  mixed
- */
-
-SubblyCore.prototype.api = function( serviceName, args )
-{
-  var service = Helpers.getNested( Components, serviceName, false )
-    , args    = args || {}
-
-  if( !service )
-    throw new Error( 'Subbly API do not include ' + serviceName )
-
-  // if it's a backbone element (model, collection, view)
-  // we create a new instance
-  if( _.isFunction( service ) )
-    return new service( args )
-
-  return service
-}
-
-
-
-
 
   // Remove empty properties / falsy values from Object with Underscore.js
   // http://stackoverflow.com/a/14058408
@@ -18304,10 +18521,6 @@ SubblyCore.prototype.api = function( serviceName, args )
   {
     console.info('dom ready')
     
-    subbly = new SubblyCore( subblyConfig )
-
-    window.Subbly = subbly
-
     subbly.init()
   })
 

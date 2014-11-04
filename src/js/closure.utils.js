@@ -1,4 +1,17 @@
 
+  // Zombies! RUN!
+  // Managing Page Transitions In Backbone Apps
+  // http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
+  Backbone.View.prototype.close = function()
+  {
+console.log('close view', this)
+    if ( this.onClose )
+      this.onClose()
+
+    this.remove()
+    this.unbind()
+    this.undelegateEvents()
+  }
 
   // Remove empty properties / falsy values from Object with Underscore.js
   // http://stackoverflow.com/a/14058408

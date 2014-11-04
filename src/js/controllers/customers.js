@@ -1,14 +1,19 @@
 
-Components.Controller.Customers = Backbone.Controller.extend(
+Components.Controller.Customers = SubblyController.extend(
+// var Customers = 
 {
-    routes: {
-        'customers':      'list'
-      , 'customers/:uid': 'details'
+    _tplStructure:   'half' // full|half|third
+  , _viewsNames:     [ 'Users', 'User' ]
+  , _controllerName: 'customers'
+
+  , onInitialize: function()
+    {
+console.log( 'onInitialize Customers')
     }
 
-  , initialize: function() 
-    {
-console.log('customers Controller initialized')
+  , routes: {
+        'customers':      'list'
+      , 'customers/:uid': 'details'
     }
 
   , fetch: function()
@@ -30,8 +35,13 @@ console.log('customers Controller initialized')
         this.collection = subbly.api('Collection.Users')
     }
 
+    // Routes
+    //-------------------------------
+
   , list: function() 
     {
+      this._mainRouter._currentView = this
+      // return
 console.info('call customer list')
       this.getCollection()
 
@@ -62,6 +72,8 @@ console.info('call customer list')
           }
       })
     }
+// }
 })
-
+// console.log( subbly )
 SubblyPlugins.register( 'Customers' )
+// subbly.extend( 'Controller', 'Customers', Customers )

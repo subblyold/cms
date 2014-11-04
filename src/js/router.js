@@ -1,8 +1,9 @@
 
 var Router = Backbone.Router.extend(
 {
-    controllers:  {}
-  , viewspointer: {}
+    _controllers:  {}
+  , _viewspointer: {}
+  , _currentView:  false
 
   , routes: {
         '':       'default'
@@ -13,14 +14,16 @@ var Router = Backbone.Router.extend(
   , initialize: function() 
     {
       var controllers = SubblyPlugins.getList()
+        , router      = this
 
-      _.each( controllers, function( controller )
+      _.each( controllers, function( controller ) //, name ) // Components.Controller
       {
-        this.controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
       }, this )
 
+      // new Components.Controller.Customers( { router: this } )
 
-      this.viewspointer.login = subbly.api('View.Login')
+      this._viewspointer.login = subbly.api('View.Login')
   
       Backbone.history.start({
           hashChange: true 
@@ -28,8 +31,25 @@ var Router = Backbone.Router.extend(
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
+      subbly.event.on( 'hash::changed', this.closeCurrent, this )
+
       return this
     }
+
+    // Methods
+    // ----------------------------
+
+  , closeCurrent: function()
+    {
+      if(
+             this._currentView 
+          && this._currentView.remove 
+        )
+        this._currentView.remove()
+    }
+
+    // Routes
+    // ----------------------------
 
   , default: function()
     {
@@ -38,13 +58,9 @@ var Router = Backbone.Router.extend(
 
   , login: function()
     {
-      this.viewspointer.login.display()
-      // if( App.mApp )
-      // {
-      //   Pubsub.trigger( 'hash::change', '' )
-      //   Pubsub.trigger( 'loader::hide' )
-      //   return
-      // }
+      // this._currentView = this._viewspointer.login
+
+      this._viewspointer.login.display()
     }
 
   , logout: function()

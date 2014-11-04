@@ -16,13 +16,15 @@ var SubblyCore = function( config )
 
   // Pub/Sub channel
   this.event  = _.extend( {}, Backbone.Events )
+
+  return this
 }
 
 
 /*
  * Initialize App router
  *
- * @return  void
+ * @return  {void}
  */
 
 SubblyCore.prototype.init = function()
@@ -35,6 +37,7 @@ SubblyCore.prototype.init = function()
   {
     if( scope._changesAreSaved )
     {
+      scope.event.trigger( 'hash::changed' )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -61,7 +64,7 @@ SubblyCore.prototype.init = function()
 /*
  * Get config value
  *
- * @return  mixed
+ * @return  {mixed}
  */
 
 SubblyCore.prototype.getConfig = function( path, defaults )
@@ -72,7 +75,7 @@ SubblyCore.prototype.getConfig = function( path, defaults )
 /*
  * Set config value
  *
- * @return  void
+ * @return  {void}
  */
 
 SubblyCore.prototype.setConfig = function( path, value )
@@ -83,7 +86,7 @@ SubblyCore.prototype.setConfig = function( path, value )
 /*
  * Set user credentials
  *
- * @return  void
+ * @return  {void}
  */
 
 SubblyCore.prototype.setCredentials = function( credentials )
@@ -102,7 +105,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 /*
  * Return current user credentials object
  *
- * @return  object
+ * @return  {object}
  */
 
 SubblyCore.prototype.getCredentials = function()
@@ -116,7 +119,7 @@ SubblyCore.prototype.getCredentials = function()
 /*
  * Check if current user is logged in
  *
- * @return  void
+ * @return  {void}
  */
 
 SubblyCore.prototype.isLogin = function()
@@ -145,7 +148,7 @@ SubblyCore.prototype.isLogin = function()
  * Unset user credentials
  * Trigger logout event
  *
- * @return  void
+ * @return  {void}
  */
 
 SubblyCore.prototype.logout = function()
@@ -161,8 +164,8 @@ SubblyCore.prototype.logout = function()
 /*
  * Format full URL to API service
  *
- * @params  string  service
- * @return  string
+ * @params  {string}  service
+ * @return  {string}
  */
 
 SubblyCore.prototype.apiUrl = function( url )
@@ -173,8 +176,8 @@ SubblyCore.prototype.apiUrl = function( url )
 /*
  * Call service protected by closure
  *
- * @params  string  service name
- * @return  mixed
+ * @params  {string}  service name
+ * @return  {mixed}
  */
 
 SubblyCore.prototype.api = function( serviceName, args )
@@ -193,4 +196,24 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
+
+/*
+ * Extend Subbly Components
+ *
+ * @params  {string}  component type
+ * @params  {string}  component name
+ * @params  {object}  component
+ * @return  {string}
+ */
+
+SubblyCore.prototype.extend = function( type, name, obj )
+{
+  Components[ type ][ name ] = SubblyController.extend( obj )
+}
+
+// Global Init
+
+subbly = new SubblyCore( subblyConfig )
+
+window.Subbly = subbly
 

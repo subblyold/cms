@@ -457,7 +457,7 @@ ol {
 .user-nav-container:hover,
 .user-nav-container.active {
   background: #323336;
-  height: 130px;
+  height: 120px;
 }
 .user-nav-sub {
   -webkit-transform: translateY(80px);

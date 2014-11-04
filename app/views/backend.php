@@ -51,7 +51,7 @@
 
       <div class="user-nav">
         <div class="user-nav-container">
-          <a href="javascript:;">
+          <a href="javascript:;" class="cur-d">
             My Shop
           </a>
           <span class="caret"></span>
@@ -62,7 +62,7 @@
               </a>
             </li>
             <li>
-              <a href="javascript:;" class="js-trigger-logout">
+              <a href="javascript:;" class="js-trigger-logout" onclick="Subbly.logout()">
                 logout
               </a>
             </li>
@@ -104,9 +104,7 @@
         </li>
       </ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
-    <section class="main-view" id="main-view">
-      <div class="view-full">full view</div>
-    </section><!-- /.main-view -->
+    <section class="main-view" id="main-view"></section><!-- /.main-view -->
   </div><!-- /. container -->
 
   <!-- Force 3d acceleration always and forever :) -->
@@ -124,35 +122,5 @@
     }
   </script>
   <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
-  <script>
-//   $(function()
-//   {
-//     var users = Subbly.api('Collection.Users')
-// console.log( users )
-//     users.fetch({
-//         // data: {limit: 2},
-//         success: function( collection, response )
-//         {
-// console.log( collection )
-// console.log( response )
-//         }
-//     }); 
-
-
-//     var user = Subbly.api('Model.User', {
-//       uid: '48cc9851f125ea646d7dd3e26988abae'
-//     })
-// console.log( user )
-
-//     user.fetch({
-//         data: {includes: ['addresses', 'orders']}
-//       , success: function( model, response )
-//         {
-// console.log( model.displayName() )
-// console.log( response )
-//         }
-//     });    
-//   })
-  </script>
 </body>
 </html>

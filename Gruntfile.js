@@ -161,6 +161,9 @@ module.exports = function(grunt)
 
                   , 'src/js/model.js'
                   , 'src/js/collection.js'
+                  , 'src/js/view.js'
+                  , 'src/js/controller.js'
+                  , 'src/js/subbly.js'
 
                   , 'src/js/models/*.js'
                   , 'src/js/collections/*.js'
@@ -176,7 +179,6 @@ module.exports = function(grunt)
                   // , 'src/js/feedback.js'
 
                   , 'src/js/router.js'
-                  , 'src/js/subbly.js'
                   , 'src/js/closure.utils.js'
                   , 'src/js/closure.outro.js'
 

@@ -45,7 +45,10 @@ Components.View.Login = Components.View.FormView.extend(
 
       window.setTimeout(function()
       {
-        login.$el.show().addClass('active')
+        login.$el
+          .show()
+          .removeClass('logged')
+          .addClass('active')
 
         document.getElementById('login-email').focus()
         

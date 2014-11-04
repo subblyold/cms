@@ -4,10 +4,6 @@
   {
     console.info('dom ready')
     
-    subbly = new SubblyCore( subblyConfig )
-
-    window.Subbly = subbly
-
     subbly.init()
   })
 
