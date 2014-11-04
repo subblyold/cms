@@ -86,10 +86,10 @@ class UsersControllerTest extends TestCase
          * OK
          */
         $data = array(
-            'firstname' => 'John',
-            'lastname'  => 'Doe',
-            'email'     => 'john.doe@test.subbly.com',
-            'password'  => '!UnkownPassword!'
+            'firstname' => TestCase::faker()->firstName,
+            'lastname'  => TestCase::faker()->lastName,
+            'email'     => TestCase::faker()->email,
+            'password'  => TestCase::faker()->password,
         );
         $response = $this->call('POST', '/api/v1/users', array('user' => $data));
 
@@ -103,5 +103,56 @@ class UsersControllerTest extends TestCase
         $this->assertEquals($data['firstname'], $json->response->user->firstname);
         $this->assertEquals($data['lastname'], $json->response->user->lastname);
         $this->assertEquals($data['email'], $json->response->user->email);
+    }
+
+    public function testUpdate()
+    {
+        $user = TestCase::getFixture('users.user_8');
+
+        /**
+         * NOT OK
+         */
+        // "user" not defined
+        $response = $this->call('PATCH', "/api/v1/users/{$user->uid}");
+
+        $this->assertResponseStatus(400);
+        $this->assertResponseJSONValid();
+
+        $json = $this->getJSONContent();
+        $this->assertObjectHasAttribute('error', $json->response);
+
+        /**
+         * OK
+         */
+        // "user" defined but empty
+        $response = $this->call('PATCH', "/api/v1/users/{$user->uid}", array('user' => array()));
+
+        $this->assertResponseOk();
+        $this->assertResponseJSONValid();
+
+        $json = $this->getJSONContent();
+        $this->assertObjectHasAttribute('user', $json->response);
+        $this->assertObjectHasAttribute('uid', $json->response->user);
+        $this->assertEquals($user->email, $json->response->user->email);
+        $this->assertEquals($user->firstname, $json->response->user->firstname);
+        $this->assertEquals($user->lastname, $json->response->user->lastname);
+        $this->assertEquals($user->email, $json->response->user->email);
+
+        // "users" with datas
+        $data = array(
+            'firstname' => TestCase::faker()->firstName,
+        );
+        $response = $this->call('PATCH', "/api/v1/users/{$user->uid}", array('user' => $data));
+
+        $this->assertResponseOk();
+        $this->assertResponseJSONValid();
+
+        $json = $this->getJSONContent();
+        $this->assertObjectHasAttribute('user', $json->response);
+        $this->assertObjectHasAttribute('uid', $json->response->user);
+        $this->assertEquals($user->email, $json->response->user->email);
+        $this->assertEquals($data['firstname'], $json->response->user->firstname);
+        $this->assertEquals($user->lastname, $json->response->user->lastname);
+        $this->assertEquals($user->email, $json->response->user->email);
     }
 }
