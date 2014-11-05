@@ -54,9 +54,16 @@ class UsersControllerTest extends TestCase
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('user', $json->response);
-        $this->assertEquals($user->uid, $json->response->user->uid);
-        $this->assertEquals($user->email, $json->response->user->email);
+
+        $this->assertJSONTypes('user', array(
+            'firstname'  => 'string',
+            'lastname'   => 'string',
+            'email'      => 'string',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+        ));
+
+        $this->assertJSONEquals('user', $user);
     }
 
     public function testStore()
