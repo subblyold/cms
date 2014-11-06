@@ -16,15 +16,19 @@ var Router = Backbone.Router.extend(
       var controllers = SubblyPlugins.getList()
         , router      = this
 
-      _.each( Components.Controller, function( controller, name )
+      _.each( Components, function( vendorComponents, vendor )
       {
-// console.log( name, controller )
-        this._controllers[ name ] = new Components.Controller[ name ]( { router: this } )
+        if( !vendorComponents.Controller )
+          return
+
+        _.each( vendorComponents.Controller, function( controller, name )
+        {
+          this._controllers[ vendor + name ] = new controller( { router: this } )
+        }, this )
+
       }, this )
 
-      // new Components.Controller.Customers( { router: this } )
-
-      this._viewspointer.login = subbly.api('View.Login')
+      this._viewspointer.login = subbly.api('Subbly.View.Login')
   
       Backbone.history.start({
           hashChange: true 

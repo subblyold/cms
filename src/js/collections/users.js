@@ -1,7 +1,7 @@
 
-Components.Collection.Users = Components.Collection.List.extend(
+Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 {
-    model:       Components.Model.User
+    model:       Components.Subbly.Model.User
   , serviceName: 'users'
 
   , comparator: function( model )

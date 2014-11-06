@@ -4,7 +4,7 @@
   var dashboard = 
   {
       _controllerName: 'dashboard'
-    , _viewsNames:     ['Dashboard']
+    , _viewsNames:     'Subbly.View.DashboardView'
 
     , onInitialize: function()
       {
@@ -30,15 +30,25 @@
   var DashboardView = 
   {
       _viewName: 'Dashboard'
+
+    , onClose: function()
+      {
+  console.info('close dashboard view')
+      }
   }
 
-  Subbly.register({
-      name: 'Dashboard'
-    , components: {
-          Controller: dashboard
-        , View: [
-              DashboardView
-          ]
-      }
+  Subbly.register('Subbly', 'Dashboard', {
+      'View:DashboardView': DashboardView
+    , 'Controller:dashboard': dashboard
   })
+
+  // Subbly.register({
+  //     name: 'Dashboard'
+  //   , components: {
+  //         Controller: dashboard
+  //       , View: [
+  //             DashboardView
+  //         ]
+  //     }
+  // })
 })( window )

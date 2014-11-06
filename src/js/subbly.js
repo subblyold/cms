@@ -170,7 +170,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this.trigger('user::loggedIn')
 
-  this.trigger( 'hash::change', 'customers' )
+  this.trigger( 'hash::change', 'dashboard' )
 }
 
 /*
@@ -231,6 +231,7 @@ SubblyCore.prototype.logout = function()
   this.trigger( 'hash::change', 'login' )
 }
 
+
 // API
 //-------------------------------
 
@@ -258,7 +259,7 @@ SubblyCore.prototype.api = function( serviceName, args )
 {
   var service = Helpers.getNested( Components, serviceName, false )
     , args    = args || {}
-console.log( service, Components, serviceName )
+// console.log( service, Components, serviceName )
 
   if( !service )
     throw new Error( 'Subbly API do not include ' + serviceName )
@@ -271,6 +272,11 @@ console.log( service, Components, serviceName )
   return service
 }
 
+
+// PLUGINS
+//-------------------------------
+
+
 /*
  * Extend Subbly Components
  *
@@ -280,15 +286,32 @@ console.log( service, Components, serviceName )
  * @return  {void}
  */
 
-SubblyCore.prototype.extend = function( type, name, obj )
+SubblyCore.prototype.extend = function( vendor, type, name, obj )
 {
   var allowedType = [ 'Model', 'Collection', 'View', 'Controller' ]
 
   if( allowedType.indexOf( type ) == -1 )
     throw new Error( 'Extend can not accept "' + type + '" as extend' )
 
-  if( Components[ type ][ name ] )
-    throw new Error( type + '.'  + name + ' already exist' )
+  if( !Components[ vendor ] )
+  {
+    // TODO: build obj dynamically
+    Components[ vendor ] =
+    {
+        Model:      {}
+      , Collection: {}
+      , View:       {}
+      , Supervisor: {}
+      , Controller: {}
+      , Component:  {}
+    }
+  }
+
+  if( Components[ vendor ][ type ][ name ] )
+  {
+    // TODO: extend existing components + log 
+    throw new Error( vendor + '.'  + type + '.'  + name + ' already exist' )
+  }
 
   var alias
 
@@ -307,8 +330,8 @@ SubblyCore.prototype.extend = function( type, name, obj )
         alias = SubblyCollection
       break
   }
-console.log( type, name )
-  Components[ type ][ name ] = alias.extend( obj )
+
+  Components[ vendor ][ type ][ name ] = alias.extend( obj )
 }
 
 /*
@@ -318,11 +341,13 @@ console.log( type, name )
  * @return  {void}
  */
 
-SubblyCore.prototype.register = function( plugin )
+SubblyCore.prototype.register = function( vendor, name, plugin )
 {
-  _.each( plugin.components, function( component, key )
+  _.each( plugin, function( component, typeName )
   {
-    this.extend( key, plugin.name, component )
+    var arr = typeName.split(':')
+    
+    this.extend( vendor, arr[0], arr[1], component )
   }, this )
 }
 

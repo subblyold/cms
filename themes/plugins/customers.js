@@ -4,7 +4,7 @@
   var Customers = 
   {
       _tplStructure:   'half' // full|half|third
-    , _viewsNames:     [ 'Users', 'User' ]
+    , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.Customer' ]
     , _controllerName: 'customers'
 
     , onInitialize: function()
@@ -20,13 +20,13 @@
     // Local method
     , fetch: function()
       {
-        Subbly.event.trigger( 'loader::show' )
+        Subbly.trigger( 'loader::show' )
 
         this.collection.fetch(
         {
           success: function()
           {
-            Subbly.event.trigger( 'pagination::changed' )
+            Subbly.trigger( 'pagination::changed' )
           } 
         })
       }
@@ -35,7 +35,7 @@
     , getCollection: function()
       {
         if( !this.collection )
-          this.collection = Subbly.api('Collection.Users')
+          this.collection = Subbly.api('Subbly.Collection.Users')
       }
 
       // Routes
@@ -52,8 +52,8 @@
         {
             success: function( collection, response )
             {
-    console.log( collection )
-    console.log( response )
+    // console.log( collection )
+    // console.log( response )
             }
         })
       }
@@ -77,7 +77,6 @@
       }
   }
 
-
   var CustomersUsers = 
   {
       _viewName: 'Users'
@@ -88,16 +87,11 @@
       _viewName: 'User'
   }
 
-  // Subbly.extend( 'Controller', 'Customers', Customers )
-
-  Subbly.register({
-      name: 'Customers'
-    , components: {
-          View: [
-              CustomersUsers
-            , CustomersUser
-          ]
-        , Controller: Customers
-      }
+  Subbly.register('Subbly', 'Customers', 
+  {
+      'View:Customers':       CustomersUsers
+    , 'View:Customer':        CustomersUser
+    , 'Controller:Customers': Customers
   })
+
 })( window )

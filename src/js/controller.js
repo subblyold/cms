@@ -29,6 +29,7 @@ var SubblyController = Backbone.Controller.extend(
     // Clean DOM and JS memory
   , remove: function() 
     {
+console.log('remove')
       // Nested views
       if( this._tplLenght )
       {
@@ -86,7 +87,7 @@ var SubblyController = Backbone.Controller.extend(
 
           this._parentView.appendChild( view )
 
-          this._viewsPointers[ viewId ] = subbly.api( 'View.' + this._viewsNames[ index ], {
+          this._viewsPointers[ viewId ] = subbly.api( this._viewsNames[ index ], {
               el:     view
             , viewId: viewId
           })
@@ -95,14 +96,11 @@ var SubblyController = Backbone.Controller.extend(
       // Single view
       else
       {
-        this._viewsPointers = subbly.api( 'View.' + this._viewsNames, {
+        this._viewsPointers = subbly.api( this._viewsNames, {
             el:     this._parentView
           , viewId: parentViewId
         })
       }
-
-console.log( this._viewsPointers )
-
     }
 
     // return single DOM element

@@ -1,5 +1,5 @@
 
-Components.Model.User = SubblyModel.extend(
+Components.Subbly.Model.User = SubblyModel.extend(
 {
     idAttribute:  'uid'
   , serviceName:  'users'

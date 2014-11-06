@@ -1,5 +1,5 @@
 
-Components.View.Login = Components.View.FormView.extend(
+Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
 {
     el: '#login'
 

@@ -31,12 +31,17 @@
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
 
-  var Components = {
-      Model:      {}
-    , Collection: {}
-    , View:       {}
-    , Supervisor: {}
-    , Controller: {}
-    , Component:  {}
+  var Components = 
+  {
+      // vendor level
+      Subbly: 
+      {
+          Model:      {}
+        , Collection: {}
+        , View:       {}
+        , Supervisor: {}
+        , Controller: {}
+        , Component:  {}
+      }
   }
 
