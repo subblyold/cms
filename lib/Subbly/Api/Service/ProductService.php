@@ -127,6 +127,8 @@ class ProductService extends Service
             $product->setCaller($this);
             $product->save();
 
+            $product = $this->find($product->sku);
+
             $this->fireEvent('created', array($product));
 
             return $product;

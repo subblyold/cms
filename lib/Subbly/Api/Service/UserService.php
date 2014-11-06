@@ -182,6 +182,8 @@ class UserService extends Service
 
             $this->fireEvent('created', array($user));
 
+            $user = $this->find($user->uid);
+
             return $user;
         }
 
