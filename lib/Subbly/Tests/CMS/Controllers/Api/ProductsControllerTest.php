@@ -5,16 +5,26 @@ use Subbly\Tests\Support\TestCase;
 
 class ProductsControllerTest extends TestCase
 {
+    private $productJSONFormat = array(
+        'sku'         => 'string',
+        'name'        => 'string',
+        'description' => 'string',
+        'price'       => 'double',
+        'sale_price'  => array('double', 'null'),
+        'quantity'    => 'integer',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+    );
+
     public function testIndex()
     {
-        $response = $this->call('GET', '/api/v1/products');
+        $response = $this->callJSON('GET', '/api/v1/products');
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('products', $json->response);
-        $this->assertJSONCollectionResponse($json->response);
+        $this->assertJSONCollectionResponse('products');
         $this->assertEquals(0, $json->response->offset);
         $this->assertEquals(Product::count(), $json->response->total);
     }
@@ -24,7 +34,7 @@ class ProductsControllerTest extends TestCase
         /**
          * NOT OK
          */
-        $response = $this->call('GET', '/api/v1/products/search');
+        $response = $this->callJSON('GET', '/api/v1/products/search');
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -33,30 +43,30 @@ class ProductsControllerTest extends TestCase
          * OK
          */
         $searchQuery = TestCase::faker()->word;
-        $response    = $this->call('GET', '/api/v1/products/search', array('q' => $searchQuery));
+        $response    = $this->callJSON('GET', '/api/v1/products/search', array('q' => $searchQuery));
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('products', $json->response);
-        $this->assertJSONCollectionResponse($json->response);
+        $this->assertJSONCollectionResponse('products');
         $this->assertEquals($searchQuery, $json->response->query);
     }
 
     public function testShow()
     {
+        // TODO test 404
+
         $product = TestCase::getFixture('products.product_1');
 
-        $response = $this->call('GET', "/api/v1/products/{$product->sku}");
+        $response = $this->callJSON('GET', "/api/v1/products/{$product->sku}");
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('product', $json->response);
-        $this->assertEquals($product->sku, $json->response->product->sku);
-        $this->assertEquals($product->name, $json->response->product->name);
+        $this->assertJSONTypes('product', $this->productJSONFormat);
+        $this->assertJSONEquals('product', $product);
     }
 
     public function testStore()
@@ -65,7 +75,7 @@ class ProductsControllerTest extends TestCase
          * NOT OK
          */
         // "product" not defined
-        $response = $this->call('POST', '/api/v1/products');
+        $response = $this->callJSON('POST', '/api/v1/products');
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -74,7 +84,7 @@ class ProductsControllerTest extends TestCase
         $this->assertObjectHasAttribute('error', $json->response);
 
         // "product" defined but empty
-        $response = $this->call('POST', '/api/v1/products', array('product' => array()));
+        $response = $this->callJSON('POST', '/api/v1/products', array('product' => array()));
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -93,19 +103,14 @@ class ProductsControllerTest extends TestCase
             // 'sale_price'  => null,
             'quantity'    => TestCase::faker()->randomNumber(4),
         );
-        $response = $this->call('POST', '/api/v1/products', array('product' => $data));
+        $response = $this->callJSON('POST', '/api/v1/products', array('product' => $data));
 
         $this->assertResponseStatus(201);
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('product', $json->response);
-        $this->assertEquals($data['sku'], $json->response->product->sku);
-        $this->assertEquals($data['name'], $json->response->product->name);
-        $this->assertEquals($data['description'], $json->response->product->description);
-        $this->assertEquals($data['price'], $json->response->product->price);
-        // $this->assertEquals($data['sale_price'], $json->response->product->sale_price);
-        $this->assertEquals($data['quantity'], $json->response->product->quantity);
+        $this->assertJSONTypes('product', $this->productJSONFormat);
+        $this->assertJSONEquals('product', $data);
     }
 
     public function testUpdate()
@@ -116,7 +121,7 @@ class ProductsControllerTest extends TestCase
          * NOT OK
          */
         // "product" not defined
-        $response = $this->call('PATCH', "/api/v1/products/{$product->sku}");
+        $response = $this->callJSON('PATCH', "/api/v1/products/{$product->sku}");
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -128,28 +133,26 @@ class ProductsControllerTest extends TestCase
          * OK
          */
         // "product" defined but empty
-        $response = $this->call('PATCH', "/api/v1/products/{$product->sku}", array('product' => array()));
+        $response = $this->callJSON('PATCH', "/api/v1/products/{$product->sku}", array('product' => array()));
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('product', $json->response);
-        $this->assertEquals($product->sku, $json->response->product->sku);
-        // TODO add others fields
+        $this->assertJSONTypes('product', $this->productJSONFormat);
+        $this->assertJSONEquals('product', $product);
 
         // "products" with datas
         $data = array(
             'name' => TestCase::faker()->word,
         );
-        $response = $this->call('PATCH', "/api/v1/products/{$product->sku}", array('product' => $data));
+        $response = $this->callJSON('PATCH', "/api/v1/products/{$product->sku}", array('product' => $data));
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
 
         $json = $this->getJSONContent();
-        $this->assertObjectHasAttribute('product', $json->response);
-        $this->assertEquals($product->sku, $json->response->product->sku);
-        // TODO add others fields
+        $this->assertJSONTypes('product', $this->productJSONFormat);
+        $this->assertJSONEquals('product', $data);
     }
 }
