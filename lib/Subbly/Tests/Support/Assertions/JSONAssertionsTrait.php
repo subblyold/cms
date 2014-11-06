@@ -7,13 +7,20 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 trait JSONAssertionsTrait
 {
     private static $formats = array(
-        'boolean',
-        'integer',
-        'double',
-        'string',
         'array',
-        'object',
+        'boolean',
+        'bool',
+        'float',
+        'double',
+        'integer',
+        'int',
         'null',
+        'numeric',
+        'object',
+        'resource',
+        'string',
+        'scalar',
+        'callable',
     );
 
 
@@ -134,7 +141,7 @@ trait JSONAssertionsTrait
         }
         else {
             // TODO
-            throw new Exception('');
+            throw new \Exception('');
         }
 
         // Get JSON content
@@ -150,7 +157,6 @@ trait JSONAssertionsTrait
         foreach ($params['field_types'] as $fieldName=>$formats)
         {
             if (!property_exists($content, $fieldName)) {
-                // TODO
                 throw new \Exception(sprintf('The field named "%s" does not exists into the content "%s"',
                     $fieldName,
                     json_encode($content, true)
@@ -190,7 +196,6 @@ trait JSONAssertionsTrait
                         array_push($asserts, ($value instanceof $format));
                     }
                     else {
-                        // TODO
                         throw new \Exception(sprintf('The type or class "%s" does not exist.', $format));
                     }
                 }
@@ -261,6 +266,6 @@ trait JSONAssertionsTrait
             return false;
         }
 
-        return array_keys($arr) !== range(0, count($arr) - 1);
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 }
