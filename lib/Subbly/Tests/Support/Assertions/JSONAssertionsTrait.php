@@ -151,7 +151,10 @@ trait JSONAssertionsTrait
         {
             if (!property_exists($content, $fieldName)) {
                 // TODO
-                throw new Exception('');
+                throw new \Exception(sprintf('The field named "%s" does not exists into the content "%s"',
+                    $fieldName,
+                    json_encode($content, true)
+                ));
             }
 
             if (is_array($formats) && $this->isKeyValueArray($formats))
@@ -163,22 +166,42 @@ trait JSONAssertionsTrait
             {
                 $value = $accessor->getValue($content, $fieldName);
 
+                $asserts = array();
+
                 foreach ((array) $formats as $format)
                 {
-                    if (in_array($format, self::$formats)) {
-                        $this->assertInternalType($format, $value);
+                    if (in_array($format, self::$formats))
+                    {
+                        // TEMPORARY FIX
+                        // TODO remove it when possible (see phpunit)
+                        if ($format === 'double') {
+                            $format = 'float';
+                        }
+
+                        // $this->assertInternalType($format, $value);
+                        $constraint = new \PHPUnit_Framework_Constraint_IsType($format);
+                        array_push($asserts, $constraint->evaluate($value, '', true));
                     }
                     else if ($format === 'datetime') {
-                        $this->assertDateTimeString($value, \DateTime::ISO8601);
+                        array_push($asserts, $this->isDateTimeString($value, \DateTime::ISO8601));
                     }
                     else if (class_exists($format)) {
-                        $this->assertInstanceOf($format, $value);
+                        // $this->assertInstanceOf($format, $value);
+                        array_push($asserts, ($value instanceof $format));
                     }
                     else {
                         // TODO
-                        throw new Exception('');
+                        throw new \Exception(sprintf('The type or class "%s" does not exist.', $format));
                     }
                 }
+
+                // Assert
+                $this->assertContains(true, $asserts, sprintf('Failed asserting that %s for field "%s" is of %s "%s".',
+                    json_encode($value),
+                    $fieldName,
+                    count($formats) === 1 ? 'type' : 'types',
+                    implode(', ', (array) $formats)
+                ));
             }
         }
     }

@@ -65,4 +65,18 @@ trait ApplicationTrait
             return $this->call($method, $uri, $params, $files, $headers);
         }
     }
+
+    /**
+     * Is the string date has a give format
+     *
+     * @param string  $date   The date into a string format
+     * @param string  $format The date format to check
+     *
+     * @return boolean
+     */
+    public function isDateTimeString($date, $format)
+    {
+        $d = \DateTime::createFromFormat($format, $date);
+        return $d->format($format) === $date;
+    }
 }

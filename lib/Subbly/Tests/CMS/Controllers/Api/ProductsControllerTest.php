@@ -99,7 +99,7 @@ class ProductsControllerTest extends TestCase
             'sku'         => TestCase::faker()->unique()->bothify('????????##'),
             'name'        => TestCase::faker()->words(3, true),
             'description' => TestCase::faker()->text(),
-            'price'       => TestCase::faker()->randomFloat(2, 0, 99999999.99),
+            'price'       => round(TestCase::faker()->randomFloat(2, 0, 99999999.99), 2),
             // 'sale_price'  => null,
             'quantity'    => TestCase::faker()->randomNumber(4),
         );

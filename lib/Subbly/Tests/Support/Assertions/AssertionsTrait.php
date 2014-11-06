@@ -12,7 +12,10 @@ trait AssertionsTrait
      */
     public function assertDateTimeString($date, $format)
     {
-        $d = \DateTime::createFromFormat($format, $date);
-        $this->assertEquals($d->format($format), $date);
+        $this->assertTrue($this->isDateTimeString($date, $format), sprintf(
+            'Failed asserting that %s date is of format "%s".',
+            $date,
+            $format
+        ));
     }
 }

@@ -25,7 +25,7 @@ class SettingServiceTest extends TestCase
     {
         $all = $this->getService()->all();
 
-        $this->assertInstanceOf('ArrayObject', $all);
+        $this->assertInstanceOf('Illuminate\\Support\\Collection', $all);
     }
 
     public function testGet()
