@@ -5,6 +5,7 @@ namespace Subbly\Api\Service;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -15,7 +16,7 @@ class SettingService extends Service
 {
     const CACHE_NAME = 'subbly.settings';
 
-    /** @var \ArrayObject $defaults */
+    /** @var \Illuminate\Support\Collection $defaults */
     private $defaults = null;
 
     /**
@@ -23,7 +24,7 @@ class SettingService extends Service
      */
     protected function init()
     {
-        $this->defaults = new \ArrayObject();
+        $this->defaults = new Collection();
     }
 
     /**
@@ -58,15 +59,15 @@ class SettingService extends Service
             ));
         }
 
-        $this->defaults = new \ArrayObject(
-            array_merge_recursive($this->defaults->getArrayCopy(), $yaml['default_settings'])
+        $this->defaults = new Collection(
+            array_merge_recursive($this->defaults->toArray(), $yaml['default_settings'])
         );
     }
 
     /**
      * Get all Setting
      *
-     * @return \ArrayObject
+     * @return \Illuminate\Support\Collection
      *
      * @api
      */
@@ -180,7 +181,7 @@ class SettingService extends Service
             return $this->defaults->offsetGet($key);
         }
 
-        return $this->defaults->getArrayCopy();
+        return $this->defaults->toArray();
     }
 
     /**
@@ -198,7 +199,7 @@ class SettingService extends Service
     /**
      * Get the cached settings data
      *
-     * @return \ArrayObject
+     * @return \Illuminate\Support\Collection
      */
     private function getCachedSettings()
     {
@@ -207,7 +208,7 @@ class SettingService extends Service
             $this->initCachedSettings();
         }
 
-        return new \ArrayObject(
+        return new Collection(
             Cache::get(self::CACHE_NAME)
         );
     }
@@ -215,12 +216,12 @@ class SettingService extends Service
     /**
      * Set new settings data to cache
      *
-     * @param \ArrayObject  $settings
+     * @param \Illuminate\Support\Collection  $settings
      */
-    private function setCachedSettings(\ArrayObject $settings)
+    private function setCachedSettings(Collection $settings)
     {
         $expiresAt = Carbon::now()->addMinutes(15);
-        $settings  = $settings->getArrayCopy();
+        $settings  = $settings->toArray();
 
         Cache::put(self::CACHE_NAME, $settings, $expiresAt);
 
@@ -230,11 +231,11 @@ class SettingService extends Service
     /**
      *
      *
-     * @return \ArrayObject
+     * @return \Illuminate\Support\Collection
      */
     private function initCachedSettings()
     {
-        $settings = new \ArrayObject;
+        $settings = new Collection;
 
         // Defaults settings
         foreach ($this->defaults as $k=>$v)
