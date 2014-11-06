@@ -124,6 +124,8 @@ class OrderService extends Service
 
             $this->fireEvent('created', array($order));
 
+            $order = $this->find($order->id);
+
             return $order;
         }
 

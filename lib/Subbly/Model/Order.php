@@ -8,28 +8,13 @@ class Order extends Model implements ModelInterface
 {
     use Concerns\SubblyModel;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'orders';
 
     /**
-     * The attributes visible from the model's JSON form.
-     *
-     * @var array
+     * Fields
      */
     protected $visible = array('id', 'status', 'total_price', 'shipping_address', 'billing_address', 'products', 'user');
-
     protected $fillable = array('status', 'user_id', 'shipping_address', 'billing_address');
-
-    protected $defaultValues = array(
-        'status'      => self::STATUS_DRAFT,
-        'total_price' => 0,
-    );
-
-    const STATUS_DRAFT = 'draft';
 
     /**
      * Validations
@@ -37,6 +22,19 @@ class Order extends Model implements ModelInterface
     protected $rules = array(
         'user_id' => 'required',
     );
+
+    protected $defaultValues = array(
+        'status'      => self::STATUS_DRAFT,
+        'total_price' => 0,
+    );
+
+    const STATUS_DRAFT     = 'draft';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_REFUSED   = 'refused';
+    const STATUS_WAITING   = 'waiting';
+    const STATUS_PAID      = 'paid';
+    const STATUS_SENT      = 'sent';
+
 
     /**
      * Relashionship

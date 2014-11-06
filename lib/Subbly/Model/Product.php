@@ -12,22 +12,18 @@ class Product extends Model  implements ModelInterface, SortableInterface
     use Sortable;
     use Concerns\SubblyModel;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'products';
 
     /**
-     * The attributes visible from the model's JSON form.
-     *
-     * @var array
+     * Fields
      */
     protected $visible = array('position', 'status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity', 'images', 'options', 'categories', 'created_at', 'updated_at');
 
     protected $fillable = array('status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity');
 
+    /**
+     * Validation rules
+     */
     protected $rules = array(
         'status' => 'required',
         'name'   => 'required',
@@ -43,7 +39,11 @@ class Product extends Model  implements ModelInterface, SortableInterface
         'order_column_name' => 'position',
     );
 
-    const STATUS_DRAFT = 'draft';
+    const STATUS_DRAFT      = 'draft';
+    const STATUS_ACTIVE     = 'active';
+    const STATUS_HIDDEN     = 'hidden';
+    const STATUS_SOLDOUT    = 'sold_out';
+    const STATUS_COMINGSOON = 'coming_soon';
 
     /**
      * Relashionship
@@ -61,5 +61,18 @@ class Product extends Model  implements ModelInterface, SortableInterface
     public function categories()
     {
         return $this->hasMany('Subbly\\Model\\ProductCategory');
+    }
+
+
+    public function getPriceAttribute()
+    {
+        return (double) $this->attributes['price'];
+    }
+    public function getSalePriceAttribute()
+    {
+        return $this->attributes['sale_price'] === null
+            ? null
+            : (double) $this->attributes['sale_price']
+        ;
     }
 }

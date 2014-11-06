@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Artisan;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
-    use AssertionsTrait, FixturesTrait, ApplicationTrait;
+    use FixturesTrait, ApplicationTrait;
+    use Assertions\AssertionsTrait, Assertions\JSONAssertionsTrait;
 
     protected $useDatabase = true;
 
@@ -37,7 +38,11 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     public function teardown()
     {
-        // m::close();
+        parent::teardown();
+
+        if ($this->useDatabase) {
+            $this->teardownDb();
+        }
     }
 
     public function setUpDb()
@@ -48,6 +53,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
 
     public function teardownDb()
     {
-        Artisan::call('migrate:reset');
+        // Artisan::call('migrate:reset');
     }
 }

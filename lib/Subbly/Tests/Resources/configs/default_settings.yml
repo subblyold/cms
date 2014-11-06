@@ -1,0 +1,8 @@
+default_settings:
+  test.subbly.string_setting:
+    type: string
+    value: Value
+
+  subbly.array_setting:
+    type: array
+    value: [1, 2, 3]

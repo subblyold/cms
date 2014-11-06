@@ -23,7 +23,7 @@ class ProductTableSeeder extends Seeder {
                 'name'        => $faker->words(3, true),
                 'description' => $faker->text(),
                 'price'       => $price,
-                'sale_price'  => $i === 0 ? null : $sale_price,
+                'sale_price'  => ($i % 2) === 0 ? null : $sale_price,
                 'quantity'    => $faker->randomNumber(4),
             ));
             TestCase::addFixture('products.product_' . $i, $product);
