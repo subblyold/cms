@@ -101,6 +101,6 @@ console.log('close view', this)
     }
 
     // publish jQuery event + viewport 
-    subbly.event.trigger( 'window::resize', event, viewport )
+    subbly.trigger( 'window::resize', event, viewport )
   })
   

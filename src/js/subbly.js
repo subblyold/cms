@@ -15,7 +15,7 @@ var SubblyCore = function( config )
   this._credentials = false
 
   // Pub/Sub channel
-  this.event  = _.extend( {}, Backbone.Events )
+  this._event  = _.extend( {}, Backbone.Events )
 
   return this
 }
@@ -33,11 +33,11 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
-  this.event.on( 'hash::change', function( href )
+  this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )
     {
-      scope.event.trigger( 'hash::changed' )
+      scope.trigger( 'hash::changed' )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -61,6 +61,11 @@ SubblyCore.prototype.init = function()
   this._router.ready()
 }
 
+
+// CONFIG
+//-------------------------------
+
+
 /*
  * Get config value
  *
@@ -83,6 +88,72 @@ SubblyCore.prototype.setConfig = function( path, value )
   return Helpers.setNested( this._config, path, value ) 
 }
 
+
+// EVENTS
+//-------------------------------
+
+
+/*
+ * Bind an event to a `callback` function. Passing `"all"` will bind
+ * the callback to all events fired.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.on = function( name, callback, context )
+{
+  this._event.on( name, callback, context )
+}
+
+/*
+ * Bind an event to only be triggered a single time. After the first time
+ * the callback is invoked, it will be removed.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.once = function( name, callback, context )
+{
+  this._event.once( name, callback, context )
+}
+
+/*
+ * Remove one or many callbacks. If `context` is null, removes all
+ * callbacks with that function. If `callback` is null, removes all
+ * callbacks for the event. If `name` is null, removes all bound
+ * callbacks for all events.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.off = function( name, callback, context )
+{
+  this._event.off( name, callback, context )
+}
+
+/*
+ * Trigger one or many events, firing all bound callbacks. Callbacks are
+ * passed the same arguments as `trigger` is, apart from the event name
+ * (unless you're listening on `"all"`, which will cause your callback to
+ * receive the true name of the event as the first argument).
+ *
+ * @return  {void}
+ */
+
+// TODO: args1... ho my god ! need to find a better solution
+SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args6, args7 )
+{
+  // var args = [].slice.call( arguments, 1 )
+// console.log( arguments )
+//   this._event.trigger.apply( this, arguments )
+  this._event.trigger( args1, args2, args3, args4, args5, args6, args7 )
+}
+
+
+// CREDENTIALS / LOGIN
+//-------------------------------
+
+
 /*
  * Set user credentials
  *
@@ -97,9 +168,9 @@ SubblyCore.prototype.setCredentials = function( credentials )
   // TODO: find a client side crypto lib
   document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
 
-  this.event.trigger('user::loggedIn')
+  this.trigger('user::loggedIn')
 
-  this.event.trigger( 'hash::change', 'dashboard' )
+  this.trigger( 'hash::change', 'customers' )
 }
 
 /*
@@ -126,7 +197,7 @@ SubblyCore.prototype.isLogin = function()
 {
   if( !document.cookie )
   {
-    this.event.trigger( 'hash::change', 'login' )
+    this.trigger( 'hash::change', 'login' )
     return
   }
 
@@ -137,7 +208,7 @@ SubblyCore.prototype.isLogin = function()
 
   if( _.isNull( credentials ) )
   {
-    this.event.trigger( 'hash::change', 'login' )
+    this.trigger( 'hash::change', 'login' )
     return
   }
 
@@ -157,8 +228,11 @@ SubblyCore.prototype.logout = function()
 
   document.cookie = this._credentialsCookie + '=' + null + '; path=/'
 
-  this.event.trigger( 'hash::change', 'login' )
+  this.trigger( 'hash::change', 'login' )
 }
+
+// API
+//-------------------------------
 
 
 /*

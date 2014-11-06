@@ -32,7 +32,7 @@ var Router = Backbone.Router.extend(
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
-      subbly.event.on( 'hash::changed', this.closeCurrent, this )
+      subbly.on( 'hash::changed', this.closeCurrent, this )
 
       return this
     }

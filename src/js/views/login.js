@@ -28,7 +28,7 @@ Components.View.Login = Components.View.FormView.extend(
         , skip:     false
       })
 
-      subbly.event.on( 'user::loggedIn', function()
+      subbly.on( 'user::loggedIn', function()
       {
         this.hide()
         this.form.$el.reset()
@@ -52,7 +52,7 @@ Components.View.Login = Components.View.FormView.extend(
 
         document.getElementById('login-email').focus()
         
-        subbly.event.trigger( 'loader::hide' )
+        subbly.trigger( 'loader::hide' )
       }, 500)
     }
 
