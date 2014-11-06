@@ -35,6 +35,7 @@
       , "league/oauth2-client":        "~0.3"
       , "barryvdh/laravel-debugbar":   "1.*"
       , "pimple/pimple":               "~3.0"
+      , "symfony/property-access":     "~2.5"
       , "mustache/mustache":           "2.7.0"
     }
   , "require-dev": {
