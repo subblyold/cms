@@ -10,6 +10,7 @@ var Router = Backbone.Router.extend(
         '':       'default'
       , 'login':  'login'
       , 'logout': 'logout'
+      , '*path':  'notFound'
     }
 
   , initialize: function() 
@@ -80,6 +81,11 @@ var Router = Backbone.Router.extend(
   , logout: function()
     {
       subbly.logout()
+    }
+
+  , notFound: function( route )
+    {
+      subbly.trigger( 'hash::notFound', route )
     }
 
     // Methods
