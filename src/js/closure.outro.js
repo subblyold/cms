@@ -2,17 +2,10 @@
   // On DOMready
   $(function()
   {
-    console.info('dom ready')
-    
     subbly.init()
   })
 
-})(window); // end closure
-
-
-// Plugins holder
-// var subblyPlugins = {}
-
+})( window ); // end closure
 
 // In case we forget to take out console statements. 
 // IE becomes very unhappy when we forget. Let's not make IE unhappy
