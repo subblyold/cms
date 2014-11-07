@@ -1,0 +1,37 @@
+
+//
+// Dashboard
+// --------------------------------------------------
+
+.dashboard {
+  .flex-display;
+  .align-items(center);
+  .justify-content(center);
+  height: 100%;
+  text-align: center;
+  // .align-items(center)
+
+  .btn + .btn {
+    margin-left: 10px;
+  }
+}
+
+.dashboard-stats {
+  padding-top: 80px;
+
+  li {
+    color: @black;
+    display: inline-block;
+    font-size: @font-size-title;
+
+    & + li {
+      margin-left: 70px;
+    }
+  }
+
+  span {
+    color: @gray;
+    display: block;
+    font-size: @font-size-small;
+  }
+}

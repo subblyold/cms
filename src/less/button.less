@@ -47,6 +47,19 @@
   }
 }
 
+.btn-product {
+  background: @product;
+  border-color: @product;
+  color: @white;
+
+  &:hover,
+  &:focus {
+    background: darken( @product, 10%);
+    border-color: darken( @product, 10% );
+    color: @white;
+  }
+}
+
 .btn-icon {
   border-color: @gray-light;
   position: relative;
