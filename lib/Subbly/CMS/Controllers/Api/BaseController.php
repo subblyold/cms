@@ -158,15 +158,21 @@ class BaseController extends Controller
             $response = $parentResponse = parent::callAction($method, $parameters);
         }
         catch (\Exception $e) {
-            $allowExceptions = array(
-                'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
+            $notFoundExceptions = array(
                 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
+                'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
+            );
+            $errorExceptions = array(
+                'Subbly\\Api\\Service\\Exception',
             );
 
-            if (in_array(get_class($e), $allowExceptions)) {
+            if (in_array(get_class($e), $notFoundExceptions)) {
                 return $this->jsonNotFoundResponse($e->getMessage());
             }
-            if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
+            else if (in_array(get_class($e), $errorExceptions)) {
+                return $this->jsonErrorResponse($e->getMessage());
+            }
+            else if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
                 return $this->jsonErrorResponse($e->firstErrorMessage());
             }
 
