@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="<?= URL::to('/themes/backend/assets/css/subbly.' . $environment . '.css'); ?>">
 
   <script src="<?= URL::to('/themes/backend/assets/lib/modernizr.js'); ?>"></script>
-  <script src="<?= URL::to('/themes/backend/assets/lib/pace.min.js'); ?>"></script>
 
 </head>
 <body>
