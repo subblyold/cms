@@ -11,7 +11,7 @@ class UserService extends Service
 {
     protected $modelClass = 'Subbly\\Model\\User';
 
-    protected $includableRelationships = array('addresses', 'orders');
+    protected $includableRelationships = array('addresses', 'orders', 'groups');
 
     /**
      * Return an empty model

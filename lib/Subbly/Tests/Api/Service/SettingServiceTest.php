@@ -58,9 +58,20 @@ class SettingServiceTest extends TestCase
 
         foreach ($tests as $value)
         {
-            $this->getService()->update('subbly.test_entry_setting', $value);
-            $this->assertSame($this->getService()->get('subbly.test_entry_setting'), $value);
-            // TODO must be false
+            $this->getService()->update('test.subbly.untyped_setting', $value);
+            $this->assertSame($this->getService()->get('test.subbly.untyped_setting'), $value);
+        }
+
+        try {
+            $value = array(5, 6);
+
+            $this->getService()->update('test.subbly.string_setting', $value);
+            $this->assertSame($this->getService()->get('subbly.string_setting'), $value);
+
+            $this->fail('\Subbly\Api\Service\Exception has not be raised.');
+        }
+        catch (\Subbly\Api\Service\Exception $e) {
+            $this->assertTrue(true);
         }
     }
 

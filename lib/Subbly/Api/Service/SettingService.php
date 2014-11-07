@@ -60,7 +60,7 @@ class SettingService extends Service
         }
 
         $this->defaults = new Collection(
-            array_merge_recursive($this->defaults->toArray(), $yaml['default_settings'])
+            array_merge($this->defaults->toArray(), $yaml['default_settings'])
         );
     }
 
@@ -107,20 +107,7 @@ class SettingService extends Service
      */
     public function has($key)
     {
-        // TODO check the defaults key instead?
-        $exists = $this->getCachedSettings()->offsetExists($key);
-
-        /**
-         * Refresh cache if
-         */
-        if (!$exists)
-        {
-            $this->refresh();
-
-            $exists = $this->getCachedSettings()->offsetExists($key);
-        }
-
-        return $exists;
+        return $this->defaults->offsetExists($key);
     }
 
     /**
@@ -129,14 +116,29 @@ class SettingService extends Service
      * @param string  $key   The setting key
      * @param mixed   $value The setting value
      *
+     * @return boolean
+     *
+     * @throws \Subbly\Api\Service\Exception If the setting key does not exists
+     * @throws \Subbly\Api\Service\Exception If the setting value has not the good format
+     *
      * @api
      */
     public function update($key, $value)
     {
         if ($this->fireEvent('updating', array($key, $value)) === false) return false;
-        // TODO check that identifier is defined into default_settings.yml
 
-        // TODO check the $value type in function of the default setting informations
+        if (!is_string($key) || !$this->has($key)) {
+            throw new Exception(sprintf(Exception::SETTING_KEY_NOT_EXISTS, $key));
+        }
+
+        $default = $this->defaults($key);
+        if (isset($default['type']) && gettype($value) !== $default['type']) {
+            throw new Exception(sprintf(Exception::SETTING_VALUE_WRONG_TYPE,
+                json_encode($value),
+                $key,
+                $default['type']
+            ));
+        }
 
         $settings = $this->getCachedSettings();
         // TODO identifier = PACKAGE_NAME.KEY_NAME
@@ -157,6 +159,8 @@ class SettingService extends Service
         $this->setCachedSettings($settings);
 
         $this->fireEvent('updated', array($key, $value));
+
+        return true;
     }
 
     /**
@@ -174,7 +178,7 @@ class SettingService extends Service
     {
         if (is_string($key))
         {
-            if (!$this->defaults->offsetExists($key)) {
+            if (!$this->has($key)) {
                 throw new Exception(sprintf(Exception::SETTING_KEY_NOT_EXISTS, $key));
             }
 

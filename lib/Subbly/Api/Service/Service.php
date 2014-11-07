@@ -22,7 +22,7 @@ abstract class Service
      *
      * @param Subbly\Api\Api  $api The Api class
      *
-     * @throws Subbly\Api\Service\Exception Throw an exception if name() method does not return a string
+     * @throws Subbly\Api\Service\Exception If name() method does not return a string
      */
     final public function __construct(Api $api)
     {

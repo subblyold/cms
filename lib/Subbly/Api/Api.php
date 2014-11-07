@@ -31,7 +31,7 @@ class Api
      *
      * @return \Subbly\Api\Service\Service
      *
-     * @throws \Subbly\Api\Exception Throw an exception if the service name does not exists
+     * @throws \Subbly\Api\Exception If the service name does not exists
      *
      * @api
      */
@@ -61,9 +61,9 @@ class Api
      *
      * @param string  $className The class name of the service
      *
-     * @throws \Subbly\Api\Exception Throw an exception if class name does not exists
-     * @throws \Subbly\Api\Exception Throw an exception if the class does not implement \Subbly\Api\Service\Service
-     * @throws \Subbly\Api\Exception Throw an exception if service name is already register
+     * @throws \Subbly\Api\Exception If class name does not exists
+     * @throws \Subbly\Api\Exception If the class does not implement \Subbly\Api\Service\Service
+     * @throws \Subbly\Api\Exception If service name is already register
      */
     public function registerService($className)
     {

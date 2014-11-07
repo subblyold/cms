@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Response;
 
 use Subbly\Subbly;
 use Subbly\Model\Collection;
+use Subbly\Model\User;
 
 class BaseController extends Controller
 {
@@ -136,10 +137,12 @@ class BaseController extends Controller
                 ? array()
                 : array('WWW-Authenticate' => 'Basic realm="Subbly authentication"')
             ;
-            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders );
+            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders);
         }
 
-        // TODO Check if is admin
+        if (! $user instanceof User || !$user->hasAccess('subbly.backend.auth')) {
+            return $this->jsonErrorResponse('Access refused! You have not the premission to access this page.', 401);
+        }
     }
 
     /**
@@ -158,15 +161,21 @@ class BaseController extends Controller
             $response = $parentResponse = parent::callAction($method, $parameters);
         }
         catch (\Exception $e) {
-            $allowExceptions = array(
-                'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
+            $notFoundExceptions = array(
                 'Illuminate\\Database\\Eloquent\\ModelNotFoundException',
+                'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException',
+            );
+            $errorExceptions = array(
+                'Subbly\\Api\\Service\\Exception',
             );
 
-            if (in_array(get_class($e), $allowExceptions)) {
+            if (in_array(get_class($e), $notFoundExceptions)) {
                 return $this->jsonNotFoundResponse($e->getMessage());
             }
-            if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
+            else if (in_array(get_class($e), $errorExceptions)) {
+                return $this->jsonErrorResponse($e->getMessage());
+            }
+            else if ($e instanceof \Subbly\Model\Exception\UnvalidModelException) {
                 return $this->jsonErrorResponse($e->firstErrorMessage());
             }
 
