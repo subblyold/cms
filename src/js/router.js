@@ -46,7 +46,7 @@ var Router = Backbone.Router.extend(
         subbly.trigger( 'hash::changed', route, params  )
       })
 
-      subbly.on( 'hash::changed', this.closeCurrent, this )
+      subbly.on( 'hash::change', this.closeCurrent, this )
 
       return this
     }
@@ -60,7 +60,13 @@ var Router = Backbone.Router.extend(
              this._currentView 
           && this._currentView.remove 
         )
+      {
+        console.groupCollapsed( 'Close current view' )
+          console.log( this._currentView  )
+        console.groupEnd()
+
         this._currentView.remove()
+      }
     }
 
     // Routes
@@ -68,7 +74,8 @@ var Router = Backbone.Router.extend(
 
   , default: function()
     {
-      console.info('default controller')
+      console.warn('call default router')
+      subbly.trigger( 'hash::change', 'dashboard' )
     }      
 
   , login: function()

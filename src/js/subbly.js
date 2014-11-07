@@ -48,7 +48,6 @@ SubblyCore.prototype.init = function()
   {
     if( scope._changesAreSaved )
     {
-      scope.trigger( 'hash::changed', href )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -67,8 +66,16 @@ SubblyCore.prototype.init = function()
     }
   })
 
-  this.isLogin()
-
+  if( !this.isLogin() )
+  {
+    console.info( 'trigger login view' )
+    this.trigger( 'hash::change', 'login' )
+  }
+  else
+  {
+    console.info( 'user is logged in' )
+  }
+  
   console.info( 'release app router' )
   this._router.ready()
 
@@ -208,23 +215,23 @@ SubblyCore.prototype.isLogin = function()
   if( !document.cookie )
   {
     console.warn('no cookie for this domain')
-    this.trigger( 'hash::change', 'login' )
-    return
+    return false
   }
 
   // retrive credentials from cookies
   var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
     , result      = regexp.exec( document.cookie )
-    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
+    , credentials = ( result === null ) ? false : result[1]
 
-  if( _.isNull( credentials ) )
+  if( credentials === 'null' )
   {
     console.warn('cookie found but credentials are null')
-    this.trigger( 'hash::change', 'login' )
-    return
+    return false
   }
+  
+  this.trigger( 'user::loggedIn', credentials )
 
-  this.setCredentials( credentials )
+  return true
 }
 
 /*
@@ -236,6 +243,8 @@ SubblyCore.prototype.isLogin = function()
 
 SubblyCore.prototype.logout = function()
 {
+  console.info( 'user logout' )
+
   this._credentials = false
 
   document.cookie = this._credentialsCookie + '=' + null + '; path=/'
@@ -366,6 +375,7 @@ SubblyCore.prototype.register = function( vendor, name, plugin )
 // Global Init
 
 console.groupCollapsed( 'Subbly Global Init' )
+// console.group( 'Subbly Global Init' )
 
 subbly = new SubblyCore( subblyConfig )
 
