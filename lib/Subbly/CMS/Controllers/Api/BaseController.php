@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Response;
 
 use Subbly\Subbly;
 use Subbly\Model\Collection;
+use Subbly\Model\User;
 
 class BaseController extends Controller
 {
@@ -136,10 +137,12 @@ class BaseController extends Controller
                 ? array()
                 : array('WWW-Authenticate' => 'Basic realm="Subbly authentication"')
             ;
-            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders );
+            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders);
         }
 
-        // TODO Check if is admin
+        if (! $user instanceof User || !$user->hasAccess('subbly.backend.auth')) {
+            return $this->jsonErrorResponse('Access refused! You have not the premission to access this page.', 401);
+        }
     }
 
     /**

@@ -14,19 +14,20 @@ class DatabaseSeeder extends Seeder
     {
         Eloquent::unguard();
 
-        $this->globalSeeds();
-
         if (App::environment('testing')) {
             $this->testingSeeds();
         }
+
+        $this->globalSeeds();
+
 
         Eloquent::reguard();
     }
 
     public function globalSeeds()
     {
-        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\UserRolesSeeder');
-        $this->command->info('User roles seeded!');
+        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\GroupsSeeder');
+        $this->command->info('Group table seeded!');
     }
 
     public function testingSeeds()
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
          */
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        $tables = array('settings', 'users', 'products', 'orders');
+        $tables = array('settings', 'users', 'products', 'orders', 'users_groups', 'groups');
 
         foreach ($tables as $table) {
             DB::table($table)->delete();
