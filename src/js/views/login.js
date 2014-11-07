@@ -97,7 +97,7 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
                 }
               , success: function( response )
                 {
-                  subbly.setCredentials( credentials )
+                  subbly.trigger( 'user::loggedIn', encode )
                 }
               , error:   function( jqXHR, textStatus, errorThrown )
                 {

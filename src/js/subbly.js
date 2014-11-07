@@ -22,6 +22,10 @@ var SubblyCore = function( config )
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
+
+  this._event.on( 'user::loggedIn', this.setCredentials, this )
+  this._event.on( 'user::logout',   this.logout,         this )
+
   return this
 }
 
@@ -176,14 +180,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this._credentials = credentials
 
-  // not safe at all
-  // TODO: find a client side crypto lib
-  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
-
-  this.trigger('user::loggedIn')
-
-  // TODO: do not trigger `dashboard` if URL set
-  this.trigger( 'hash::change', 'dashboard' )
+  document.cookie = this._credentialsCookie + '=' + this._credentials + '; path=/'
 }
 
 /*
