@@ -8,5 +8,6 @@ class Exception extends \Exception
     const CANT_UPDATE_MODEL = 'Can\'t update the "%s" model in Service named "%s". Format invalid.';
 
     /** SettingService */
-    const SETTING_KEY_NOT_EXISTS = 'Setting key named "%s" does not exists';
+    const SETTING_KEY_NOT_EXISTS   = 'Setting key named "%s" does not exists';
+    const SETTING_VALUE_WRONG_TYPE = 'The value "%s" for setting named "%s" must be a %s';
 }
