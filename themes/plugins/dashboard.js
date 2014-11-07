@@ -5,6 +5,12 @@
   {
       _controllerName: 'dashboard'
     , _viewsNames:     'Subbly.View.DashboardView'
+    , _mainNav:
+      {
+          name:       'Dashboard'
+        , order:      100
+        , defaultUrl: 'dashboard'
+      }
 
     , onInitialize: function()
       {
@@ -20,8 +26,6 @@
 
     , list: function() 
       {
-        this._mainRouter._currentView = this
-        // return
   console.info('call dashboard view')
 
       }
@@ -42,13 +46,4 @@
     , 'Controller:dashboard': dashboard
   })
 
-  // Subbly.register({
-  //     name: 'Dashboard'
-  //   , components: {
-  //         Controller: dashboard
-  //       , View: [
-  //             DashboardView
-  //         ]
-  //     }
-  // })
 })( window )

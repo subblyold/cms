@@ -17425,7 +17425,7 @@ var SubblyView = Backbone.View.extend(
     {
       this._viewId   = options.viewId
 
-      console.log(' initialize ' + this._viewName, this._viewId, this.el)
+      // console.log(' initialize ' + this._viewName, this._viewId, this.el)
 
       return this
     }
@@ -17445,10 +17445,13 @@ var SubblyController = Backbone.Controller.extend(
   , _parentView:     false
   , _controllerName: null
   , _mainRouter:     false
+  , _mainNav:        false
 
   , initialize: function() 
     {
       this._mainRouter = this.options.router
+
+      this.registerMainView()
 
       if( this.onInitialize )
         this.onInitialize()
@@ -17457,29 +17460,23 @@ var SubblyController = Backbone.Controller.extend(
   , onBeforeRoute: function()
     {
       this.displayViews()
+      
+      // register current view
+      console.log('register current view ' + this._controllerName)
+
+      this._mainRouter._currentView = this
     }
 
     // Clean DOM and JS memory
   , remove: function() 
     {
-console.log('remove')
-      // Nested views
-      if( this._tplLenght )
-      {
-        _( this._viewsPointers )
-          .forEach( function( v )
-          {
-            this._viewsPointers[ v._viewId ].close()
-          }, this)
-        
-        if( this._parentView )
-          this.el.removeChild( this._parentView )
-      }
-      // Single view
-      else
-      {
-        this._viewsPointers.close()
-      }
+console.info('remove ' + this._controllerName)
+
+      _( this._viewsPointers )
+        .forEach( function( v )
+        {
+          this._viewsPointers[ v._viewId ].close()
+        }, this)
 
       this._parentView    = false
       this._viewsPointers = {}
@@ -17529,11 +17526,13 @@ console.log('remove')
       // Single view
       else
       {
-        this._viewsPointers = subbly.api( this._viewsNames, {
+        this._viewsPointers[ parentViewId ] = subbly.api( this._viewsNames, {
             el:     this._parentView
           , viewId: parentViewId
         })
       }
+
+// console.log( this._viewsPointers )
     }
 
     // return single DOM element
@@ -17545,6 +17544,12 @@ console.log('remove')
       div.id        = 'view-' + id
 
       return div
+    }
+
+  , registerMainView: function()
+    {
+      if( this._mainNav )
+        this._mainRouter.registerMainNav( this._mainNav )
     }
 })
 
@@ -17583,11 +17588,16 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
+  this._router.on('route', function( route )
+  {
+console.log('route', route)
+  })
+
   this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )
     {
-      scope.trigger( 'hash::changed' )
+      scope.trigger( 'hash::changed', href )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -17720,6 +17730,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this.trigger('user::loggedIn')
 
+  // TODO: do not trigger `dashboard` if URL set
   this.trigger( 'hash::change', 'dashboard' )
 }
 
@@ -17896,7 +17907,7 @@ SubblyCore.prototype.register = function( vendor, name, plugin )
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
-    
+
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
 }
@@ -18506,11 +18517,80 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
 })
 
 
+Components.Subbly.View.MainNav = Backbone.View.extend(
+{
+    el: '#bo-nav'
+
+  , initialize: function( options )
+    {
+      this._items = options.items
+      this._itemsSorted = _.sortBy( this._items, function( obj )
+      {
+        return -obj.order 
+      })
+
+      this.fragment = document.createDocumentFragment()
+
+      _.each( this._itemsSorted, this.buildItem, this )
+
+      this.$el.html( this.fragment )
+
+      this.$links = this.$el.find('a.js-trigger-go')
+// console.log( 'initialize MainNav')
+
+      subbly.on( 'hash::changed', this.hashChanged, this )
+
+      return this
+    }
+
+  , events: {
+      'click a.js-trigger-go': 'goTo'
+    }
+
+  , buildItem: function( item )
+    {
+      var li  = document.createElement('li')
+        , a   = document.createElement('a')
+        , txt = document.createTextNode( item.name )
+
+      //  href="javascript:;" class="fst-nav js-trigger-go-home"
+      a.href        = 'javascript:;'
+      a.className   = 'fst-nav js-trigger-go'
+      a.dataset.url = item.defaultUrl
+
+      a.appendChild( txt )
+      li.appendChild( a )
+
+      this.fragment.appendChild( li )
+    }
+
+  , goTo: function( event )
+    {
+      subbly.trigger( 'hash::change', event.target.getAttribute('data-url') )
+    }
+
+  , hashChanged: function( href )
+    {
+      var $target = this.$links.filter('a[data-url="' + href + '"]')
+// console.log( 'MainNav hashChanged' )
+// console.log( $target )
+// console.log( '-------------------' )
+      if( !$target.length )
+        return
+
+      this.$links.removeClass('active')
+
+      $target.addClass('active')
+    }
+})
+
+
 var Router = Backbone.Router.extend(
 {
     _controllers:  {}
   , _viewspointer: {}
   , _currentView:  false
+  , _mainNav:      []
 
   , routes: {
         '':       'default'
@@ -18535,7 +18615,12 @@ var Router = Backbone.Router.extend(
 
       }, this )
 
-      this._viewspointer.login = subbly.api('Subbly.View.Login')
+      this._viewspointer.login   = subbly.api( 'Subbly.View.Login' )
+      this._viewspointer.mainNav = subbly.api( 'Subbly.View.MainNav', {
+          items: this._mainNav
+      })
+
+// console.log( this._mainNav )
   
       Backbone.history.start({
           hashChange: true 
@@ -18579,6 +18664,15 @@ var Router = Backbone.Router.extend(
     {
       subbly.logout()
     }
+
+    // Methods
+    // ----------------------------
+
+  , registerMainNav: function( navItem )
+    {
+// console.log( navItem )
+      this._mainNav.push( navItem )
+    }
 })
 
 
@@ -18587,7 +18681,6 @@ var Router = Backbone.Router.extend(
   // http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
   Backbone.View.prototype.close = function()
   {
-console.log('close view', this)
     if ( this.onClose )
       this.onClose()
 

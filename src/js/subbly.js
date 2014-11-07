@@ -33,11 +33,16 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
+  this._router.on('route', function( route )
+  {
+console.log('route', route)
+  })
+
   this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )
     {
-      scope.trigger( 'hash::changed' )
+      scope.trigger( 'hash::changed', href )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -170,6 +175,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this.trigger('user::loggedIn')
 
+  // TODO: do not trigger `dashboard` if URL set
   this.trigger( 'hash::change', 'dashboard' )
 }
 
@@ -346,7 +352,7 @@ SubblyCore.prototype.register = function( vendor, name, plugin )
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
-    
+
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
 }

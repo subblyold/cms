@@ -6,6 +6,12 @@
       _tplStructure:   'half' // full|half|third
     , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.Customer' ]
     , _controllerName: 'customers'
+    , _mainNav:
+      {
+          name:       'Customers'
+        , order:      90
+        , defaultUrl: 'customers'
+      }
 
     , onInitialize: function()
       {
