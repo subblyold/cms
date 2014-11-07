@@ -134,7 +134,7 @@ class SettingService extends Service
         $default = $this->defaults($key);
         if (isset($default['type']) && gettype($value) !== $default['type']) {
             throw new Exception(sprintf(Exception::SETTING_VALUE_WRONG_TYPE,
-                $value,
+                json_encode($value),
                 $key,
                 $default['type']
             ));
