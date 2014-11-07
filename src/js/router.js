@@ -4,6 +4,7 @@ var Router = Backbone.Router.extend(
     _controllers:  {}
   , _viewspointer: {}
   , _currentView:  false
+  , _mainNav:      []
 
   , routes: {
         '':       'default'
@@ -16,14 +17,24 @@ var Router = Backbone.Router.extend(
       var controllers = SubblyPlugins.getList()
         , router      = this
 
-      _.each( controllers, function( controller ) //, name ) // Components.Controller
+      _.each( Components, function( vendorComponents, vendor )
       {
-        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+        if( !vendorComponents.Controller )
+          return
+
+        _.each( vendorComponents.Controller, function( controller, name )
+        {
+          this._controllers[ vendor + name ] = new controller( { router: this } )
+        }, this )
+
       }, this )
 
-      // new Components.Controller.Customers( { router: this } )
+      this._viewspointer.login   = subbly.api( 'Subbly.View.Login' )
+      this._viewspointer.mainNav = subbly.api( 'Subbly.View.MainNav', {
+          items: this._mainNav
+      })
 
-      this._viewspointer.login = subbly.api('View.Login')
+// console.log( this._mainNav )
   
       Backbone.history.start({
           hashChange: true 
@@ -31,7 +42,7 @@ var Router = Backbone.Router.extend(
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
-      subbly.event.on( 'hash::changed', this.closeCurrent, this )
+      subbly.on( 'hash::changed', this.closeCurrent, this )
 
       return this
     }
@@ -66,5 +77,14 @@ var Router = Backbone.Router.extend(
   , logout: function()
     {
       subbly.logout()
+    }
+
+    // Methods
+    // ----------------------------
+
+  , registerMainNav: function( navItem )
+    {
+// console.log( navItem )
+      this._mainNav.push( navItem )
     }
 })

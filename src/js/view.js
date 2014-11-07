@@ -10,7 +10,7 @@ var SubblyView = Backbone.View.extend(
     {
       this._viewId   = options.viewId
 
-      console.log(' initialize ' + this._viewName, this._viewId, this.el)
+      // console.log(' initialize ' + this._viewName, this._viewId, this.el)
 
       return this
     }

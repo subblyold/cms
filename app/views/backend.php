@@ -71,7 +71,7 @@
       </div><!-- /.user-nav -->
       <hr>
       <ul class="bo-nav" id="bo-nav">
-        <li>
+<!--         <li>
           <a href="javascript:;" class="fst-nav js-trigger-go-home">
             Dashboard
           </a>
@@ -101,7 +101,7 @@
           <a href="javascript:;">
             Hangar
           </a>
-        </li>
+        </li> -->
       </ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
     <section class="main-view" id="main-view"></section><!-- /.main-view -->
@@ -122,5 +122,7 @@
     }
   </script>
   <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
+  <script src="<?= URL::to('/themes/plugins/customers.js') ?>"></script>
+  <script src="<?= URL::to('/themes/plugins/dashboard.js') ?>"></script>
 </body>
 </html>

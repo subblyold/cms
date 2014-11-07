@@ -1,5 +1,5 @@
 
-Components.View.FormView = Backbone.View.extend(
+Components.Subbly.View.FormView = Backbone.View.extend(
 {
     form:             false
   , $formInputs:      false
@@ -26,7 +26,7 @@ Components.View.FormView = Backbone.View.extend(
     {
       this.removeWarning( event )
 
-      subbly.event.trigger( 'form::changed' )
+      subbly.trigger( 'form::changed' )
 
       if (event.keyCode != 13) 
           return
@@ -45,7 +45,7 @@ Components.View.FormView = Backbone.View.extend(
         this.onCancel()
       }
 
-      subbly.event.trigger( 'form::reset' )
+      subbly.trigger( 'form::reset' )
     }
 
   , removeWarning: function( event )

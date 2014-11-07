@@ -16900,13 +16900,18 @@ var SubblyPlugins =
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
 
-  var Components = {
-      Model:      {}
-    , Collection: {}
-    , View:       {}
-    , Supervisor: {}
-    , Controller: {}
-    , Component:  {}
+  var Components = 
+  {
+      // vendor level
+      Subbly: 
+      {
+          Model:      {}
+        , Collection: {}
+        , View:       {}
+        , Supervisor: {}
+        , Controller: {}
+        , Component:  {}
+      }
   }
 
 
@@ -17420,7 +17425,7 @@ var SubblyView = Backbone.View.extend(
     {
       this._viewId   = options.viewId
 
-      console.log(' initialize ' + this._viewName, this._viewId, this.el)
+      // console.log(' initialize ' + this._viewName, this._viewId, this.el)
 
       return this
     }
@@ -17440,10 +17445,13 @@ var SubblyController = Backbone.Controller.extend(
   , _parentView:     false
   , _controllerName: null
   , _mainRouter:     false
+  , _mainNav:        false
 
   , initialize: function() 
     {
       this._mainRouter = this.options.router
+
+      this.registerMainView()
 
       if( this.onInitialize )
         this.onInitialize()
@@ -17452,28 +17460,23 @@ var SubblyController = Backbone.Controller.extend(
   , onBeforeRoute: function()
     {
       this.displayViews()
+      
+      // register current view
+      console.log('register current view ' + this._controllerName)
+
+      this._mainRouter._currentView = this
     }
 
     // Clean DOM and JS memory
   , remove: function() 
     {
-      // Nested views
-      if( this._tplLenght )
-      {
-        _( this._viewsPointers )
-          .forEach( function( v )
-          {
-            this._viewsPointers[ v._viewId ].close()
-          }, this)
-        
-        if( this._parentView )
-          this.el.removeChild( this._parentView )
-      }
-      // Single view
-      else
-      {
-        this._viewsPointers.close()
-      }
+console.info('remove ' + this._controllerName)
+
+      _( this._viewsPointers )
+        .forEach( function( v )
+        {
+          this._viewsPointers[ v._viewId ].close()
+        }, this)
 
       this._parentView    = false
       this._viewsPointers = {}
@@ -17514,7 +17517,7 @@ var SubblyController = Backbone.Controller.extend(
 
           this._parentView.appendChild( view )
 
-          this._viewsPointers[ viewId ] = subbly.api( 'View.' + this._viewsNames[ index ], {
+          this._viewsPointers[ viewId ] = subbly.api( this._viewsNames[ index ], {
               el:     view
             , viewId: viewId
           })
@@ -17523,14 +17526,13 @@ var SubblyController = Backbone.Controller.extend(
       // Single view
       else
       {
-        this._viewsPointers = subbly.api( 'View.' + this._viewsNames, {
+        this._viewsPointers[ parentViewId ] = subbly.api( this._viewsNames, {
             el:     this._parentView
           , viewId: parentViewId
         })
       }
 
-console.log( this._viewsPointers)
-
+// console.log( this._viewsPointers )
     }
 
     // return single DOM element
@@ -17542,6 +17544,12 @@ console.log( this._viewsPointers)
       div.id        = 'view-' + id
 
       return div
+    }
+
+  , registerMainView: function()
+    {
+      if( this._mainNav )
+        this._mainRouter.registerMainNav( this._mainNav )
     }
 })
 
@@ -17562,7 +17570,7 @@ var SubblyCore = function( config )
   this._credentials = false
 
   // Pub/Sub channel
-  this.event  = _.extend( {}, Backbone.Events )
+  this._event  = _.extend( {}, Backbone.Events )
 
   return this
 }
@@ -17580,11 +17588,16 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
-  this.event.on( 'hash::change', function( href )
+  this._router.on('route', function( route )
+  {
+console.log('route', route)
+  })
+
+  this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )
     {
-      scope.event.trigger( 'hash::changed' )
+      scope.trigger( 'hash::changed', href )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -17608,6 +17621,11 @@ SubblyCore.prototype.init = function()
   this._router.ready()
 }
 
+
+// CONFIG
+//-------------------------------
+
+
 /*
  * Get config value
  *
@@ -17630,6 +17648,72 @@ SubblyCore.prototype.setConfig = function( path, value )
   return Helpers.setNested( this._config, path, value ) 
 }
 
+
+// EVENTS
+//-------------------------------
+
+
+/*
+ * Bind an event to a `callback` function. Passing `"all"` will bind
+ * the callback to all events fired.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.on = function( name, callback, context )
+{
+  this._event.on( name, callback, context )
+}
+
+/*
+ * Bind an event to only be triggered a single time. After the first time
+ * the callback is invoked, it will be removed.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.once = function( name, callback, context )
+{
+  this._event.once( name, callback, context )
+}
+
+/*
+ * Remove one or many callbacks. If `context` is null, removes all
+ * callbacks with that function. If `callback` is null, removes all
+ * callbacks for the event. If `name` is null, removes all bound
+ * callbacks for all events.
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.off = function( name, callback, context )
+{
+  this._event.off( name, callback, context )
+}
+
+/*
+ * Trigger one or many events, firing all bound callbacks. Callbacks are
+ * passed the same arguments as `trigger` is, apart from the event name
+ * (unless you're listening on `"all"`, which will cause your callback to
+ * receive the true name of the event as the first argument).
+ *
+ * @return  {void}
+ */
+
+// TODO: args1... ho my god ! need to find a better solution
+SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args6, args7 )
+{
+  // var args = [].slice.call( arguments, 1 )
+// console.log( arguments )
+//   this._event.trigger.apply( this, arguments )
+  this._event.trigger( args1, args2, args3, args4, args5, args6, args7 )
+}
+
+
+// CREDENTIALS / LOGIN
+//-------------------------------
+
+
 /*
  * Set user credentials
  *
@@ -17644,9 +17728,10 @@ SubblyCore.prototype.setCredentials = function( credentials )
   // TODO: find a client side crypto lib
   document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
 
-  this.event.trigger('user::loggedIn')
+  this.trigger('user::loggedIn')
 
-  this.event.trigger( 'hash::change', 'customers' )
+  // TODO: do not trigger `dashboard` if URL set
+  this.trigger( 'hash::change', 'dashboard' )
 }
 
 /*
@@ -17673,7 +17758,7 @@ SubblyCore.prototype.isLogin = function()
 {
   if( !document.cookie )
   {
-    this.event.trigger( 'hash::change', 'login' )
+    this.trigger( 'hash::change', 'login' )
     return
   }
 
@@ -17684,7 +17769,7 @@ SubblyCore.prototype.isLogin = function()
 
   if( _.isNull( credentials ) )
   {
-    this.event.trigger( 'hash::change', 'login' )
+    this.trigger( 'hash::change', 'login' )
     return
   }
 
@@ -17704,8 +17789,12 @@ SubblyCore.prototype.logout = function()
 
   document.cookie = this._credentialsCookie + '=' + null + '; path=/'
 
-  this.event.trigger( 'hash::change', 'login' )
+  this.trigger( 'hash::change', 'login' )
 }
+
+
+// API
+//-------------------------------
 
 
 /*
@@ -17731,6 +17820,7 @@ SubblyCore.prototype.api = function( serviceName, args )
 {
   var service = Helpers.getNested( Components, serviceName, false )
     , args    = args || {}
+// console.log( service, Components, serviceName )
 
   if( !service )
     throw new Error( 'Subbly API do not include ' + serviceName )
@@ -17744,18 +17834,82 @@ SubblyCore.prototype.api = function( serviceName, args )
 }
 
 
+// PLUGINS
+//-------------------------------
+
+
 /*
  * Extend Subbly Components
  *
  * @params  {string}  component type
  * @params  {string}  component name
- * @params  {object}  component
- * @return  {string}
+ * @params  {object}  component object
+ * @return  {void}
  */
 
-SubblyCore.prototype.extend = function( type, name, obj )
+SubblyCore.prototype.extend = function( vendor, type, name, obj )
 {
-  Components[ type ][ name ] = SubblyController.extend( obj )
+  var allowedType = [ 'Model', 'Collection', 'View', 'Controller' ]
+
+  if( allowedType.indexOf( type ) == -1 )
+    throw new Error( 'Extend can not accept "' + type + '" as extend' )
+
+  if( !Components[ vendor ] )
+  {
+    // TODO: build obj dynamically
+    Components[ vendor ] =
+    {
+        Model:      {}
+      , Collection: {}
+      , View:       {}
+      , Supervisor: {}
+      , Controller: {}
+      , Component:  {}
+    }
+  }
+
+  if( Components[ vendor ][ type ][ name ] )
+  {
+    // TODO: extend existing components + log 
+    throw new Error( vendor + '.'  + type + '.'  + name + ' already exist' )
+  }
+
+  var alias
+
+  switch( type )
+  {
+    case 'Controller':
+        alias = SubblyController
+      break
+    case 'View':
+        alias = SubblyView
+      break
+    case 'Model':
+        alias = SubblyModel
+      break
+    case 'Collection':
+        alias = SubblyCollection
+      break
+  }
+
+  Components[ vendor ][ type ][ name ] = alias.extend( obj )
+}
+
+/*
+ * Register Plugin
+ *
+ * @params  {object}  plugin object
+ * @return  {void}
+ */
+
+SubblyCore.prototype.register = function( vendor, name, plugin )
+{
+  _.each( plugin, function( component, typeName )
+  {
+    var arr = typeName.split(':')
+
+    this.extend( vendor, arr[0], arr[1], component )
+  }, this )
 }
 
 // Global Init
@@ -17766,7 +17920,7 @@ window.Subbly = subbly
 
 
 
-Components.Model.User = SubblyModel.extend(
+Components.Subbly.Model.User = SubblyModel.extend(
 {
     idAttribute:  'uid'
   , serviceName:  'users'
@@ -17781,7 +17935,7 @@ Components.Model.User = SubblyModel.extend(
 
 // Base collection with pagination
 
-Components.Collection.List = SubblyCollection.extend(
+Components.Subbly.Collection.List = SubblyCollection.extend(
 {
     defaultPerPage: 5
 
@@ -17884,9 +18038,9 @@ Components.Collection.List = SubblyCollection.extend(
     }
 })
 
-Components.Collection.Users = Components.Collection.List.extend(
+Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 {
-    model:       Components.Model.User
+    model:       Components.Subbly.Model.User
   , serviceName: 'users'
 
   , comparator: function( model )
@@ -17895,98 +18049,122 @@ Components.Collection.Users = Components.Collection.List.extend(
     }
 })
 
-Components.Controller.Customers = SubblyController.extend(
-// var Customers = 
-{
-    _tplStructure:   'half' // full|half|third
-  , _viewsNames:     [ 'Users', 'User' ]
-  , _controllerName: 'customers'
+// (function( window )
+// {
+//   var Customers = 
+//   {
+//       _tplStructure:   'half' // full|half|third
+//     , _viewsNames:     [ 'Users', 'User' ]
+//     , _controllerName: 'customers'
 
-  , onInitialize: function()
-    {
-console.log( 'onInitialize Customers')
-    }
+//     , onInitialize: function()
+//       {
+//   console.log( 'onInitialize Customers')
+//       }
 
-  , routes: {
-        'customers':      'list'
-      , 'customers/:uid': 'details'
-    }
+//     , routes: {
+//           'customers':      'list'
+//         , 'customers/:uid': 'details'
+//       }
 
-  , fetch: function()
-    {
-      subbly.event.trigger( 'loader::show' )
+//     // Local method
+//     // , fetch: function()
+//     //   {
+//     //     subbly.event.trigger( 'loader::show' )
 
-      this.collection.fetch(
-      {
-        success: function()
-        {
-          subbly.event.trigger( 'pagination::changed' )
-        } 
-      })
-    }
+//     //     this.collection.fetch(
+//     //     {
+//     //       success: function()
+//     //       {
+//     //         subbly.event.trigger( 'pagination::changed' )
+//     //       } 
+//     //     })
+//     //   }
 
-  , getCollection: function()
-    {
-      if( !this.collection )
-        this.collection = subbly.api('Collection.Users')
-    }
+//     // Local method
+//     // , getCollection: function()
+//     //   {
+//     //     if( !this.collection )
+//     //       this.collection = subbly.api('Collection.Users')
+//     //   }
 
-    // Routes
-    //-------------------------------
+//       // Routes
+//       //-------------------------------
 
-  , list: function() 
-    {
-      this._mainRouter._currentView = this
-      // return
-console.info('call customer list')
-      this.getCollection()
+//     , list: function() 
+//       {
+//         this._mainRouter._currentView = this
+//         // return
+//   console.info('call customer list')
+//         this.getCollection()
 
-      this.collection.fetch(
-      {
-          success: function( collection, response )
-          {
-  console.log( collection )
-  console.log( response )
-          }
-      })
-    }
+//         this.collection.fetch(
+//         {
+//             success: function( collection, response )
+//             {
+//     console.log( collection )
+//     console.log( response )
+//             }
+//         })
+//       }
 
-  , details: function( uid ) 
-    {
-      this.getCollection()
-      
-      var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
-  console.log( user )
+//     , details: function( uid ) 
+//       {
+//         this.getCollection()
+        
+//         var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
+//     console.log( user )
 
-      user.fetch(
-      {
-          data: { includes: ['addresses', 'orders'] }
-        , success: function( model, response )
-          {
-  console.log( model.displayName() )
-  console.log( response )
-          }
-      })
-    }
-// }
-})
-// console.log( subbly )
-SubblyPlugins.register( 'Customers' )
-// subbly.extend( 'Controller', 'Customers', Customers )
-
-
-Components.View.Users = SubblyView.extend(
-{
-    _viewName: 'Users'
-})
-
-Components.View.User = SubblyView.extend(
-{
-    _viewName: 'User'
-})
+//         user.fetch(
+//         {
+//             data: { includes: ['addresses', 'orders'] }
+//           , success: function( model, response )
+//             {
+//     console.log( model.displayName() )
+//     console.log( response )
+//             }
+//         })
+//       }
+//   }
 
 
-Components.View.FormView = Backbone.View.extend(
+//   var CustomersUsers = 
+//   {
+//       _viewName: 'Users'
+//   }
+
+//   var CustomersUser = 
+//   {
+//       _viewName: 'User'
+//   }
+
+//   // subbly.extend( 'Controller', 'Customers', Customers )
+
+//   // window.subbly.register({
+//   //     name: 'Customers'
+//   //   , components: {
+//   //         Controller: Customers
+//   //       , View: [
+//   //             CustomersUsers
+//   //           , CustomersUser
+//   //         ]
+//   //     }
+//   // })
+// })( window )
+
+
+// Components.Subbly.View.Users = SubblyView.extend(
+// {
+//     _viewName: 'Users'
+// })
+
+// Components.Subbly.View.User = SubblyView.extend(
+// {
+//     _viewName: 'User'
+// })
+
+
+Components.Subbly.View.FormView = Backbone.View.extend(
 {
     form:             false
   , $formInputs:      false
@@ -18013,7 +18191,7 @@ Components.View.FormView = Backbone.View.extend(
     {
       this.removeWarning( event )
 
-      subbly.event.trigger( 'form::changed' )
+      subbly.trigger( 'form::changed' )
 
       if (event.keyCode != 13) 
           return
@@ -18032,7 +18210,7 @@ Components.View.FormView = Backbone.View.extend(
         this.onCancel()
       }
 
-      subbly.event.trigger( 'form::reset' )
+      subbly.trigger( 'form::reset' )
     }
 
   , removeWarning: function( event )
@@ -18221,7 +18399,7 @@ Components.View.FormView = Backbone.View.extend(
 })
 
 
-Components.View.Login = Components.View.FormView.extend(
+Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
 {
     el: '#login'
 
@@ -18250,7 +18428,7 @@ Components.View.Login = Components.View.FormView.extend(
         , skip:     false
       })
 
-      subbly.event.on( 'user::loggedIn', function()
+      subbly.on( 'user::loggedIn', function()
       {
         this.hide()
         this.form.$el.reset()
@@ -18274,7 +18452,7 @@ Components.View.Login = Components.View.FormView.extend(
 
         document.getElementById('login-email').focus()
         
-        subbly.event.trigger( 'loader::hide' )
+        subbly.trigger( 'loader::hide' )
       }, 500)
     }
 
@@ -18339,11 +18517,80 @@ Components.View.Login = Components.View.FormView.extend(
 })
 
 
+Components.Subbly.View.MainNav = Backbone.View.extend(
+{
+    el: '#bo-nav'
+
+  , initialize: function( options )
+    {
+      this._items = options.items
+      this._itemsSorted = _.sortBy( this._items, function( obj )
+      {
+        return -obj.order 
+      })
+
+      this.fragment = document.createDocumentFragment()
+
+      _.each( this._itemsSorted, this.buildItem, this )
+
+      this.$el.html( this.fragment )
+
+      this.$links = this.$el.find('a.js-trigger-go')
+// console.log( 'initialize MainNav')
+
+      subbly.on( 'hash::changed', this.hashChanged, this )
+
+      return this
+    }
+
+  , events: {
+      'click a.js-trigger-go': 'goTo'
+    }
+
+  , buildItem: function( item )
+    {
+      var li  = document.createElement('li')
+        , a   = document.createElement('a')
+        , txt = document.createTextNode( item.name )
+
+      //  href="javascript:;" class="fst-nav js-trigger-go-home"
+      a.href        = 'javascript:;'
+      a.className   = 'fst-nav js-trigger-go'
+      a.dataset.url = item.defaultUrl
+
+      a.appendChild( txt )
+      li.appendChild( a )
+
+      this.fragment.appendChild( li )
+    }
+
+  , goTo: function( event )
+    {
+      subbly.trigger( 'hash::change', event.target.getAttribute('data-url') )
+    }
+
+  , hashChanged: function( href )
+    {
+      var $target = this.$links.filter('a[data-url="' + href + '"]')
+// console.log( 'MainNav hashChanged' )
+// console.log( $target )
+// console.log( '-------------------' )
+      if( !$target.length )
+        return
+
+      this.$links.removeClass('active')
+
+      $target.addClass('active')
+    }
+})
+
+
 var Router = Backbone.Router.extend(
 {
     _controllers:  {}
   , _viewspointer: {}
   , _currentView:  false
+  , _mainNav:      []
 
   , routes: {
         '':       'default'
@@ -18356,14 +18603,24 @@ var Router = Backbone.Router.extend(
       var controllers = SubblyPlugins.getList()
         , router      = this
 
-      _.each( controllers, function( controller ) //, name ) // Components.Controller
+      _.each( Components, function( vendorComponents, vendor )
       {
-        this._controllers[ controller ] = new Components.Controller[ controller ]( { router: this } )
+        if( !vendorComponents.Controller )
+          return
+
+        _.each( vendorComponents.Controller, function( controller, name )
+        {
+          this._controllers[ vendor + name ] = new controller( { router: this } )
+        }, this )
+
       }, this )
 
-      // new Components.Controller.Customers( { router: this } )
+      this._viewspointer.login   = subbly.api( 'Subbly.View.Login' )
+      this._viewspointer.mainNav = subbly.api( 'Subbly.View.MainNav', {
+          items: this._mainNav
+      })
 
-      this._viewspointer.login = subbly.api('View.Login')
+// console.log( this._mainNav )
   
       Backbone.history.start({
           hashChange: true 
@@ -18371,7 +18628,7 @@ var Router = Backbone.Router.extend(
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
-      subbly.event.on( 'hash::changed', this.closeCurrent, this )
+      subbly.on( 'hash::changed', this.closeCurrent, this )
 
       return this
     }
@@ -18407,6 +18664,15 @@ var Router = Backbone.Router.extend(
     {
       subbly.logout()
     }
+
+    // Methods
+    // ----------------------------
+
+  , registerMainNav: function( navItem )
+    {
+// console.log( navItem )
+      this._mainNav.push( navItem )
+    }
 })
 
 
@@ -18415,7 +18681,6 @@ var Router = Backbone.Router.extend(
   // http://lostechies.com/derickbailey/2011/09/15/zombies-run-managing-page-transitions-in-backbone-apps/
   Backbone.View.prototype.close = function()
   {
-console.log('close view', this)
     if ( this.onClose )
       this.onClose()
 
@@ -18512,7 +18777,7 @@ console.log('close view', this)
     }
 
     // publish jQuery event + viewport 
-    subbly.event.trigger( 'window::resize', event, viewport )
+    subbly.trigger( 'window::resize', event, viewport )
   })
   
 

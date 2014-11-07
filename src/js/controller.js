@@ -12,10 +12,13 @@ var SubblyController = Backbone.Controller.extend(
   , _parentView:     false
   , _controllerName: null
   , _mainRouter:     false
+  , _mainNav:        false
 
   , initialize: function() 
     {
       this._mainRouter = this.options.router
+
+      this.registerMainView()
 
       if( this.onInitialize )
         this.onInitialize()
@@ -24,28 +27,23 @@ var SubblyController = Backbone.Controller.extend(
   , onBeforeRoute: function()
     {
       this.displayViews()
+      
+      // register current view
+      console.log('register current view ' + this._controllerName)
+
+      this._mainRouter._currentView = this
     }
 
     // Clean DOM and JS memory
   , remove: function() 
     {
-      // Nested views
-      if( this._tplLenght )
-      {
-        _( this._viewsPointers )
-          .forEach( function( v )
-          {
-            this._viewsPointers[ v._viewId ].close()
-          }, this)
-        
-        if( this._parentView )
-          this.el.removeChild( this._parentView )
-      }
-      // Single view
-      else
-      {
-        this._viewsPointers.close()
-      }
+console.info('remove ' + this._controllerName)
+
+      _( this._viewsPointers )
+        .forEach( function( v )
+        {
+          this._viewsPointers[ v._viewId ].close()
+        }, this)
 
       this._parentView    = false
       this._viewsPointers = {}
@@ -86,7 +84,7 @@ var SubblyController = Backbone.Controller.extend(
 
           this._parentView.appendChild( view )
 
-          this._viewsPointers[ viewId ] = subbly.api( 'View.' + this._viewsNames[ index ], {
+          this._viewsPointers[ viewId ] = subbly.api( this._viewsNames[ index ], {
               el:     view
             , viewId: viewId
           })
@@ -95,14 +93,13 @@ var SubblyController = Backbone.Controller.extend(
       // Single view
       else
       {
-        this._viewsPointers = subbly.api( 'View.' + this._viewsNames, {
+        this._viewsPointers[ parentViewId ] = subbly.api( this._viewsNames, {
             el:     this._parentView
           , viewId: parentViewId
         })
       }
 
-console.log( this._viewsPointers)
-
+// console.log( this._viewsPointers )
     }
 
     // return single DOM element
@@ -114,5 +111,11 @@ console.log( this._viewsPointers)
       div.id        = 'view-' + id
 
       return div
+    }
+
+  , registerMainView: function()
+    {
+      if( this._mainNav )
+        this._mainRouter.registerMainNav( this._mainNav )
     }
 })
