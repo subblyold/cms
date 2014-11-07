@@ -33,11 +33,6 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
-  this._router.on('route', function( route )
-  {
-console.log('route', route)
-  })
-
   this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )

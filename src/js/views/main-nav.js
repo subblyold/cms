@@ -18,7 +18,6 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       this.$el.html( this.fragment )
 
       this.$links = this.$el.find('a.js-trigger-go')
-// console.log( 'initialize MainNav')
 
       subbly.on( 'hash::changed', this.hashChanged, this )
 
@@ -35,7 +34,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         , a   = document.createElement('a')
         , txt = document.createTextNode( item.name )
 
-      //  href="javascript:;" class="fst-nav js-trigger-go-home"
+      //  href="javascript:;" class="fst-nav js-trigger-go"
       a.href        = 'javascript:;'
       a.className   = 'fst-nav js-trigger-go'
       a.dataset.url = item.defaultUrl
@@ -54,9 +53,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
   , hashChanged: function( href )
     {
       var $target = this.$links.filter('a[data-url="' + href + '"]')
-// console.log( 'MainNav hashChanged' )
-// console.log( $target )
-// console.log( '-------------------' )
+
       if( !$target.length )
         return
 

@@ -34,12 +34,15 @@ var Router = Backbone.Router.extend(
           items: this._mainNav
       })
 
-// console.log( this._mainNav )
-  
       Backbone.history.start({
           hashChange: true 
         , pushState:  true 
         , root:       subbly.getConfig( 'baseUrl' )
+      })
+
+      Backbone.history.on('route', function( router, route, params )
+      {
+        subbly.trigger( 'hash::changed', route, params  )
       })
 
       subbly.on( 'hash::changed', this.closeCurrent, this )
