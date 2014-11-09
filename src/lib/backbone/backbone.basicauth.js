@@ -38,10 +38,11 @@
   };
 
   // Add a public method so that anything else can also create the header
+  // /!\ SUBBLY EDIT: credentials are already encoded
   Backbone.BasicAuth = {
     getHeader: function(credentials) {
       return {
-        'Authorization': 'Basic ' + encode(credentials)
+        'Authorization': 'Basic ' + credentials //encode(credentials)
       };
     }
   };

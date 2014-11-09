@@ -14,14 +14,22 @@
     instance: false,
     requestedCallback: null,
     requestedArgs: [],
+    catchedRouteName: false,
 
     ready: function()
     {
       this.instance = true;
       if(this.requestedCallback !== null)
       {
+        console.groupCollapsed( 'AppRouter: release requested route' )
+          console.log( this.catchedRouteName )
+          console.log( this.requestedArgs )
+        console.groupEnd()
+
         this.requestedCallback.apply(this, this.requestedArgs);
         this.requestedCallback = null;
+        this.catchedRouteName = false;
+        this.requestedArgs = [];
       }
     },
 
@@ -37,8 +45,14 @@
         }
         else
         {
+          this.catchedRouteName = name;
           this.requestedCallback = callback;
           this.requestedArgs  = args;
+          
+          console.groupCollapsed( 'AppRouter: store requested route' )
+            console.log( this.catchedRouteName )
+            console.log( this.requestedArgs )
+          console.groupEnd()
         }
         this.trigger.apply(this, ['route:' + name].concat(args));
         Backbone.history.trigger('route', this, name, args);

@@ -29,7 +29,7 @@ var SubblyController = Backbone.Controller.extend(
       this.displayViews()
       
       // register current view
-      console.log('register current view ' + this._controllerName)
+      console.log('onBeforeRoute current view ' + this._controllerName)
 
       this._mainRouter._currentView = this
     }
@@ -37,8 +37,7 @@ var SubblyController = Backbone.Controller.extend(
     // Clean DOM and JS memory
   , remove: function() 
     {
-console.info('remove ' + this._controllerName)
-
+// console.info('remove ' + this._controllerName)
       _( this._viewsPointers )
         .forEach( function( v )
         {

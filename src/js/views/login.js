@@ -41,6 +41,19 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
 
   , display: function()
     {
+      // do not display form to logged users
+      try
+      {
+        // if `getCredentials` didn't throws errors
+        // that means that user is already logged in
+        subbly.getCredentials()
+        // so we send him to default controller
+        subbly.trigger( 'hash::change', '' )
+        // and stop this action to go on
+        return
+      }
+      catch( e ){}
+
       var login = this
 
       window.setTimeout(function()
@@ -97,7 +110,7 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
                 }
               , success: function( response )
                 {
-                  subbly.setCredentials( credentials )
+                  subbly.trigger( 'user::loggedIn', encode )
                 }
               , error:   function( jqXHR, textStatus, errorThrown )
                 {

@@ -10,6 +10,7 @@ var Router = Backbone.Router.extend(
         '':       'default'
       , 'login':  'login'
       , 'logout': 'logout'
+      , '*path':  'notFound'
     }
 
   , initialize: function() 
@@ -34,15 +35,18 @@ var Router = Backbone.Router.extend(
           items: this._mainNav
       })
 
-// console.log( this._mainNav )
-  
       Backbone.history.start({
           hashChange: true 
         , pushState:  true 
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
-      subbly.on( 'hash::changed', this.closeCurrent, this )
+      Backbone.history.on('route', function( router, route, params )
+      {
+        subbly.trigger( 'hash::changed', route, params  )
+      })
+
+      subbly.on( 'hash::change', this.closeCurrent, this )
 
       return this
     }
@@ -56,7 +60,13 @@ var Router = Backbone.Router.extend(
              this._currentView 
           && this._currentView.remove 
         )
+      {
+        console.groupCollapsed( 'Close current view' )
+          console.log( this._currentView  )
+        console.groupEnd()
+
         this._currentView.remove()
+      }
     }
 
     // Routes
@@ -64,7 +74,8 @@ var Router = Backbone.Router.extend(
 
   , default: function()
     {
-      console.info('default controller')
+      console.warn('call default router')
+      subbly.trigger( 'hash::change', 'dashboard' )
     }      
 
   , login: function()
@@ -77,6 +88,11 @@ var Router = Backbone.Router.extend(
   , logout: function()
     {
       subbly.logout()
+    }
+
+  , notFound: function( route )
+    {
+      subbly.trigger( 'hash::notFound', route )
     }
 
     // Methods

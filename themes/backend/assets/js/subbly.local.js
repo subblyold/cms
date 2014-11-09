@@ -13516,14 +13516,22 @@ return jQuery;
     instance: false,
     requestedCallback: null,
     requestedArgs: [],
+    catchedRouteName: false,
 
     ready: function()
     {
       this.instance = true;
       if(this.requestedCallback !== null)
       {
+        console.groupCollapsed( 'AppRouter: release requested route' )
+          console.log( this.catchedRouteName )
+          console.log( this.requestedArgs )
+        console.groupEnd()
+
         this.requestedCallback.apply(this, this.requestedArgs);
         this.requestedCallback = null;
+        this.catchedRouteName = false;
+        this.requestedArgs = [];
       }
     },
 
@@ -13539,8 +13547,14 @@ return jQuery;
         }
         else
         {
+          this.catchedRouteName = name;
           this.requestedCallback = callback;
           this.requestedArgs  = args;
+          
+          console.groupCollapsed( 'AppRouter: store requested route' )
+            console.log( this.catchedRouteName )
+            console.log( this.requestedArgs )
+          console.groupEnd()
         }
         this.trigger.apply(this, ['route:' + name].concat(args));
         Backbone.history.trigger('route', this, name, args);
@@ -13592,10 +13606,11 @@ return jQuery;
   };
 
   // Add a public method so that anything else can also create the header
+  // /!\ SUBBLY EDIT: credentials are already encoded
   Backbone.BasicAuth = {
     getHeader: function(credentials) {
       return {
-        'Authorization': 'Basic ' + encode(credentials)
+        'Authorization': 'Basic ' + credentials //encode(credentials)
       };
     }
   };
@@ -17462,7 +17477,7 @@ var SubblyController = Backbone.Controller.extend(
       this.displayViews()
       
       // register current view
-      console.log('register current view ' + this._controllerName)
+      console.log('onBeforeRoute current view ' + this._controllerName)
 
       this._mainRouter._currentView = this
     }
@@ -17470,8 +17485,7 @@ var SubblyController = Backbone.Controller.extend(
     // Clean DOM and JS memory
   , remove: function() 
     {
-console.info('remove ' + this._controllerName)
-
+// console.info('remove ' + this._controllerName)
       _( this._viewsPointers )
         .forEach( function( v )
         {
@@ -17556,21 +17570,30 @@ console.info('remove ' + this._controllerName)
 
 var SubblyCore = function( config )
 {
-  console.info('init Subbly object', config)
+  console.info( 'Init Subbly object with this config:' )
+  console.log( config )
 
   // enviroment config
-  this._config          = config
+  this._config            = config
+
+  // form change's flag
+  this._changesAreSaved   = true
 
   // current user model
   this._user              = false
-  this._changesAreSaved   = true
+  
+  // user credentials cookie's name
   this._credentialsCookie = 'SubblyCredentials'
 
   // current user credentials
-  this._credentials = false
+  this._credentials       = false
 
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
+
+
+  this._event.on( 'user::loggedIn', this.setCredentials, this )
+  this._event.on( 'user::logout',   this.logout,         this )
 
   return this
 }
@@ -17584,20 +17607,16 @@ var SubblyCore = function( config )
 
 SubblyCore.prototype.init = function()
 {
+  console.info( 'Initialize App router' )
+
   this._router = new Router()
 
   var scope = this
-
-  this._router.on('route', function( route )
-  {
-console.log('route', route)
-  })
 
   this.on( 'hash::change', function( href )
   {
     if( scope._changesAreSaved )
     {
-      scope.trigger( 'hash::changed', href )
       scope._router.navigate( href, { trigger: true } )
     }
     else
@@ -17616,9 +17635,20 @@ console.log('route', route)
     }
   })
 
-  this.isLogin()
-
+  if( !this.isLogin() )
+  {
+    console.info( 'trigger login view' )
+    this.trigger( 'hash::change', 'login' )
+  }
+  else
+  {
+    console.info( 'user is logged in' )
+  }
+  
+  console.info( 'release app router' )
   this._router.ready()
+
+  console.groupEnd()
 }
 
 
@@ -17722,16 +17752,11 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
 
 SubblyCore.prototype.setCredentials = function( credentials )
 {
+  console.info('Set user credentials')
+
   this._credentials = credentials
 
-  // not safe at all
-  // TODO: find a client side crypto lib
-  document.cookie = this._credentialsCookie + '=' + JSON.stringify( this._credentials ) + '; path=/'
-
-  this.trigger('user::loggedIn')
-
-  // TODO: do not trigger `dashboard` if URL set
-  this.trigger( 'hash::change', 'dashboard' )
+  document.cookie = this._credentialsCookie + '=' + this._credentials + '; path=/'
 }
 
 /*
@@ -17758,22 +17783,24 @@ SubblyCore.prototype.isLogin = function()
 {
   if( !document.cookie )
   {
-    this.trigger( 'hash::change', 'login' )
-    return
+    console.warn('no cookie for this domain')
+    return false
   }
 
   // retrive credentials from cookies
   var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
     , result      = regexp.exec( document.cookie )
-    , credentials = result = ( result === null ) ? null : JSON.parse( result[1] )
+    , credentials = ( result === null ) ? false : result[1]
 
-  if( _.isNull( credentials ) )
+  if( credentials === 'null' )
   {
-    this.trigger( 'hash::change', 'login' )
-    return
+    console.warn('cookie found but credentials are null')
+    return false
   }
+  
+  this.trigger( 'user::loggedIn', credentials )
 
-  this.setCredentials( credentials )
+  return true
 }
 
 /*
@@ -17785,6 +17812,8 @@ SubblyCore.prototype.isLogin = function()
 
 SubblyCore.prototype.logout = function()
 {
+  console.info( 'user logout' )
+
   this._credentials = false
 
   document.cookie = this._credentialsCookie + '=' + null + '; path=/'
@@ -17913,6 +17942,9 @@ SubblyCore.prototype.register = function( vendor, name, plugin )
 }
 
 // Global Init
+
+console.groupCollapsed( 'Subbly Global Init' )
+// console.group( 'Subbly Global Init' )
 
 subbly = new SubblyCore( subblyConfig )
 
@@ -18441,6 +18473,19 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
 
   , display: function()
     {
+      // do not display form to logged users
+      try
+      {
+        // if `getCredentials` didn't throws errors
+        // that means that user is already logged in
+        subbly.getCredentials()
+        // so we send him to default controller
+        subbly.trigger( 'hash::change', '' )
+        // and stop this action to go on
+        return
+      }
+      catch( e ){}
+
       var login = this
 
       window.setTimeout(function()
@@ -18497,7 +18542,7 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
                 }
               , success: function( response )
                 {
-                  subbly.setCredentials( credentials )
+                  subbly.trigger( 'user::loggedIn', encode )
                 }
               , error:   function( jqXHR, textStatus, errorThrown )
                 {
@@ -18536,7 +18581,6 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       this.$el.html( this.fragment )
 
       this.$links = this.$el.find('a.js-trigger-go')
-// console.log( 'initialize MainNav')
 
       subbly.on( 'hash::changed', this.hashChanged, this )
 
@@ -18553,7 +18597,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         , a   = document.createElement('a')
         , txt = document.createTextNode( item.name )
 
-      //  href="javascript:;" class="fst-nav js-trigger-go-home"
+      //  href="javascript:;" class="fst-nav js-trigger-go"
       a.href        = 'javascript:;'
       a.className   = 'fst-nav js-trigger-go'
       a.dataset.url = item.defaultUrl
@@ -18572,9 +18616,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
   , hashChanged: function( href )
     {
       var $target = this.$links.filter('a[data-url="' + href + '"]')
-// console.log( 'MainNav hashChanged' )
-// console.log( $target )
-// console.log( '-------------------' )
+
       if( !$target.length )
         return
 
@@ -18596,6 +18638,7 @@ var Router = Backbone.Router.extend(
         '':       'default'
       , 'login':  'login'
       , 'logout': 'logout'
+      , '*path':  'notFound'
     }
 
   , initialize: function() 
@@ -18620,15 +18663,18 @@ var Router = Backbone.Router.extend(
           items: this._mainNav
       })
 
-// console.log( this._mainNav )
-  
       Backbone.history.start({
           hashChange: true 
         , pushState:  true 
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
-      subbly.on( 'hash::changed', this.closeCurrent, this )
+      Backbone.history.on('route', function( router, route, params )
+      {
+        subbly.trigger( 'hash::changed', route, params  )
+      })
+
+      subbly.on( 'hash::change', this.closeCurrent, this )
 
       return this
     }
@@ -18642,7 +18688,13 @@ var Router = Backbone.Router.extend(
              this._currentView 
           && this._currentView.remove 
         )
+      {
+        console.groupCollapsed( 'Close current view' )
+          console.log( this._currentView  )
+        console.groupEnd()
+
         this._currentView.remove()
+      }
     }
 
     // Routes
@@ -18650,7 +18702,8 @@ var Router = Backbone.Router.extend(
 
   , default: function()
     {
-      console.info('default controller')
+      console.warn('call default router')
+      subbly.trigger( 'hash::change', 'dashboard' )
     }      
 
   , login: function()
@@ -18663,6 +18716,11 @@ var Router = Backbone.Router.extend(
   , logout: function()
     {
       subbly.logout()
+    }
+
+  , notFound: function( route )
+    {
+      subbly.trigger( 'hash::notFound', route )
     }
 
     // Methods
@@ -18781,20 +18839,47 @@ var Router = Backbone.Router.extend(
   })
   
 
+  // Global error handler for backbone.js ajax requests
+  // http://stackoverflow.com/a/6154922
+  $document.ajaxError( function( e, xhr, options )
+  {
+    var response = ( xhr.responseJSON.response )
+                   ? xhr.responseJSON.response
+                   : false
+
+    var message = ( response && response.error )  ? response.error : false
+
+console.group('Ajax Error')
+console.log( xhr.status )
+console.log( xhr.responseJSON )
+console.log( ( message ) ? message : 'no error message' )
+console.groupEnd()
+
+    if( xhr.status === 401 )
+    {
+      subbly.trigger( 'user::logout', message )
+      return 
+    }
+
+    // if( xhr.status === 418 )
+    //   return 
+
+    // // ask delete token
+    // if( xhr.status === 406 && !xhr.responseJSON.error )
+    //   return
+    
+    // // real error
+    // // display message
+    // App.feedback.handleError( xhr )
+  })
+
   // On DOMready
   $(function()
   {
-    console.info('dom ready')
-    
     subbly.init()
   })
 
-})(window); // end closure
-
-
-// Plugins holder
-// var subblyPlugins = {}
-
+})( window ); // end closure
 
 // In case we forget to take out console statements. 
 // IE becomes very unhappy when we forget. Let's not make IE unhappy

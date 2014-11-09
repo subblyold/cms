@@ -1260,6 +1260,17 @@ input[type="search"] {
   border-color: #2b933c;
   color: #ffffff;
 }
+.btn-product {
+  background: #aacdf9;
+  border-color: #aacdf9;
+  color: #ffffff;
+}
+.btn-product:hover,
+.btn-product:focus {
+  background: #7ab1f6;
+  border-color: #7ab1f6;
+  color: #ffffff;
+}
 .btn-icon {
   border-color: #bbbbbb;
   position: relative;
@@ -1366,6 +1377,42 @@ input[type="search"] {
   position: absolute;
   right: 25px;
   top: 50%;
+}
+.dashboard {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+.dashboard .btn + .btn {
+  margin-left: 10px;
+}
+.dashboard-stats {
+  padding-top: 80px;
+}
+.dashboard-stats li {
+  color: #202124;
+  display: inline-block;
+  font-size: 28px;
+}
+.dashboard-stats li + li {
+  margin-left: 70px;
+}
+.dashboard-stats span {
+  color: #878787;
+  display: block;
+  font-size: 12px;
 }
 .ordr-sts {
   text-align: center;
