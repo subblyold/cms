@@ -15,26 +15,26 @@ class DatabaseSeeder extends Seeder
         Eloquent::unguard();
 
         if (App::environment('testing')) {
-            $this->testingSeeds();
+            $this->testingDeleteTables();
         }
 
         $this->globalSeeds();
 
+        if (App::environment('testing')) {
+            $this->testingSeeds();
+        }
 
         Eloquent::reguard();
     }
 
-    public function globalSeeds()
+    private function globalSeeds()
     {
-        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\GroupsSeeder');
+        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\GroupsTableSeeder');
         $this->command->info('Group table seeded!');
     }
 
-    public function testingSeeds()
+    private function testingDeleteTables()
     {
-        /**
-         * Delete table content
-         */
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         $tables = array('settings', 'users', 'products', 'orders', 'users_groups', 'groups');
@@ -45,10 +45,10 @@ class DatabaseSeeder extends Seeder
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
 
-        /**
-         * Call seeders
-         */
+    private function testingSeeds()
+    {
         $this->call('Subbly\\Tests\\Resources\\database\\seeds\\SettingTableSeeder');
         $this->command->info('Setting table seeded!');
 

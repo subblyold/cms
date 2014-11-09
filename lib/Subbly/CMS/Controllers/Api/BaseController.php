@@ -140,7 +140,7 @@ class BaseController extends Controller
             return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders);
         }
 
-        if (! $user instanceof User || !$user->hasAccess('subbly.backend.auth')) {
+        if (!$user instanceof User || !$user->hasAccess('subbly.backend.auth')) {
             return $this->jsonErrorResponse('Access refused! You have not the premission to access this page.', 401);
         }
     }
