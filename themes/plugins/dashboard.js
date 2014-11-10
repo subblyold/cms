@@ -14,7 +14,7 @@
 
     , onInitialize: function()
       {
-  console.log( 'onInitialize Dashboard')
+  // console.log( 'onInitialize Dashboard')
       }
 
     , routes: {
@@ -34,6 +34,7 @@
   var DashboardView = 
   {
       _viewName: 'Dashboard'
+    , _viewTpl:  TPL.dashboard.index
 
     , onClose: function()
       {
