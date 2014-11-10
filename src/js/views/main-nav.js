@@ -21,11 +21,48 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
       subbly.on( 'hash::changed', this.hashChanged, this )
 
+      this.userNav()
+
       return this
     }
 
   , events: {
       'click a.js-trigger-go': 'goTo'
+    }
+
+  , userNav : function()
+    {
+      var nodeId   = 'user-nav-trigger'
+        , $trigger = $( document.getElementById( nodeId ) )
+        , $parent  = $trigger.parent('div.user-nav-container')
+
+      var hideList = function()
+      {
+        $parent.removeClass('active')
+      }
+
+      var handleClickOutside = function( event )
+      {
+        event.stopPropagation()
+
+        if( !$( event.target ).parents('#' + nodeId ).length )
+          hideList()
+      }
+      
+      $trigger
+        .on( 'click', function( event )
+        {
+          event.stopPropagation()
+          event.preventDefault()
+
+          $parent.addClass('active')
+
+          $body.on( 'click', handleClickOutside )
+        })
+
+      $( document.getElementById('user-nav-sub') )
+        .find('a')
+        .on( 'click', hideList )
     }
 
   , buildItem: function( item )

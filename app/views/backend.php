@@ -50,11 +50,11 @@
 
       <div class="user-nav">
         <div class="user-nav-container">
-          <a href="javascript:;" class="cur-d">
+          <a href="javascript:;" id="user-nav-trigger">
             My Shop
           </a>
           <span class="caret"></span>
-          <ul class="user-nav-sub">
+          <ul class="user-nav-sub" id="user-nav-sub">
             <li>
               <a href="<?= URL::to('/' ); ?>" target="_blank">
                 Visit my store
