@@ -77,9 +77,9 @@ SubblyCore.prototype.init = function()
   }
   
   console.info( 'release app router' )
-  this._router.ready()
-
   console.groupEnd()
+  
+  this._router.ready()
 }
 
 
