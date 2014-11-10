@@ -117,10 +117,10 @@ class UserService extends Service
     }
 
     /**
-     * Find a User by $id
+     * Find a User by $uid
      *
      * @example
-     *     $user = Subbly::api('subbly.user')->find(1);
+     *     $user = Subbly::api('subbly.user')->find($uid);
      *
      * @param string  $uid
      * @param array   $options
