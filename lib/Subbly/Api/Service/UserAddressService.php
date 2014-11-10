@@ -6,10 +6,13 @@ use Sentry;
 
 use Subbly\Model\Collection;
 use Subbly\Model\UserAddress;
+use Subbly\Model\User;
 
 class UserAddressService extends Service
 {
     protected $modelClass = 'Subbly\\Model\\UserAddress';
+
+    protected $includableRelationships = array('user');
 
     /**
      * Return an empty model
@@ -24,15 +27,38 @@ class UserAddressService extends Service
     }
 
     /**
+     * Find a UserAddress by $uid
+     *
+     * @example
+     *     $userAddress = Subbly::api('subbly.user_address')->find($uid);
+     *
+     * @param string  $uid
+     * @param array   $options
+     *
+     * @return User
+     *
+     * @api
+     */
+    public function find($uid, array $options = array())
+    {
+        $options = array_replace(array(), $options);
+
+        $query = $this->newQuery($options);
+        $query->where('uid', '=', $uid);
+
+        return $query->firstOrFail();
+    }
+
+    /**
      * Find a UserAddress by User
      *
      * @example
-     *     $user = Subbly::api('subbly.user_address_address')->findByUser($user);
+     *     $userAddress = Subbly::api('subbly.user_address')->findByUser($user);
      *
      * @param string|\Subbly\Model\User  $user    The User model or the User uid
      * @param array                      $options Some options
      *
-     * @return UserAddress
+     * @return \Subbly\Model\UserAddress
      *
      * @api
      */
@@ -51,41 +77,9 @@ class UserAddressService extends Service
         }
 
         $query = $this->newCollectionQuery($options);
-        $query
-            ->with('user')
-            ->where('users.uid', '=', $user_uid)
-        ;
-        echo($query->toSql()); exit;
-
-        return new Collection($query);
-    }
-
-    /**
-     * Search a UserAddress by options
-     *
-     * @example
-     *     $users = Subbly::api('subbly.user_address')->searchBy(array(
-     *         'firstname' => 'Jon',
-     *         'lastname'  => 'Snow',
-     *     ));
-     *     // OR
-     *     $users = Subbly::api('subbly.user_address')->searchBy('some words');
-     *
-     * @param array|string  $searchQuery    Search params
-     * @param array         $options        Query options
-     * @param string        $statementsType Type of statement null|or|and (default is null)
-     *
-     * @return \Subbly\Model\Collection
-     *
-     * @api
-     */
-    public function searchBy($searchQuery, array $options = array(), $statementsType = null)
-    {
-        $query = $this->newSearchQuery($searchQuery, array(
-            'first_name',
-            'last_name',
-            'email',
-        ), $statementsType, $options);
+        $query->with(array('user' => function($query) use ($user_uid) {
+            $query->where('uid', '=', $user_uid);
+        }));
 
         return new Collection($query);
     }
@@ -95,39 +89,44 @@ class UserAddressService extends Service
      *
      * @example
      *     $user = Subbly\Model\UserAddress;
-     *     Subbly::api('subbly.user_address')->create($user);
+     *     Subbly::api('subbly.user_address')->create($userAddress);
      *
      *     Subbly::api('subbly.user_address')->create(array(
      *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @param UserAddress|array $user
+     * @param \Subbly\Model\UserAddress|array  $userAddress
+     * @param \Subbly\Model\User|null          $user
      *
-     * @return UserAddress
+     * @return \Subbly\Model\UserAddress
      *
      * @throws \Subbly\Api\Service\Exception
      *
      * @api
      */
-    public function create($user)
+    public function create($userAddress, User $user = null)
     {
-        if (is_array($user)) {
-            $user = new UserAddress($user);
+        if (is_array($userAddress)) {
+            $userAddress = new UserAddress($userAddress);
         }
 
-        if ($user instanceof UserAddress)
+        if ($userAddress instanceof UserAddress)
         {
-            if ($this->fireEvent('creating', array($user)) === false) return false;
+            if ($this->fireEvent('creating', array($userAddress)) === false) return false;
 
-            $user->setCaller($this);
-            $user->save();
+            if ($user !== null) {
+                $userAddress->user()->associate($user);
+            }
 
-            $this->fireEvent('created', array($user));
+            $userAddress->setCaller($this);
+            $userAddress->save();
 
-            $user = $this->find($user->uid);
+            $this->fireEvent('created', array($userAddress));
 
-            return $user;
+            $userAddress = $this->find($userAddress->uid);
+
+            return $userAddress;
         }
 
         throw new Exception(sprintf(Exception::CANT_CREATE_MODEL,
@@ -140,42 +139,42 @@ class UserAddressService extends Service
      * Update a UserAddress
      *
      * @example
-     *     $user = [Subbly\Model\UserAddress instance];
-     *     Subbly::api('subbly.user_address')->update($user);
+     *     $userAddress = [Subbly\Model\UserAddress instance];
+     *     Subbly::api('subbly.user_address')->update($userAddress);
      *
      *     Subbly::api('subbly.user_address')->update($user_uid, array(
      *         'firstname' => 'Jon',
      *         'lastname'  => 'Snow',
      *     ));
      *
-     * @return UserAddress
+     * @return \Subbly\Model\UserAddress
      *
      * @api
      */
     public function update()
     {
-        $args = func_get_args();
-        $user = null;
+        $args        = func_get_args();
+        $userAddress = null;
 
         if (count($args) == 1 && $args[0] instanceof UserAddress) {
-            $user = $args[0];
+            $userAddress = $args[0];
         }
         else if (count($args) == 2 && !empty($args[0]) && is_array($args[1]))
         {
-            $user = $this->find($args[0]);
-            $user->fill($args[1]);
+            $userAddress = $this->find($args[0]);
+            $userAddress->fill($args[1]);
         }
 
-        if ($user instanceof UserAddress)
+        if ($userAddress instanceof UserAddress)
         {
-            if ($this->fireEvent('updating', array($user)) === false) return false;
+            if ($this->fireEvent('updating', array($userAddress)) === false) return false;
 
-            $user->setCaller($this);
-            $user->save();
+            $userAddress->setCaller($this);
+            $userAddress->save();
 
-            $this->fireEvent('updated', array($user));
+            $this->fireEvent('updated', array($userAddress));
 
-            return $user;
+            return $userAddress;
         }
 
         throw new Exception(sprintf(Exception::CANT_UPDATE_MODEL,
@@ -187,25 +186,25 @@ class UserAddressService extends Service
     /**
      * Delete a UserAddress
      *
-     * @param UserAddress|string  $user The user_uid or the user model
+     * @param \Subbly\Model\UserAddress|string  $userAddress The userAddress_uid or the UserAddress model
      *
-     * @return UserAddress
+     * @return \Subbly\Model\UserAddress
      *
      * @pi
      */
-    public function delete($user)
+    public function delete($userAddress)
     {
-        if (!is_object($user)) {
-            $user = $this->find($user);
+        if (!is_object($userAddress)) {
+            $userAddress = $this->find($userAddress);
         }
 
-        if ($user instanceof UserAddress)
+        if ($userAddress instanceof UserAddress)
         {
-            if ($this->fireEvent('deleting', array($user)) === false) return false;
+            if ($this->fireEvent('deleting', array($userAddress)) === false) return false;
 
-            $user->delete($this);
+            $userAddress->delete($this);
 
-            $this->fireEvent('deleted', array($user));
+            $this->fireEvent('deleted', array($userAddress));
         }
     }
 
