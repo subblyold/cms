@@ -33,3 +33,9 @@ les settings suivants sont sauvegardés au format JSON car il ne nécéssite pas
 - Raison social
 - SIRET
 - Numéro TVA
+
+
+## Create a new project
+
+* Download archive
+* Composer: `composer create-project subbly/cms my-subbly-project`

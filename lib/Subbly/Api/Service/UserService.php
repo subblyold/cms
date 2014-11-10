@@ -65,6 +65,30 @@ class UserService extends Service
     }
 
     /**
+     * Check to see if a user has the permission.
+     *
+     * @param string|array        $permissionKey One or array of permission keys
+     * @param \Subbly\Model\User  $user          The User scope (if null, current user is used)
+     *
+     * @return bool
+     *
+     * @api
+     */
+    public function hasPermission($permissionKey, User $user = null)
+    {
+        if ($user === null) {
+            $user = $this->currentUser();
+        }
+
+        if (is_array($permissionKey)) {
+            return $user->hasAnyPermissions($permissionKey);
+        }
+        else {
+            return $user->hasPermission($permissionKey);
+        }
+    }
+
+    /**
      * Returns the current user being used by Sentry, if any.
      *
      * @return \Cartalyst\Sentry\Users\UserInterface

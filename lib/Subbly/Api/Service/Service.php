@@ -64,17 +64,21 @@ abstract class Service
     /**
      * Get new query instance
      *
-     * @param array  $options
+     * @param array        $options
+     * @param string|null  $modelClass
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function newQuery(array $options = array())
+    protected function newQuery(array $options = array(), $modelClass = null)
     {
         $options = array_replace(array(
             'includes' => array(),
         ), $options);
 
-        $query = call_user_func($this->modelClass . '::query');
+        if (!is_string($modelClass)) {
+            $modelClass = $this->modelClass;
+        }
+        $query = call_user_func(array(new $modelClass, 'newQuery'));
 
         /**
          * Includes
@@ -97,18 +101,19 @@ abstract class Service
     /**
      * Get new collection query instance
      *
-     * @param array  $options
+     * @param array        $options
+     * @param string|null  $modelClass
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function newCollectionQuery(array $options = array())
+    protected function newCollectionQuery(array $options = array(), $modelClass = null)
     {
         $options = array_replace(array(
             'limit'  => null,
             'offset' => null,
         ), $options);
 
-        $query = $this->newQuery($options);
+        $query = $this->newQuery($options, $modelClass);
 
         /**
          * Offset & limit
@@ -130,16 +135,19 @@ abstract class Service
      * @param array         $searchableFields The searchable fields (default: all visible fields in the model)
      * @param string|null   $statmentsType
      * @param array         $options          The query options
+     * @param string|null   $modelClass
      *
      * @return \Illuminate\Database\Eloquent\Builder
      *
      * @throws \Subbly\Api\Service\Exception
      */
-    protected function newSearchQuery($searchQuery, array $searchableFields = null, $statementsType = null, array $options = array())
+    protected function newSearchQuery($searchQuery, array $searchableFields = null, $statementsType = null, array $options = array(), $modelClass = null)
     {
         // Query without scopes
-        $instance = new $this->modelClass();
-        $q        = $instance->newQueryWithoutScopes();
+        if (!is_string($modelClass)) {
+            $modelClass = $this->modelClass;
+        }
+        $q = call_user_func(array(new $modelClass, 'newQueryWithoutScopes'));
 
         if ($searchableFields === null || empty($searchableFields)) {
             $searchableFields = $instance->getVisible();
@@ -180,7 +188,7 @@ abstract class Service
             ));
         }
 
-        return $this->newCollectionQuery($options)
+        return $this->newCollectionQuery($options, $modelClass)
             ->addNestedWhereQuery($q->getQuery())
         ;
     }

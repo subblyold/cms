@@ -1,6 +1,6 @@
 {
     "name":              "subbly/cms"
-  , "version":           "0.1.0"
+  , "description":       "e-commerce cms based on Laravel"
   , "type":              "project"
   , "keywords":          ["e-commerce", "cms"]
   , "license":           "MIT"

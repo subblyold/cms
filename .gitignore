@@ -13,4 +13,8 @@ composer.phar
 composer.lock
 node_modules/
 !.gitkeep
+!*.example
 *.bak
+
+/workbench/subbly/framework
+/workbench/subbly/backend

@@ -22,7 +22,7 @@ class ProductsController extends BaseController
     /**
      * Get Product list
      *
-     * @route GET /api/products
+     * @route GET /api/v1/products
      * @authentication required
      */
     public function index()
@@ -42,7 +42,7 @@ class ProductsController extends BaseController
     /**
      * Search one or many Product
      *
-     * @route GET /api/products/search/?q=
+     * @route GET /api/v1/products/search/?q=
      * @authentication required
      */
     public function search()
@@ -68,7 +68,7 @@ class ProductsController extends BaseController
     /**
      * Get Product datas
      *
-     * @route GET /api/products/{sku}
+     * @route GET /api/v1/products/:sku
      * @authentication required
      */
     public function show($sku)
@@ -85,7 +85,7 @@ class ProductsController extends BaseController
     /**
      * Create a new Product
      *
-     * @route POST /api/products/
+     * @route POST /api/v1/products/
      * @authentication required
      */
     public function store()
@@ -110,7 +110,7 @@ class ProductsController extends BaseController
     /**
      * Update a Product
      *
-     * @route PUT|PATCH /api/products/{sku}
+     * @route PUT|PATCH /api/v1/products/:sku
      * @authentication required
      */
     public function update($sku)

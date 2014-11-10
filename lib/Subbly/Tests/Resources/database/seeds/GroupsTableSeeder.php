@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\User;
 use Subbly\Tests\Support\TestCase;
 
-class GroupsSeeder extends Seeder {
+class GroupsTableSeeder extends Seeder {
 
     public function run()
     {

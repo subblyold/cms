@@ -22,7 +22,7 @@ class UsersController extends BaseController
     /**
      * Get User list
      *
-     * @route GET /api/users
+     * @route GET /api/v1/users
      * @authentication required
      */
     public function index()
@@ -42,7 +42,7 @@ class UsersController extends BaseController
     /**
      * Search one or many User
      *
-     * @route GET /api/users/search/?q=
+     * @route GET /api/v1/users/search/?q=
      * @authentication required
      */
     public function search()
@@ -68,7 +68,7 @@ class UsersController extends BaseController
     /**
      * Get User datas
      *
-     * @route GET /api/users/{uid}
+     * @route GET /api/v1/users/:uid
      * @authentication required
      */
     public function show($uid)
@@ -85,7 +85,7 @@ class UsersController extends BaseController
     /**
      * Create a new User
      *
-     * @route POST /api/users/
+     * @route POST /api/v1/users/
      * @authentication required
      */
     public function store()
@@ -110,7 +110,7 @@ class UsersController extends BaseController
     /**
      * Update a User
      *
-     * @route PUT|PATCH /api/users/{uid}
+     * @route PUT|PATCH /api/v1/users/:uid
      * @authentication required
      */
     public function update($uid)

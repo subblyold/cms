@@ -22,7 +22,7 @@ class OrdersController extends BaseController
     /**
      * Get Order list
      *
-     * @route GET /api/orders
+     * @route GET /api/v1/orders
      * @authentication required
      */
     public function index()
@@ -42,7 +42,7 @@ class OrdersController extends BaseController
     /**
      * Search one or many Order
      *
-     * @route GET /api/orders/search/?q=
+     * @route GET /api/v1/orders/search/?q=
      * @authentication required
      */
     public function search()
@@ -68,7 +68,7 @@ class OrdersController extends BaseController
     /**
      * Get Order datas
      *
-     * @route GET /api/orders/{sku}
+     * @route GET /api/v1/orders/:id
      * @authentication required
      */
     public function show($sku)
@@ -85,7 +85,7 @@ class OrdersController extends BaseController
     /**
      * Create a new Order
      *
-     * @route POST /api/orders/
+     * @route POST /api/v1/orders/
      * @authentication required
      */
     public function store()
@@ -110,7 +110,7 @@ class OrdersController extends BaseController
     /**
      * Update a Order
      *
-     * @route PUT|PATCH /api/orders/{sku}
+     * @route PUT|PATCH /api/v1/orders/:id
      * @authentication required
      */
     public function update($sku)
