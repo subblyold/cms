@@ -317,15 +317,7 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
   if( !Components[ vendor ] )
   {
     // TODO: build obj dynamically
-    Components[ vendor ] =
-    {
-        Model:      {}
-      , Collection: {}
-      , View:       {}
-      , Supervisor: {}
-      , Controller: {}
-      , Component:  {}
-    }
+    Components[ vendor ] = $.extend( {}, defaultFwObj )
   }
 
   if( Components[ vendor ][ type ][ name ] )
@@ -343,6 +335,9 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
       break
     case 'View':
         alias = SubblyView
+      break
+    case 'ViewForm':
+        alias = SubblyViewForm
       break
     case 'Model':
         alias = SubblyModel

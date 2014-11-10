@@ -146,8 +146,7 @@ module.exports = function(grunt)
                   // , 'src/lib/momentjs/moment.js'
                   // , 'src/lib/download/download.js'
 
-                  // Plugins collector
-                  , 'src/js/plugins.js'
+                  , 'src/js/scroll2sicky.js'
 
                   // App
                   , 'src/js/closure.intro.js'
@@ -181,8 +180,6 @@ module.exports = function(grunt)
                   , 'src/js/router.js'
                   , 'src/js/closure.utils.js'
                   , 'src/js/closure.outro.js'
-
-                  , 'src/js/scroll2sicky.js'
                 ]
               , dest: 'themes/backend/assets/js/<%= pkg.name %>.local.js'
             }
