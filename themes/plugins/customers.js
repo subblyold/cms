@@ -15,7 +15,16 @@
 
     , onInitialize: function()
       {
-  console.log( 'onInitialize Customers')
+  // console.log( 'onInitialize Customers')
+        this.on( 'fetch::calling', function()
+        {
+console.log('fetch::calling')
+        } )
+
+        this.on( 'fetch::responds', function()
+        {
+console.log('fetch::responds')
+        } )
       }
 
     , routes: {
@@ -24,18 +33,18 @@
       }
 
     // Local method
-    , fetch: function()
-      {
-        Subbly.trigger( 'loader::show' )
+    // , fetch: function()
+    //   {
+    //     Subbly.trigger( 'loader::show' )
 
-        this.collection.fetch(
-        {
-          success: function()
-          {
-            Subbly.trigger( 'pagination::changed' )
-          } 
-        })
-      }
+    //     this.collection.fetch(
+    //     {
+    //       success: function()
+    //       {
+    //         Subbly.trigger( 'pagination::changed' )
+    //       } 
+    //     })
+    //   }
 
     // Local method
     , getCollection: function()
@@ -50,18 +59,21 @@
     , list: function() 
       {
         this._mainRouter._currentView = this
-        // return
-  console.info('call customer list')
+
         this.getCollection()
 
-        this.collection.fetch(
+        this.fetch( this.collection,
         {
-            success: function( collection, response )
-            {
-    // console.log( collection )
-    // console.log( response )
-            }
-        })
+            success: _.bind( this.cbAlaCon, this )
+        }, this )
+      }
+
+      // test Callback
+    , cbAlaCon: function( collection, response )
+      {
+        console.log( collection )
+        console.log( response )
+        console.log( this._controllerName )
       }
 
     , details: function( uid ) 
@@ -69,9 +81,8 @@
         this.getCollection()
         
         var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
-    console.log( user )
 
-        user.fetch(
+        this.fetch( user,
         {
             data: { includes: ['addresses', 'orders'] }
           , success: function( model, response )
@@ -79,7 +90,7 @@
     console.log( model.displayName() )
     console.log( response )
             }
-        })
+        }, this )
       }
   }
 

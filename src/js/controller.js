@@ -13,6 +13,8 @@ var SubblyController = Backbone.Controller.extend(
   , _controllerName: null
   , _mainRouter:     false
   , _mainNav:        false
+  , _fetchXhr:       {}
+  , _instance:       'Controller'
 
   , initialize: function() 
     {
@@ -37,15 +39,58 @@ var SubblyController = Backbone.Controller.extend(
     // Clean DOM and JS memory
   , remove: function() 
     {
-// console.info('remove ' + this._controllerName)
+      //Stop pending fetch
+      _( this._fetchXhr )
+        .forEach( function( f )
+        {
+          if( f.readyState > 0 && f.readyState < 4 )
+            f.abort()
+        }, this)
+
+      // Close views
       _( this._viewsPointers )
         .forEach( function( v )
         {
           this._viewsPointers[ v._viewId ].close()
         }, this)
 
+      // Reset variables
       this._parentView    = false
       this._viewsPointers = {}
+      this._fetchXhr      = {}
+    }
+
+    // Generic method to fetch model/collection
+    // stores the XHR call which allows the abort on route change
+    // trigger local loading event
+  , fetch: function( obj, options, context )
+    {
+      var options = options || {}
+        , xhrId   = _.uniqueId( 'xhr_' )
+
+      if( context )
+        context.trigger( 'fetch::calling' )
+
+      this._fetchXhr[ xhrId ] = obj.fetch({
+          data:    options.data || {} 
+        , xhrId:   xhrId
+        , success: function( bbObj, response, opts )
+          {
+            if( context )
+              context.trigger( 'fetch::responds' )
+
+            if( options.success && _.isFunction( options.success ) )
+              options.success( bbObj, response, opts )
+          }
+        , error: function( bbObj, response, opts )
+          {
+            if( context )
+              context.trigger( 'fetch::responds' )
+
+            if( options.error && _.isFunction( options.error ) )
+              options.error( bbObj, response, opts  )
+          }
+      })
     }
 
     // create DOM elements
@@ -97,8 +142,6 @@ var SubblyController = Backbone.Controller.extend(
           , viewId: parentViewId
         })
       }
-
-// console.log( this._viewsPointers )
     }
 
     // return single DOM element

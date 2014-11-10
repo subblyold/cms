@@ -3,13 +3,23 @@
   // http://stackoverflow.com/a/6154922
   $document.ajaxError( function( e, xhr, options )
   {
-    var response = ( xhr.responseJSON.response )
-                   ? xhr.responseJSON.response
-                   : false
+    var isJson     = ( xhr.responseJSON )
+      , response = false
+      , message  = false
 
-    var message = ( response && response.error )  ? response.error : false
+    if( isJson )
+    {
+      response = ( xhr.responseJSON.response )
+                 ? xhr.responseJSON.response
+                 : false
+
+      message = ( response && response.error )  
+                ? response.error 
+                : false
+    }
 
 console.group('Ajax Error')
+console.log( xhr )
 console.log( xhr.status )
 console.log( xhr.responseJSON )
 console.log( ( message ) ? message : 'no error message' )
