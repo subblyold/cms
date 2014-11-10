@@ -147,7 +147,7 @@ abstract class Service
         if (!is_string($modelClass)) {
             $modelClass = $this->modelClass;
         }
-        $query = call_user_func(array(new $modelClass, 'newQueryWithoutScopes'));
+        $q = call_user_func(array(new $modelClass, 'newQueryWithoutScopes'));
 
         if ($searchableFields === null || empty($searchableFields)) {
             $searchableFields = $instance->getVisible();
