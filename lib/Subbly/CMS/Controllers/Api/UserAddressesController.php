@@ -22,7 +22,7 @@ class UserAddressesController extends BaseController
     /**
      * Get list of UserAddress for a User
      *
-     * @route GET /api/v1/user-addresses/:user_uid
+     * @route GET /api/v1/users/:user_uid/user-addresses
      * @authentication required
      */
     public function index($user_uid)
@@ -36,5 +36,55 @@ class UserAddressesController extends BaseController
         $userAddresses = Subbly::api('subbly.user_address')->findByUser($user_uid);
 
         return $this->jsonCollectionResponse('user_addresses', $userAddresses);
+    }
+
+    /**
+     * Create a new User
+     *
+     * @route POST /api/v1/users/:user_uid/user-addresses
+     * @authentication required
+     */
+    public function store($user_uid)
+    {
+        if (!Input::has('user_address')) {
+            return $this->jsonErrorResponse('"user_address" is required.');
+        }
+
+        $userAddress = Subbly::api('subbly.user_address')->create(Input::get('user_address'));
+
+        return $this->jsonResponse(array(
+            'user_address' => $userAddress,
+        ),
+        array(
+            'status' => array(
+                'code'    => 201,
+                'message' => 'UserAddress created',
+            ),
+        ));
+    }
+
+    /**
+     * Update a UserAddress
+     *
+     * @route PUT|PATCH /api/v1/users/:user_uid/user-addresses/:uid
+     * @authentication required
+     */
+    public function update($user_uid, $uid)
+    {
+        if (!Input::has('user_address')) {
+            return $this->jsonErrorResponse('"user_address" is required.');
+        }
+
+        $userAddress = Subbly::api('subbly.user_address')->update($uid, Input::get('user_address'));
+
+        return $this->jsonResponse(array(
+            'user_address' => $userAddress,
+        ),
+        array(
+            'status' => array(
+                'code'    => 200,
+                'message' => 'UserAddress updated',
+            ),
+        ));
     }
 }
