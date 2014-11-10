@@ -124,20 +124,29 @@ class BaseController extends Controller
         }
         catch (\Exception $e)
         {
-            if (
-                $e instanceof \Cartalyst\Sentry\Users\UserNotActivatedException
-                || $e instanceof \Cartalyst\Sentry\Users\UserSuspendedException
-                || $e instanceof \Cartalyst\Sentry\Users\UserBannedException
-            ) {
+            if (in_array(get_class($e), array(
+                'Cartalyst\\Sentry\\Users\\UserNotActivatedException',
+                'Cartalyst\\Sentry\\Users\\UserSuspendedException',
+                'Cartalyst\\Sentry\\Users\\UserBannedException',
+            ))) {
                 return $this->jsonErrorResponse($e->getMessage());
             }
+            else if (in_array(get_class($e), array(
+                'Cartalyst\\Sentry\\Users\\LoginRequiredException',
+                'Cartalyst\\Sentry\\Users\\PasswordRequiredException',
+                'Cartalyst\\Sentry\\Users\\WrongPasswordException',
+                'Cartalyst\\Sentry\\Users\\UserNotFoundException',
+            ))) {
+                // do not return basic auth if AJAX
+                $httpHeaders = Request::ajax()
+                    ? array()
+                    : array('WWW-Authenticate' => 'Basic realm="Subbly authentication"')
+                ;
 
-             // do not return basic auth if AJAX
-            $httpHeaders = Request::ajax()
-                ? array()
-                : array('WWW-Authenticate' => 'Basic realm="Subbly authentication"')
-            ;
-            return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders);
+                return $this->jsonErrorResponse('Auth required! Something is wrong with your credentials.', 401, $httpHeaders);
+            }
+
+            return $this->jsonErrorResponse('FATAL ERROR!', 500);
         }
 
         if (!$user instanceof User || !$user->hasAccess('subbly.backend.auth')) {

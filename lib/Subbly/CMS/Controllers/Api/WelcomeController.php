@@ -18,7 +18,7 @@ class WelcomeController extends BaseController
     /**
      * Return stats for the dashboard
      *
-     * @route GET /api/welcome
+     * @route GET /api/v1/welcome
      * @authentication required
      */
     public function index()
