@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        $tables = array('settings', 'users', 'products', 'orders', 'users_groups', 'groups');
+        $tables = array('settings', 'users', 'user_addresses', 'products', 'orders', 'users_groups', 'groups');
 
         foreach ($tables as $table) {
             DB::table($table)->delete();
@@ -54,6 +54,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call('Subbly\\Tests\\Resources\\database\\seeds\\UserTableSeeder');
         $this->command->info('User table seeded!');
+
+        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\UserAddressTableSeeder');
+        $this->command->info('UserAddress table seeded!');
 
         $this->call('Subbly\\Tests\\Resources\\database\\seeds\\ProductTableSeeder');
         $this->command->info('Product table seeded!');
