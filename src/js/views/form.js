@@ -1,5 +1,6 @@
+var SubblyViewForm
 
-Components.Subbly.View.FormView = Backbone.View.extend(
+Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 {
     form:             false
   , $formInputs:      false

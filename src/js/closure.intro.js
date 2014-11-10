@@ -30,12 +30,7 @@
     , subbly        = false
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
-
-  var Components = 
-  {
-      // vendor level
-      Subbly: 
-      {
+    , defaultFwObj  = {
           Model:      {}
         , Collection: {}
         , View:       {}
@@ -43,5 +38,11 @@
         , Controller: {}
         , Component:  {}
       }
+
+  var Components = 
+  {
+      // vendor level
+      Subbly: $.extend( {}, defaultFwObj )
+
   }
 

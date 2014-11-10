@@ -16864,22 +16864,116 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
 }(jQuery);
 
 
-// Collect plugins to initialize them 
-// in App Router
-
-var SubblyPlugins = 
+var scroll2sicky = (function()
 {
-    list: []
+  var $elements
+    , $nano
+    , $window
+    , lists
 
-  , register: function( plugin )
+  var refresh = function( event, values )
+  {
+    lists.forEach( function( item )
     {
-      SubblyPlugins.list.push( plugin )
-    }
+      item.update( values.position )
+    })
+  }
 
-  , getList: function()
+  var reset = function()
+  {
+    lists.forEach( function( item )
     {
-      return SubblyPlugins.list
-    }
+      item.reset()
+    })
+  }
+
+  var getDisplay = function( element )
+  {
+    var cnt    = element.querySelector('.scrll-stck-cnt')
+      , height = cnt.offsetHeight
+      , width  = element.offsetWidth
+
+    element.style.height = height + 'px'
+    cnt.style.width      = width + 'px'
+
+    return cnt    
+  }
+
+  // TODO, $el should not have more than one stickable element
+  var init = function( $el )
+  {    
+    $elements = $el[0]
+    $nano     = $el.find('div.nano')
+    $window   = $( window )
+
+    lists = []
+
+    ;[].forEach.call(
+        $elements.querySelectorAll('.scrll-stck')
+      , function( element )
+        {
+          var cnt  = getDisplay( element )
+            , list = new scroll2sickyList( cnt )
+
+          // Add this element to the collection
+          lists.push( list )
+        }
+    )
+
+    $nano.on('update', refresh )
+    $window.on( 'resize', function()
+    {
+      getDisplay( $elements.querySelector('.scrll-stck') )
+    })
+  }
+
+  var unload = function()
+  {
+    $nano.off('update', refresh )
+  }
+
+  return {
+      'init':   init
+    , 'unload': unload
+    , 'reset':  reset
+  }
+
+})()
+
+
+/**
+ * The basic type of list; applies sticky classe to
+ * list items based on scroll state.
+ */
+function scroll2sickyList( element )
+{
+  this.element = element
+
+  var t = element.offsetTop
+    , o = element
+
+  while ( o = o.offsetParent )
+      t += o.offsetTop
+
+  this.top     = t
+
+  this.update( 0 )
+}
+
+/**
+ * Force remove sticky class
+ */
+scroll2sickyList.prototype.reset = function() 
+{
+  this.element.classList.remove('sticky')
+}
+
+/**
+ * Apply sticky classes to list items outside of the viewport
+ */
+scroll2sickyList.prototype.update = function( scrollTop ) 
+{
+  this.element.classList[ ( this.top <= scrollTop ) ? 'add' : 'remove' ]('sticky')
 }
 
 
@@ -16914,12 +17008,7 @@ var SubblyPlugins =
     , subbly        = false
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
-
-  var Components = 
-  {
-      // vendor level
-      Subbly: 
-      {
+    , defaultFwObj  = {
           Model:      {}
         , Collection: {}
         , View:       {}
@@ -16927,6 +17016,12 @@ var SubblyPlugins =
         , Controller: {}
         , Component:  {}
       }
+
+  var Components = 
+  {
+      // vendor level
+      Subbly: $.extend( {}, defaultFwObj )
+
   }
 
 
@@ -17886,15 +17981,7 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
   if( !Components[ vendor ] )
   {
     // TODO: build obj dynamically
-    Components[ vendor ] =
-    {
-        Model:      {}
-      , Collection: {}
-      , View:       {}
-      , Supervisor: {}
-      , Controller: {}
-      , Component:  {}
-    }
+    Components[ vendor ] = $.extend( {}, defaultFwObj )
   }
 
   if( Components[ vendor ][ type ][ name ] )
@@ -17912,6 +17999,9 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
       break
     case 'View':
         alias = SubblyView
+      break
+    case 'ViewForm':
+        alias = SubblyViewForm
       break
     case 'Model':
         alias = SubblyModel
@@ -18080,123 +18170,9 @@ Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
         return model.displayName()
     }
 })
+var SubblyViewForm
 
-// (function( window )
-// {
-//   var Customers = 
-//   {
-//       _tplStructure:   'half' // full|half|third
-//     , _viewsNames:     [ 'Users', 'User' ]
-//     , _controllerName: 'customers'
-
-//     , onInitialize: function()
-//       {
-//   console.log( 'onInitialize Customers')
-//       }
-
-//     , routes: {
-//           'customers':      'list'
-//         , 'customers/:uid': 'details'
-//       }
-
-//     // Local method
-//     // , fetch: function()
-//     //   {
-//     //     subbly.event.trigger( 'loader::show' )
-
-//     //     this.collection.fetch(
-//     //     {
-//     //       success: function()
-//     //       {
-//     //         subbly.event.trigger( 'pagination::changed' )
-//     //       } 
-//     //     })
-//     //   }
-
-//     // Local method
-//     // , getCollection: function()
-//     //   {
-//     //     if( !this.collection )
-//     //       this.collection = subbly.api('Collection.Users')
-//     //   }
-
-//       // Routes
-//       //-------------------------------
-
-//     , list: function() 
-//       {
-//         this._mainRouter._currentView = this
-//         // return
-//   console.info('call customer list')
-//         this.getCollection()
-
-//         this.collection.fetch(
-//         {
-//             success: function( collection, response )
-//             {
-//     console.log( collection )
-//     console.log( response )
-//             }
-//         })
-//       }
-
-//     , details: function( uid ) 
-//       {
-//         this.getCollection()
-        
-//         var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
-//     console.log( user )
-
-//         user.fetch(
-//         {
-//             data: { includes: ['addresses', 'orders'] }
-//           , success: function( model, response )
-//             {
-//     console.log( model.displayName() )
-//     console.log( response )
-//             }
-//         })
-//       }
-//   }
-
-
-//   var CustomersUsers = 
-//   {
-//       _viewName: 'Users'
-//   }
-
-//   var CustomersUser = 
-//   {
-//       _viewName: 'User'
-//   }
-
-//   // subbly.extend( 'Controller', 'Customers', Customers )
-
-//   // window.subbly.register({
-//   //     name: 'Customers'
-//   //   , components: {
-//   //         Controller: Customers
-//   //       , View: [
-//   //             CustomersUsers
-//   //           , CustomersUser
-//   //         ]
-//   //     }
-//   // })
-// })( window )
-
-
-// Components.Subbly.View.Users = SubblyView.extend(
-// {
-//     _viewName: 'Users'
-// })
-
-// Components.Subbly.View.User = SubblyView.extend(
-// {
-//     _viewName: 'User'
-// })
-
-
-Components.Subbly.View.FormView = Backbone.View.extend(
+Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 {
     form:             false
   , $formInputs:      false
@@ -18643,8 +18619,7 @@ var Router = Backbone.Router.extend(
 
   , initialize: function() 
     {
-      var controllers = SubblyPlugins.getList()
-        , router      = this
+      var router = this
 
       _.each( Components, function( vendorComponents, vendor )
       {
@@ -18887,119 +18862,6 @@ if(typeof(console) === 'undefined')
 {
   var console = {}
   console.log = console.error = console.info = console.debug = console.warn = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = function () {};
-}
-
-
-var scroll2sicky = (function()
-{
-  var $elements
-    , $nano
-    , $window
-    , lists
-
-  var refresh = function( event, values )
-  {
-    lists.forEach( function( item )
-    {
-      item.update( values.position )
-    })
-  }
-
-  var reset = function()
-  {
-    lists.forEach( function( item )
-    {
-      item.reset()
-    })
-  }
-
-  var getDisplay = function( element )
-  {
-    var cnt    = element.querySelector('.scrll-stck-cnt')
-      , height = cnt.offsetHeight
-      , width  = element.offsetWidth
-
-    element.style.height = height + 'px'
-    cnt.style.width      = width + 'px'
-
-    return cnt    
-  }
-
-  // TODO, $el should not have more than one stickable element
-  var init = function( $el )
-  {    
-    $elements = $el[0]
-    $nano     = $el.find('div.nano')
-    $window   = $( window )
-
-    lists = []
-
-    ;[].forEach.call(
-        $elements.querySelectorAll('.scrll-stck')
-      , function( element )
-        {
-          var cnt  = getDisplay( element )
-            , list = new scroll2sickyList( cnt )
-
-          // Add this element to the collection
-          lists.push( list )
-        }
-    )
-
-    $nano.on('update', refresh )
-    $window.on( 'resize', function()
-    {
-      getDisplay( $elements.querySelector('.scrll-stck') )
-    })
-  }
-
-  var unload = function()
-  {
-    $nano.off('update', refresh )
-  }
-
-  return {
-      'init':   init
-    , 'unload': unload
-    , 'reset':  reset
-  }
-
-})()
-
-
-/**
- * The basic type of list; applies sticky classe to
- * list items based on scroll state.
- */
-function scroll2sickyList( element )
-{
-  this.element = element
-
-  var t = element.offsetTop
-    , o = element
-
-  while ( o = o.offsetParent )
-      t += o.offsetTop
-
-  this.top     = t
-
-  this.update( 0 )
-}
-
-/**
- * Force remove sticky class
- */
-scroll2sickyList.prototype.reset = function() 
-{
-  this.element.classList.remove('sticky')
-}
-
-/**
- * Apply sticky classes to list items outside of the viewport
- */
-scroll2sickyList.prototype.update = function( scrollTop ) 
-{
-  this.element.classList[ ( this.top <= scrollTop ) ? 'add' : 'remove' ]('sticky')
 }
 
 //# sourceMappingURL=subbly.local.js.map

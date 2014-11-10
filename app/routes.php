@@ -70,6 +70,8 @@ Route::any('/void', function()
     return $response;
 });
 
+Route::get('/static/templates', 'TplController@setup');
+
 /*
  * Register template driven Frontend
  * Comment this part if you want to user

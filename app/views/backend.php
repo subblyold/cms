@@ -12,7 +12,7 @@
 
 </head>
 <body>
-  <div class="login -active -logged" id="login">
+  <div class="login" id="login">
     <div class="login-contenair">
       <img class src="<?= URL::to('/themes/backend/assets/img/logo.svg'); ?>" width="100" alt="logo Subbly">
       <form class="login-box" method="post" accept-charset="utf-8" target="postFrame" action="<?= url('/void'); ?>" id="login-form">
@@ -120,6 +120,7 @@
 
     }
   </script>
+  <script src="<?= URL::to('/static/templates') ?>"></script>
   <script src="<?= URL::to('/themes/backend/assets/js/subbly.' . $environment . '.js') ?>"></script>
   <script src="<?= URL::to('/themes/plugins/customers.js') ?>"></script>
   <script src="<?= URL::to('/themes/plugins/dashboard.js') ?>"></script>

@@ -15,8 +15,7 @@ var Router = Backbone.Router.extend(
 
   , initialize: function() 
     {
-      var controllers = SubblyPlugins.getList()
-        , router      = this
+      var router = this
 
       _.each( Components, function( vendorComponents, vendor )
       {
