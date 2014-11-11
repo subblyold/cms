@@ -940,6 +940,12 @@ a.badge:focus {
 .cln-lst-blk {
   line-height: 100px;
 }
+.cln-lst-load {
+  text-align: center;
+}
+.cln-lst-load span {
+  line-height: 100px;
+}
 .pdt-list {
   background: #ffffff;
   border-radius: 4px;

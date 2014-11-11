@@ -9,6 +9,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _viewRow:        false
   , _tplRow:         false
   , _initialDisplay: false
+  , _isLoadingMore:  false
   , _$list:          false
   , _$listItems:     false
   , collection:      false
@@ -16,8 +17,6 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   ,  onInitialize: function()
     {
       console.log( 'initialize list view ' + this._viewName )
-
-      var scope = this
 
       this.on( 'view::scrollend', this.nextPage, this )
       subbly.on( 'pagination::fetch', this.loadMore, this )
@@ -38,6 +37,9 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
 
   , nextPage: function()
     {
+      if( this._isLoadingMore )
+        return
+
       if( !this.collection.nextPage() )
         return
 
@@ -54,6 +56,24 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
 
   , loadMore: function()
     {
+      if( this._isLoadingMore )
+        return
+
+      this._isLoadingMore = true
+
+      var li   = document.createElement('li')
+        , span = document.createElement('span')
+        , txt  = document.createTextNode( 'loading' )
+
+      span.className = 'f-lrg strong'
+      span.appendChild( txt )
+
+      li.className = 'cln-lst-rw cln-lst-load'
+      li.id        = 'list-pagination-loader'
+      li.appendChild( span )
+
+      this._$list.append( li )
+
       subbly.fetch( this.collection,
       {
           success: _.bind( this.render, this )
@@ -65,6 +85,14 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( !this.collection )
         return
       // this.cleanRows()
+
+      // fetch flag
+      this._isLoadingMore = false
+
+      var $loader = $( document.getElementById( 'list-pagination-loader') )
+
+      if( $loader.length )
+        $loader.remove()
 
       // this._viewsPointers = {}
 
@@ -194,6 +222,12 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     {
       if( this.onCloseList )
         this.onCloseList()
+
+      if( this.collection )
+        this.collection.resetPagination()
+
+      this._$nano.nanoScroller({ destroy: true })
+      scroll2sicky.unload()
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
       // subbly.off( 'row::delete',          this.removeRow, this ) 
