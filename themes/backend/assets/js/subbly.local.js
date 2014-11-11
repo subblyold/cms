@@ -20684,9 +20684,18 @@ var SubblyCore = function( config )
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
-
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
+
+  this._viewAllowedType = [ 
+      'Model'
+    , 'Collection'
+    , 'View'
+    , 'ViewForm'
+    , 'ViewList'
+    , 'ViewListRow'
+    , 'Controller' 
+  ]
 
   return this
 }
@@ -20976,16 +20985,12 @@ SubblyCore.prototype.api = function( serviceName, args )
 
 SubblyCore.prototype.extend = function( vendor, type, name, obj )
 {
-  var allowedType = [ 'Model', 'Collection', 'View', 'ViewForm', 'ViewList', 'Controller' ]
-
-  if( allowedType.indexOf( type ) == -1 )
+  if( this._viewAllowedType.indexOf( type ) == -1 )
     throw new Error( 'Extend can not accept "' + type + '" as extend' )
 
+  // create a new Vendor
   if( !Components[ vendor ] )
-  {
-    // TODO: build obj dynamically
     Components[ vendor ] = $.extend( {}, defaultFwObj )
-  }
 
   var alias
 
@@ -21004,6 +21009,10 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
     case 'ViewList':
         type  = 'View' 
         alias = SubblyViewList
+      break
+    case 'ViewListRow':
+        type  = 'View' 
+        alias = SubblyViewListRow
       break
     case 'Model':
         alias = SubblyModel
@@ -21421,6 +21430,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 })
 
 var SubblyViewList
+  , SubblyViewListRow
 
 Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
 {
@@ -21621,6 +21631,20 @@ console.log( bbObj)
       subbly.off( 'collection::truncate', this.cleanRows, this )
 
       this.cleanRows()
+    }
+})
+
+Components.Subbly.View.ViewlistRow = SubblyViewListRow = SubblyView.extend(
+{
+    events: _.extend( {}, SubblyView.prototype.events, 
+    {
+        'click.js-trigger-goto':  'goTo'
+      , 'click .js-trigger-goto': 'goTo'
+    })
+
+  , goTo: function( event )
+    {
+console.log('goTo')
     }
 })
 

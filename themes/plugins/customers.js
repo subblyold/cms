@@ -73,7 +73,7 @@
   var CustomersUserRow = 
   {
       tagName:   'li'
-    , className: 'cln-lst-rw cust-row'
+    , className: 'cln-lst-rw cust-row js-trigger-goto'
     , _viewName: 'Customer'
 
     , onInitialize: function( options )
@@ -107,7 +107,7 @@
   Subbly.register( 'Subbly', 'Customers', 
   {
       'ViewList:Customers':   CustomersUsers
-    , 'View:Customer':        CustomersUserRow
+    , 'ViewListRow:Customer': CustomersUserRow
     , 'Controller:Customers': Customers
   })
 

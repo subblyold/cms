@@ -348,6 +348,10 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
         type  = 'View' 
         alias = SubblyViewList
       break
+    case 'ViewListRow':
+        type  = 'View' 
+        alias = SubblyViewListRow
+      break
     case 'Model':
         alias = SubblyModel
       break

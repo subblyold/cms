@@ -1,4 +1,5 @@
 var SubblyViewList
+  , SubblyViewListRow
 
 Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
 {
@@ -199,5 +200,19 @@ console.log( bbObj)
       subbly.off( 'collection::truncate', this.cleanRows, this )
 
       this.cleanRows()
+    }
+})
+
+Components.Subbly.View.ViewlistRow = SubblyViewListRow = SubblyView.extend(
+{
+    events: _.extend( {}, SubblyView.prototype.events, 
+    {
+        'click.js-trigger-goto':  'goTo'
+      , 'click .js-trigger-goto': 'goTo'
+    })
+
+  , goTo: function( event )
+    {
+console.log('goTo')
     }
 })
