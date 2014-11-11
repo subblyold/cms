@@ -1283,14 +1283,15 @@ input[type="search"] {
 .btn-icon {
   border-color: #bbbbbb;
   position: relative;
+  padding: 0 15px;
   width: 40px;
 }
 .btn-icon .icon {
   left: -4px;
   margin: 0;
   position: relative;
-  font-size: 14px;
-  top: 2px;
+  font-size: 16px;
+  top: 3px;
 }
 .thmb-col {
   font-size: 0;
