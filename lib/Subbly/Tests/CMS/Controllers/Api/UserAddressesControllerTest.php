@@ -10,7 +10,6 @@ class UserAddressesControllerTest extends TestCase
         'name'         => 'string',
         'firstname'    => 'string',
         'lastname'     => 'string',
-        'lastname'     => 'string',
         'address1'     => 'string',
         'address2'     => array('string', 'null'),
         'zipcode'      => 'string',
