@@ -143,7 +143,7 @@ module.exports = function(grunt)
                   // , 'src/lib/bootstrap/dropdown.js'
                   , 'src/lib/bootstrap/button.js'
                   // , 'src/lib/bootstrap/modal.js'
-                  // , 'src/lib/momentjs/moment.js'
+                  , 'src/lib/moment/moment.js'
                   // , 'src/lib/download/download.js'
 
                   , 'src/js/scroll2sicky.js'
@@ -156,7 +156,8 @@ module.exports = function(grunt)
                   , 'src/js/helpers/xhr.js'
                   // , 'src/js/helpers/delete.js'
                   // , 'src/js/helpers/uploader.js'
-                  // , 'src/js/closure.utils.js'
+                  // , 'src/js/helpers/session.js'
+                  // , 'src/js/helpers/feedback.js'
 
                   , 'src/js/model.js'
                   , 'src/js/collection.js'
@@ -168,14 +169,6 @@ module.exports = function(grunt)
                   , 'src/js/collections/*.js'
                   , 'src/js/controllers/*.js'
                   , 'src/js/views/*.js'
-                  // , 'src/js/views/list.js'
-                  // , 'src/js/views/sortable.js'
-                  // , 'src/js/views/login.js'
-                  // , 'src/js/views/modal.js'
-
-                  // , 'src/js/subbly.js'
-                  // , 'src/js/session.js'
-                  // , 'src/js/feedback.js'
 
                   , 'src/js/router.js'
                   , 'src/js/closure.utils.js'

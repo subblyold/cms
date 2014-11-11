@@ -454,7 +454,6 @@ ol {
   right: 10px;
   top: 18px;
 }
-.user-nav-container:hover,
 .user-nav-container.active {
   background: #323336;
   height: 120px;
@@ -933,6 +932,10 @@ a.badge:focus {
 .cln-lst-itm {
   float: left;
   height: 100px;
+}
+.cln-lst-itm-tago {
+  float: right;
+  padding-right: 40px;
 }
 .cln-lst-blk {
   line-height: 100px;
@@ -1421,10 +1424,6 @@ input[type="search"] {
 .ordr-dtls {
   padding-top: 18px;
 }
-.ordr-tago {
-  float: right;
-  padding-right: 40px;
-}
 .ordr-row:hover,
 .ordr-row.active {
   background: #aacdf9;
@@ -1479,5 +1478,18 @@ input[type="search"] {
   background: #faf6e6;
   border-radius: 4px;
   padding: 25px 30px;
+}
+.cust-rsum {
+  padding-top: 28px;
+  margin-left: 50px;
+}
+.cust-row:hover,
+.cust-row.active {
+  background: #b9ccb6;
+  border-top: 1px solid #b9ccb6;
+}
+.cust-row:hover *,
+.cust-row.active * {
+  color: #ffffff !important;
 }
 /*# sourceMappingURL=subbly.local.css.map */

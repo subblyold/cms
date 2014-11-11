@@ -137,8 +137,9 @@ var SubblyController = Backbone.Controller.extend(
           this._parentView.appendChild( view )
 
           this._viewsPointers[ viewId ] = subbly.api( this._viewsNames[ index ], {
-              el:     view
-            , viewId: viewId
+              el:         view
+            , viewId:     viewId
+            , controller: this
           })
 
           this._reversedPointer[ this._viewsNames[ index ] ] = this._viewsPointers[ viewId ]
@@ -148,8 +149,9 @@ var SubblyController = Backbone.Controller.extend(
       else
       {
         this._viewsPointers[ parentViewId ] = subbly.api( this._viewsNames, {
-            el:     this._parentView
-          , viewId: parentViewId
+            el:         this._parentView
+          , viewId:     parentViewId
+          , controller: this
         })
         
         this._reversedPointer[ this._viewsNames ] = this._viewsPointers[ parentViewId ]

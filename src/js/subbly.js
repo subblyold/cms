@@ -314,7 +314,7 @@ SubblyCore.prototype.api = function( serviceName, args )
 
 SubblyCore.prototype.extend = function( vendor, type, name, obj )
 {
-  var allowedType = [ 'Model', 'Collection', 'View', 'Controller' ]
+  var allowedType = [ 'Model', 'Collection', 'View', 'ViewForm', 'ViewList', 'Controller' ]
 
   if( allowedType.indexOf( type ) == -1 )
     throw new Error( 'Extend can not accept "' + type + '" as extend' )
@@ -323,12 +323,6 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
   {
     // TODO: build obj dynamically
     Components[ vendor ] = $.extend( {}, defaultFwObj )
-  }
-
-  if( Components[ vendor ][ type ][ name ] )
-  {
-    // TODO: extend existing components + log 
-    throw new Error( vendor + '.'  + type + '.'  + name + ' already exist' )
   }
 
   var alias
@@ -342,7 +336,12 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
         alias = SubblyView
       break
     case 'ViewForm':
+        type  = 'View' 
         alias = SubblyViewForm
+      break
+    case 'ViewList':
+        type  = 'View' 
+        alias = SubblyViewList
       break
     case 'Model':
         alias = SubblyModel
@@ -350,6 +349,15 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
     case 'Collection':
         alias = SubblyCollection
       break
+    case 'CollectionList':
+        alias = SubblyCollectionList
+      break
+  }
+
+  if( Components[ vendor ][ type ][ name ] )
+  {
+    // TODO: extend existing components + log 
+    throw new Error( vendor + '.'  + type + '.'  + name + ' already exist' )
   }
 
   Components[ vendor ][ type ][ name ] = alias.extend( obj )

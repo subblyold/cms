@@ -1,7 +1,9 @@
 
 // Base collection with pagination
 
-Components.Subbly.Collection.List = SubblyCollection.extend(
+var SubblyCollectionList
+
+Components.Subbly.Collection.List = SubblyCollectionList = SubblyCollection.extend(
 {
     defaultPerPage: 5
 

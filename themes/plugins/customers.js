@@ -13,20 +13,6 @@
         , defaultUrl: 'customers'
       }
 
-//     , onInitialize: function()
-//       {
-//   console.log( 'onInitialize Customers')
-//         this.on( 'fetch::calling', function()
-//         {
-// console.log('fetch::calling')
-//         } )
-
-//         this.on( 'fetch::responds', function()
-//         {
-// console.log('fetch::responds')
-//         } )
-//       }
-
     , routes: {
           'customers':      'list'
         , 'customers/:uid': 'details'
@@ -50,17 +36,20 @@
 
         this.fetch( this.collection,
         {
-            success: _.bind( this.cbAlaCon, this )
+            data:   {
+                offset: 0
+              , limit:  1
+            }
+          , success: _.bind( this.cbAlaCon, this )
         }, this )
       }
 
       // test Callback
     , cbAlaCon: function( collection, response )
       {
-        console.log( collection )
-        // console.log( response )
-        // console.log( this._controllerName )
-        this.getViewByPath( 'Subbly.View.Customers' ).displayTpl()
+        this.getViewByPath( 'Subbly.View.Customers' )
+          .setValue( 'collection', collection )
+          .displayTpl()
       }
 
     , details: function( uid ) 
@@ -81,28 +70,44 @@
       }
   }
 
-  var CustomersUsers = 
+  var CustomersUserRow = 
   {
-      _viewName:  'Users'
-    , _viewTpl:   TPL.customers.list
-    , _classlist: ['view-half-list']
+      tagName:   'li'
+    , className: 'cln-lst-rw cust-row'
+    , _viewName: 'Customer'
 
-    , display: function()
+    , onInitialize: function( options )
       {
-  console.info('display customers view')
+        this.tplRow = options.tpl
       }
 
+    , render: function()
+      {
+        var html = this.tplRow({
+            displayName: this.model.displayName()
+          , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
+        })
+
+        this.$el.html( html )
+
+        return this
+      }
   }
 
-  var CustomersUser = 
+  var CustomersUsers = 
   {
-      _viewName: 'User'
+      _viewName:     'Customers'
+    , _viewTpl:      TPL.customers.list
+    , _classlist:    ['view-half-list']
+    , _listSelector: '#customers-list'
+    , _tplRow:        TPL.customers.listrow
+    , _viewRow:       'Subbly.View.Customer'
   }
 
   Subbly.register( 'Subbly', 'Customers', 
   {
-      'View:Customers':       CustomersUsers
-    , 'View:Customer':        CustomersUser
+      'ViewList:Customers':   CustomersUsers
+    , 'View:Customer':        CustomersUserRow
     , 'Controller:Customers': Customers
   })
 
