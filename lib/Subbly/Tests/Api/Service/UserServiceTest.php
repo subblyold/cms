@@ -93,7 +93,8 @@ class UserServiceTest extends TestCase
 
     public function testUpdate()
     {
-        $user = TestCase::getFixture('users.user_1');
+        $faker = TestCase::faker();
+        $user  = TestCase::getFixture('users.user_1');
 
         // Events
         Subbly::events()->listen($this->getService()->name() . ':updating', function($model) use ($user)
@@ -107,8 +108,8 @@ class UserServiceTest extends TestCase
             Subbly::events()->forget($this->getService()->name() . ':updated');
         });
 
-        $user->firstname = TestCase::faker()->firstname;
-        $user->lastname  = TestCase::faker()->lastname;
+        $user->firstname = $faker->firstname;
+        $user->lastname  = $faker->lastname;
 
         $returnedUser = $this->getService()->update($user);
 

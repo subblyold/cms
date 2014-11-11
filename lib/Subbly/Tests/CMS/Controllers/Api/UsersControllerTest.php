@@ -71,6 +71,8 @@ class UsersControllerTest extends TestCase
 
     public function testStore()
     {
+        $faker = TestCase::faker();
+
         /**
          * NOT OK
          */
@@ -96,10 +98,10 @@ class UsersControllerTest extends TestCase
          * OK
          */
         $data = array(
-            'firstname' => TestCase::faker()->firstName,
-            'lastname'  => TestCase::faker()->lastName,
-            'email'     => TestCase::faker()->email,
-            'password'  => TestCase::faker()->password,
+            'firstname' => $faker->firstName,
+            'lastname'  => $faker->lastName,
+            'email'     => $faker->email,
+            'password'  => $faker->password,
         );
         $response = $this->callJSON('POST', '/api/v1/users', array('user' => $data));
 

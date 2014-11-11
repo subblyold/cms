@@ -73,6 +73,7 @@ class ProductsControllerTest extends TestCase
 
     public function testStore()
     {
+        $faker = TestCase::faker();
         /**
          * NOT OK
          */
@@ -98,12 +99,12 @@ class ProductsControllerTest extends TestCase
          * OK
          */
         $data = array(
-            'sku'         => TestCase::faker()->unique()->bothify('????????##'),
-            'name'        => TestCase::faker()->words(3, true),
-            'description' => TestCase::faker()->text(),
-            'price'       => round(TestCase::faker()->randomFloat(2, 0, 99999999.99), 2),
+            'sku'         => $faker->unique()->bothify('????????##'),
+            'name'        => $faker->words(3, true),
+            'description' => $faker->text(),
+            'price'       => round($faker->randomFloat(2, 0, 99999999.99), 2),
             // 'sale_price'  => null,
-            'quantity'    => TestCase::faker()->randomNumber(4),
+            'quantity'    => $faker->randomNumber(4),
         );
         $response = $this->callJSON('POST', '/api/v1/products', array('product' => $data));
 
@@ -117,6 +118,7 @@ class ProductsControllerTest extends TestCase
 
     public function testUpdate()
     {
+        $faker   = TestCase::faker();
         $product = TestCase::getFixture('products.product_8');
 
         /**
@@ -146,7 +148,7 @@ class ProductsControllerTest extends TestCase
 
         // "products" with datas
         $data = array(
-            'name' => TestCase::faker()->word,
+            'name' => $faker->word,
         );
         $response = $this->callJSON('PATCH', "/api/v1/products/{$product->sku}", array('product' => $data));
 
