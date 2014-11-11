@@ -8,7 +8,7 @@
     , _mainNavRegister:
       {
           name:       'Dashboard'
-        , order:      100
+        , order:      200
         , defaultUrl: 'dashboard'
       }
 

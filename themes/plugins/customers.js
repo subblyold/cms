@@ -9,7 +9,7 @@
     , _mainNavRegister:
       {
           name:       'Customers'
-        , order:      90
+        , order:      180
         , defaultUrl: 'customers'
       }
 

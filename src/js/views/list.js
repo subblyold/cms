@@ -76,6 +76,9 @@ console.log( bbObj)
         return
       }
 
+      if( !this.collection )
+        return
+
       this.collection.each( function( model )
       {
         if( !this._fragment )
