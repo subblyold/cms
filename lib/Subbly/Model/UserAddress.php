@@ -16,12 +16,13 @@ class UserAddress extends Model implements ModelInterface
      */
     protected $visible = array('uid', 'name', 'firstname', 'lastname', 'address1', 'address2', 'zipcode', 'city', 'country', 'phone_work', 'phone_home', 'phone_mobile', 'created_at', 'updated_at');
 
-    protected $fillable = array('firstname', 'lastname', 'address1', 'address2', 'zipcode', 'city', 'country', 'phone_work', 'phone_home', 'phone_mobile');
+    protected $fillable = array('name', 'firstname', 'lastname', 'address1', 'address2', 'zipcode', 'city', 'country', 'phone_work', 'phone_home', 'phone_mobile');
 
     /**
      * Validations
      */
     protected $rules = array(
+        'name'      => 'required',
         'firstname' => 'required',
         'lastname'  => 'required',
         'address1'  => 'required',

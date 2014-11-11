@@ -62,19 +62,13 @@ class UserAddressService extends Service
      */
     public function findByUser($user, array $options = array())
     {
-        if ($user instanceof User) {
-            $user_uid = $user->uid;
-        }
-        else if (is_string($user)) {
-            $user_uid = $user;
-        }
-        else {
-            // TODO throw an exception
+        if (!$user instanceof User) {
+            $user = $this->api('subbly.user')->find($user);
         }
 
         $query = $this->newCollectionQuery($options);
-        $query->with(array('user' => function($query) use ($user_uid) {
-            $query->where('uid', '=', $user_uid);
+        $query->with(array('user' => function($query) use ($user) {
+            $query->where('uid', '=', $user->uid);
         }));
 
         return new Collection($query);
@@ -101,8 +95,12 @@ class UserAddressService extends Service
      *
      * @api
      */
-    public function create($userAddress, User $user = null)
+    public function create($userAddress, $user)
     {
+        if (!$user instanceof User) {
+            $user = $this->api('subbly.user')->find($user);
+        }
+
         if (is_array($userAddress)) {
             $userAddress = new UserAddress($userAddress);
         }
@@ -111,9 +109,7 @@ class UserAddressService extends Service
         {
             if ($this->fireEvent('creating', array($userAddress)) === false) return false;
 
-            if ($user !== null) {
-                $userAddress->user()->associate($user);
-            }
+            $userAddress->user()->associate($user);
 
             $userAddress->setCaller($this);
             $userAddress->save();

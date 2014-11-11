@@ -27,13 +27,15 @@ class UserAddressesController extends BaseController
      */
     public function index($user_uid)
     {
+        $user = Subbly::api('subbly.user')->find($user_uid);
+
         list($offset, $limit) = $this->apiOffsetLimit();
         $options = $this->formatOptions(array(
             'offset' => $offset,
             'limit'  => $limit,
         ));
 
-        $userAddresses = Subbly::api('subbly.user_address')->findByUser($user_uid, $options);
+        $userAddresses = Subbly::api('subbly.user_address')->findByUser($user, $options);
 
         return $this->jsonCollectionResponse('user_addresses', $userAddresses);
     }
@@ -46,11 +48,13 @@ class UserAddressesController extends BaseController
      */
     public function store($user_uid)
     {
+        $user = Subbly::api('subbly.user')->find($user_uid);
+
         if (!Input::has('user_address')) {
             return $this->jsonErrorResponse('"user_address" is required.');
         }
 
-        $userAddress = Subbly::api('subbly.user_address')->create(Input::get('user_address'));
+        $userAddress = Subbly::api('subbly.user_address')->create(Input::get('user_address'), $user);
 
         return $this->jsonResponse(array(
             'user_address' => $userAddress,
@@ -71,6 +75,8 @@ class UserAddressesController extends BaseController
      */
     public function update($user_uid, $uid)
     {
+        $user = Subbly::api('subbly.user')->find($user_uid);
+
         if (!Input::has('user_address')) {
             return $this->jsonErrorResponse('"user_address" is required.');
         }
