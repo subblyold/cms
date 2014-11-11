@@ -18,6 +18,7 @@ class OrdersControllerTest extends TestCase
 
         $json = $this->getJSONContent();
         $this->assertJSONCollectionResponse('orders');
+        $this->assertJSONTypes('orders[0]', $this->orderJSONFormat);
         $this->assertEquals(0, $json->response->offset);
         $this->assertEquals(Order::count(), $json->response->total);
     }
@@ -43,6 +44,7 @@ class OrdersControllerTest extends TestCase
 
         $json = $this->getJSONContent();
         $this->assertJSONCollectionResponse('orders');
+        // $this->assertJSONTypes('orders[0]', $this->orderJSONFormat);
         $this->assertEquals($searchQuery, $json->response->query);
     }
 

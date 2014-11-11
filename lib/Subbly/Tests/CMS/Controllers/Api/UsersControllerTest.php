@@ -23,6 +23,7 @@ class UsersControllerTest extends TestCase
 
         $json = $this->getJSONContent();
         $this->assertJSONCollectionResponse('users');
+        $this->assertJSONTypes('users[0]', $this->userJSONFormat);
         $this->assertEquals(0, $json->response->offset);
         $this->assertEquals(User::count(), $json->response->total);
     }
@@ -48,6 +49,7 @@ class UsersControllerTest extends TestCase
 
         $json = $this->getJSONContent();
         $this->assertJSONCollectionResponse('users');
+        $this->assertJSONTypes('users[0]', $this->userJSONFormat);
         $this->assertEquals($searchQuery, $json->response->query);
     }
 
