@@ -130,7 +130,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         {
           this._initialDisplay = true
 
-          this._$list.children(':first').addClass('active')
+          if( this.onInitialDisplay )
+            this.onInitialDisplay()
         }
 
         delete this._fragment
@@ -167,6 +168,14 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       this.$el.find('.app-content').html( div )
     }
 
+    // Hook to override if need
+    // called the first time list 
+    // is display
+  , onInitialDisplay: function()
+    {
+
+    }
+
     // Hook to override
     // if conditional logic needed
     // add code here in local function.
@@ -195,9 +204,10 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , addRow: function( model )
     {
       return subbly.api( this._viewRow, {
-          model:  model
-        , parent: this
-        , tpl:    this._tplRowCompiled
+          model:      model
+        , parent:     this
+        , tpl:        this._tplRowCompiled
+        , controller: this._controller
       })
     }
 

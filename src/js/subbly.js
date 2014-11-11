@@ -51,6 +51,8 @@ var SubblyCore = function( config )
 SubblyCore.prototype.init = function()
 {
   console.info( 'Initialize App router' )
+  console.info( 'Components list' )
+  console.log( Components )
 
   this._router = new Router()
 
@@ -441,12 +443,16 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
 SubblyCore.prototype.register = function( vendor, name, plugin )
 {
+  console.groupCollapsed( 'Register Plugin ' + vendor + '.' + name )
+
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
 
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
+
+  console.groupEnd()
 }
 
 // Global Init

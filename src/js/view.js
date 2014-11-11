@@ -38,6 +38,17 @@ var SubblyView = Backbone.View.extend(
       // this.on( 'fetch::responds', ..., ... 
     }
 
+    // Call controller method from view
+  , callController: function( method )
+    {
+      if( !this._controller[ method ] )
+        throw new Error( 'controller "' + this._controllerName + '" does not have  "' + method + '" method' )
+
+      var args = [].slice.call( arguments, 1 )
+
+      return this._controller[ method ].apply( this._controller, args )
+    }
+
   , setValue: function( key, value )
     {
       this[ key ] = value

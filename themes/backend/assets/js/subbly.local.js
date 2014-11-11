@@ -20429,6 +20429,17 @@ var SubblyView = Backbone.View.extend(
       // this.on( 'fetch::responds', ..., ... 
     }
 
+    // Call controller method from view
+  , callController: function( method )
+    {
+      if( !this._controller[ method ] )
+        throw new Error( 'controller "' + this._controllerName + '" does not have  "' + method + '" method' )
+
+      var args = [].slice.call( arguments, 1 )
+
+      return this._controller[ method ].apply( this._controller, args )
+    }
+
   , setValue: function( key, value )
     {
       this[ key ] = value
@@ -20681,6 +20692,8 @@ var SubblyCore = function( config )
 SubblyCore.prototype.init = function()
 {
   console.info( 'Initialize App router' )
+  console.info( 'Components list' )
+  console.log( Components )
 
   this._router = new Router()
 
@@ -21071,12 +21084,16 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
 SubblyCore.prototype.register = function( vendor, name, plugin )
 {
+  console.groupCollapsed( 'Register Plugin ' + vendor + '.' + name )
+
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
 
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
+
+  console.groupEnd()
 }
 
 // Global Init
@@ -21594,7 +21611,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         {
           this._initialDisplay = true
 
-          this._$list.children(':first').addClass('active')
+          if( this.onInitialDisplay )
+            this.onInitialDisplay()
         }
 
         delete this._fragment
@@ -21631,6 +21649,14 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       this.$el.find('.app-content').html( div )
     }
 
+    // Hook to override if need
+    // called the first time list 
+    // is display
+  , onInitialDisplay: function()
+    {
+
+    }
+
     // Hook to override
     // if conditional logic needed
     // add code here in local function.
@@ -21659,9 +21685,10 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , addRow: function( model )
     {
       return subbly.api( this._viewRow, {
-          model:  model
-        , parent: this
-        , tpl:    this._tplRowCompiled
+          model:      model
+        , parent:     this
+        , tpl:        this._tplRowCompiled
+        , controller: this._controller
       })
     }
 
