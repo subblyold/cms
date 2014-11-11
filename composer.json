@@ -1,0 +1,19 @@
+{
+    "name": "subbly/cms",
+    "description": "",
+    "type": "project",
+
+    "authors": [
+        {
+            "name": "Nicolas Brousse",
+            "email": "nicolas@subbly.com"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.4.0",
+        "subbly/framework": "~0.1"
+    },
+
+    "minimum-stability": "stable"
+}
