@@ -22,9 +22,18 @@ var SubblyCore = function( config )
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
-
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
+
+  this._viewAllowedType = [ 
+      'Model'
+    , 'Collection'
+    , 'View'
+    , 'ViewForm'
+    , 'ViewList'
+    , 'ViewListRow'
+    , 'Controller' 
+  ]
 
   return this
 }
@@ -314,16 +323,12 @@ SubblyCore.prototype.api = function( serviceName, args )
 
 SubblyCore.prototype.extend = function( vendor, type, name, obj )
 {
-  var allowedType = [ 'Model', 'Collection', 'View', 'ViewForm', 'ViewList', 'Controller' ]
-
-  if( allowedType.indexOf( type ) == -1 )
+  if( this._viewAllowedType.indexOf( type ) == -1 )
     throw new Error( 'Extend can not accept "' + type + '" as extend' )
 
+  // create a new Vendor
   if( !Components[ vendor ] )
-  {
-    // TODO: build obj dynamically
     Components[ vendor ] = $.extend( {}, defaultFwObj )
-  }
 
   var alias
 
