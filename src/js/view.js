@@ -8,11 +8,15 @@ var SubblyView = Backbone.View.extend(
   , _viewTpl:    false
   , _classlist:  []
   , _controller: false
+  , _$nano:      false
 
   , initialize: function( options )
     {
       this._viewId     = options.viewId
       this._controller = options.controller
+
+      if( this._classIdentifier )
+        this._classlist.push( this._classIdentifier )
 
       // add extra class
       _( this._classlist )
@@ -26,20 +30,13 @@ var SubblyView = Backbone.View.extend(
 
       return this
     }
-    
-//     , onInitialize: function()
-//       {
-//   console.log( 'onInitialize Customers')
-//         this.on( 'fetch::calling', function()
-//         {
-// console.log('fetch::calling')
-//         } )
 
-//         this.on( 'fetch::responds', function()
-//         {
-// console.log('fetch::responds')
-//         } )
-//       }
+    // Hook to override if needed
+  , onInitialize: function()
+    {
+      // this.on( 'fetch::calling', ..., ... )
+      // this.on( 'fetch::responds', ..., ... 
+    }
 
   , setValue: function( key, value )
     {
@@ -62,11 +59,12 @@ var SubblyView = Backbone.View.extend(
       this.$el.html( html )
 
       // Setup nanoscroller
-      var $nano = this.$el.find('div.nano')
-        , scope = this
+      this._$nano = this.$el.find('div.nano')
+      
+      var scope = this
 
-      $nano.nanoScroller()
-      $nano.on( 'scrollend', function( event )
+      this._$nano.nanoScroller()
+      this._$nano.on( 'scrollend', function( event )
       {
         scope.trigger('view::scrollend')
       })
@@ -77,5 +75,11 @@ var SubblyView = Backbone.View.extend(
         this.onDisplayTpl()
 
       return this
+    }
+
+  , onClose: function()
+    {
+      // this._$nano.nanoScroller({ destroy: true })
+      scroll2sicky.unload()
     }
 })

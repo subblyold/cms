@@ -9,29 +9,18 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _viewRow:        false
   , _tplRow:         false
   , _initialDisplay: false
+  , _$list:          false
+  , _$listItems:     false
   , collection:      false
 
   ,  onInitialize: function()
     {
-console.log( 'initialize list view ' + this._viewName)
+      console.log( 'initialize list view ' + this._viewName )
 
       var scope = this
 
       this.on( 'view::scrollend', this.nextPage, this )
-
-      subbly.on( 'pagination::fetch', function()
-      {
-// console.log( scope )
-// return
-        subbly.fetch( scope.collection,
-        {
-            success: function(bbObj, response)
-            {
-console.log( bbObj)
-console.log( bbObj)
-            }
-        }, scope )
-      })
+      subbly.on( 'pagination::fetch', this.loadMore, this )
     }
 
   , onDisplayTpl: function()
@@ -63,9 +52,19 @@ console.log( bbObj)
       subbly.trigger( 'pagination::fetch' )
     }
 
+  , loadMore: function()
+    {
+      subbly.fetch( this.collection,
+      {
+          success: _.bind( this.render, this )
+      }, this )
+    }
+
   , render: function()
     {
-      this.cleanRows()
+      if( !this.collection )
+        return
+      // this.cleanRows()
 
       // this._viewsPointers = {}
 
@@ -75,9 +74,6 @@ console.log( bbObj)
         this.displayInviteMsg()
         return
       }
-
-      if( !this.collection )
-        return
 
       this.collection.each( function( model )
       {
@@ -100,6 +96,7 @@ console.log( bbObj)
       if( this._fragment )
       {
         this._$list.append( this._fragment )
+        this._$listItems = this._$list.find('.list-row')
 
         if( !this._initialDisplay )
         {
@@ -198,9 +195,11 @@ console.log( bbObj)
       if( this.onCloseList )
         this.onCloseList()
 
-      subbly.off( 'pagination::changed',  this.render, this ) 
-      subbly.off( 'row::delete',          this.removeRow, this ) 
-      subbly.off( 'collection::truncate', this.cleanRows, this )
+      // subbly.off( 'pagination::changed',  this.render, this ) 
+      // subbly.off( 'row::delete',          this.removeRow, this ) 
+      // subbly.off( 'collection::truncate', this.cleanRows, this )
+      this.off( 'view::scrollend', this.nextPage, this )
+      subbly.off( 'pagination::fetch', this.loadMore, this )
 
       this.cleanRows()
     }
@@ -208,7 +207,10 @@ console.log( bbObj)
 
 Components.Subbly.View.ViewlistRow = SubblyViewListRow = SubblyView.extend(
 {
-    events: _.extend( {}, SubblyView.prototype.events, 
+    _classIdentifier: 'list-row'
+  , tagName:          'li'
+
+  , events: _.extend( {}, SubblyView.prototype.events, 
     {
         'click.js-trigger-goto':  'goTo'
       , 'click .js-trigger-goto': 'goTo'

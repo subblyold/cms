@@ -72,8 +72,7 @@
 
   var CustomersUserRow = 
   {
-      tagName:   'li'
-    , className: 'cln-lst-rw cust-row js-trigger-goto'
+      className: 'cln-lst-rw cust-row js-trigger-goto'
     , _viewName: 'Customer'
 
     , onInitialize: function( options )

@@ -56,7 +56,7 @@ var scroll2sicky = (function()
     )
 
     $nano.on('update', refresh )
-    $window.on( 'resize', function()
+    $window.on( 'resize:scroll2sicky', function()
     {
       getDisplay( $elements.querySelector('.scrll-stck') )
     })
@@ -65,6 +65,7 @@ var scroll2sicky = (function()
   var unload = function()
   {
     $nano.off('update', refresh )
+    $window.off( 'resize:scroll2sicky' )
   }
 
   return {
