@@ -23,14 +23,14 @@ console.log( 'initialize list view ' + this._viewName)
       {
 // console.log( scope )
 // return
-        scope._controller.fetch( scope.collection,
+        subbly.fetch( scope.collection,
         {
             success: function(bbObj, response)
             {
 console.log( bbObj)
 console.log( bbObj)
             }
-        }, this )
+        }, scope )
       })
     }
 

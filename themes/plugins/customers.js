@@ -34,7 +34,7 @@
 
         this.getCollection()
 
-        this.fetch( this.collection,
+        Subbly.fetch( this.collection,
         {
             data:   {
                 offset: 0
