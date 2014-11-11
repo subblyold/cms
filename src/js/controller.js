@@ -122,8 +122,11 @@ var SubblyController = Backbone.Controller.extend(
     {
       if( !this._reversedPointer[ index ] )
       {
-console.log( this._reversedPointer )
-console.log( index )
+        console.group('View index does not exists')
+        console.log( this._reversedPointer )
+        console.log( index )
+        console.groupEnd()
+
         throw new Error( 'View index does not exists' )
       }
       
