@@ -213,12 +213,29 @@ abstract class Service
     }
 
     /**
-     * Get the Api class
      *
-     * @return \Subbly\Api\Api
      */
-    final protected function api()
+    protected function sendMail()
     {
+        // TODO
+        // See http://laravel.com/docs/4.2/mail
+    }
+
+    /**
+     * Access to the Subbly Api
+     *
+     * @param null|string  $serviceName The name of the service (optional)
+     *
+     * @return \Subbly\Api\Api|\Subbly\Api\Service\Service
+     *
+     * @api
+     */
+    final protected function api($serviceName = null)
+    {
+        if ($serviceName !== null) {
+            return $this->api->service($serviceName);
+        }
+
         return $this->api;
     }
 }
