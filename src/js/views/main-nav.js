@@ -37,11 +37,6 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         , $trigger = $( document.getElementById( nodeId ) )
         , $parent  = $trigger.parent('div.user-nav-container')
 
-      var hideList = function()
-      {
-        $parent.removeClass('active')
-      }
-
       var handleClickOutside = function( event )
       {
         event.stopPropagation()
@@ -49,12 +44,24 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         if( !$( event.target ).parents('#' + nodeId ).length )
           hideList()
       }
+
+      var hideList = function()
+      {
+        $parent.removeClass('active')
+        $body.off( 'click', handleClickOutside )
+      }
       
       $trigger
         .on( 'click', function( event )
         {
           event.stopPropagation()
           event.preventDefault()
+
+          if( $parent.hasClass('active') )
+          {
+            hideList()
+            return
+          }
 
           $parent.addClass('active')
 
