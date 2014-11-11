@@ -6,45 +6,31 @@
       _tplStructure:   'half' // full|half|third
     , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.Customer' ]
     , _controllerName: 'customers'
-    , _mainNav:
+    , _mainNavRegister:
       {
           name:       'Customers'
         , order:      90
         , defaultUrl: 'customers'
       }
 
-    , onInitialize: function()
-      {
-  // console.log( 'onInitialize Customers')
-        this.on( 'fetch::calling', function()
-        {
-console.log('fetch::calling')
-        } )
+//     , onInitialize: function()
+//       {
+//   console.log( 'onInitialize Customers')
+//         this.on( 'fetch::calling', function()
+//         {
+// console.log('fetch::calling')
+//         } )
 
-        this.on( 'fetch::responds', function()
-        {
-console.log('fetch::responds')
-        } )
-      }
+//         this.on( 'fetch::responds', function()
+//         {
+// console.log('fetch::responds')
+//         } )
+//       }
 
     , routes: {
           'customers':      'list'
         , 'customers/:uid': 'details'
       }
-
-    // Local method
-    // , fetch: function()
-    //   {
-    //     Subbly.trigger( 'loader::show' )
-
-    //     this.collection.fetch(
-    //     {
-    //       success: function()
-    //       {
-    //         Subbly.trigger( 'pagination::changed' )
-    //       } 
-    //     })
-    //   }
 
     // Local method
     , getCollection: function()
@@ -72,8 +58,9 @@ console.log('fetch::responds')
     , cbAlaCon: function( collection, response )
       {
         console.log( collection )
-        console.log( response )
-        console.log( this._controllerName )
+        // console.log( response )
+        // console.log( this._controllerName )
+        this.getViewByPath( 'Subbly.View.Customers' ).displayTpl()
       }
 
     , details: function( uid ) 
@@ -96,7 +83,15 @@ console.log('fetch::responds')
 
   var CustomersUsers = 
   {
-      _viewName: 'Users'
+      _viewName:  'Users'
+    , _viewTpl:   TPL.customers.list
+    , _classlist: ['view-half-list']
+
+    , display: function()
+      {
+  console.info('display customers view')
+      }
+
   }
 
   var CustomersUser = 
@@ -104,7 +99,7 @@ console.log('fetch::responds')
       _viewName: 'User'
   }
 
-  Subbly.register('Subbly', 'Customers', 
+  Subbly.register( 'Subbly', 'Customers', 
   {
       'View:Customers':       CustomersUsers
     , 'View:Customer':        CustomersUser

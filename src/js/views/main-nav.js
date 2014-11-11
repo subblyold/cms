@@ -1,7 +1,8 @@
 
 Components.Subbly.View.MainNav = Backbone.View.extend(
 {
-    el: '#bo-nav'
+    el:      '#bo-nav'
+  , _active: false
 
   , initialize: function( options )
     {
@@ -84,7 +85,12 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
   , goTo: function( event )
     {
-      subbly.trigger( 'hash::change', event.target.getAttribute('data-url') )
+      var url = event.target.getAttribute('data-url')
+
+      if( url === this._active )
+        return
+
+      subbly.trigger( 'hash::change', url )
     }
 
   , hashChanged: function( href )

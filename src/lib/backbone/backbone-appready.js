@@ -16,7 +16,7 @@
     requestedArgs: [],
     catchedRouteName: false,
 
-    ready: function()
+    ready: function( _cb )
     {
       this.instance = true;
       if(this.requestedCallback !== null)
@@ -25,6 +25,9 @@
           console.log( this.catchedRouteName )
           console.log( this.requestedArgs )
         console.groupEnd()
+
+        if( _.isFunction( _cb ) )
+          _cb( this.catchedRouteName )
 
         this.requestedCallback.apply(this, this.requestedArgs);
         this.requestedCallback = null;

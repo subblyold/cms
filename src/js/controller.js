@@ -2,19 +2,20 @@
 var SubblyController = Backbone.Controller.extend(
 {
     _tplStructure:   'full' // full|half|third
-  , _tplLenght:      0
-  , _tplPointers:    {} // references to the sub views
-  , _viewsPointers:  {}
-  , _viewsNames:     []
-  , _tplDisplayed:   false
-  , el:              null
-  , $el:             null
-  , _parentView:     false
-  , _controllerName: null
-  , _mainRouter:     false
-  , _mainNav:        false
-  , _fetchXhr:       {}
-  , _instance:       'Controller'
+  , _tplLenght:       0
+  , _tplPointers:     {} // references to the sub views
+  , _viewsPointers:   {} // views references
+  , _reversedPointer: {} // reversed views references
+  , _viewsNames:      [] 
+  , _tplDisplayed:    false
+  , el:               null
+  , $el:              null
+  , _parentView:      false
+  , _controllerName:  null
+  , _mainRouter:      false
+  , _mainNav:         false
+  , _fetchXhr:        {}
+  , _instance:        'Controller'
 
   , initialize: function() 
     {
@@ -29,11 +30,17 @@ var SubblyController = Backbone.Controller.extend(
   , onBeforeRoute: function()
     {
       this.displayViews()
-      
-      // register current view
-      console.log('onBeforeRoute current view ' + this._controllerName)
 
       this._mainRouter._currentView = this
+
+      if( this.onBefore )
+        this.onBefore()
+    }
+
+  , onAfterRoute: function()
+    {
+      if( this.onAfter )
+        this.onAfter()
     }
 
     // Clean DOM and JS memory
@@ -55,9 +62,10 @@ var SubblyController = Backbone.Controller.extend(
         }, this)
 
       // Reset variables
-      this._parentView    = false
-      this._viewsPointers = {}
-      this._fetchXhr      = {}
+      this._parentView      = false
+      this._viewsPointers   = {}
+      this._fetchXhr        = {}
+      this._reversedPointer = {}
     }
 
     // Generic method to fetch model/collection
@@ -132,6 +140,8 @@ var SubblyController = Backbone.Controller.extend(
               el:     view
             , viewId: viewId
           })
+
+          this._reversedPointer[ this._viewsNames[ index ] ] = this._viewsPointers[ viewId ]
         }
       }
       // Single view
@@ -141,7 +151,21 @@ var SubblyController = Backbone.Controller.extend(
             el:     this._parentView
           , viewId: parentViewId
         })
+        
+        this._reversedPointer[ this._viewsNames ] = this._viewsPointers[ parentViewId ]
       }
+    }
+
+  , getViewByPath: function( index )
+    {
+      if( !this._reversedPointer[ index ] )
+      {
+console.log( this._reversedPointer )
+console.log( index )
+        throw new Error( 'View index does not exists' )
+      }
+      
+      return this._reversedPointer[ index ]
     }
 
     // return single DOM element
@@ -157,7 +181,7 @@ var SubblyController = Backbone.Controller.extend(
 
   , registerMainView: function()
     {
-      if( this._mainNav )
-        this._mainRouter.registerMainNav( this._mainNav )
+      if( this._mainNavRegister )
+        this._mainRouter.registerMainNav( this._mainNavRegister )
     }
 })

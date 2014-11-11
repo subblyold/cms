@@ -5,7 +5,7 @@
   {
       _controllerName: 'dashboard'
     , _viewsNames:     'Subbly.View.DashboardView'
-    , _mainNav:
+    , _mainNavRegister:
       {
           name:       'Dashboard'
         , order:      100
@@ -26,8 +26,7 @@
 
     , list: function() 
       {
-  console.info('call dashboard view')
-
+        this.getViewByPath( this._viewsNames ).displayTpl()
       }
   }
 
@@ -35,6 +34,11 @@
   {
       _viewName: 'Dashboard'
     , _viewTpl:  TPL.dashboard.index
+
+    , display: function()
+      {
+  console.info('display dashboard view')
+      }
 
     , onClose: function()
       {

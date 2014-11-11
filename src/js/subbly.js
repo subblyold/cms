@@ -78,8 +78,13 @@ SubblyCore.prototype.init = function()
   
   console.info( 'release app router' )
   console.groupEnd()
+
+  var scope = this
   
-  this._router.ready()
+  this._router.ready(function( route )
+  {
+    scope.trigger( 'hash::changed', route )
+  })
 }
 
 
