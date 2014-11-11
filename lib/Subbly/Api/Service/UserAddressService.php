@@ -41,8 +41,6 @@ class UserAddressService extends Service
      */
     public function find($uid, array $options = array())
     {
-        $options = array_replace(array(), $options);
-
         $query = $this->newQuery($options);
         $query->where('uid', '=', $uid);
 
@@ -64,8 +62,6 @@ class UserAddressService extends Service
      */
     public function findByUser($user, array $options = array())
     {
-        $options = array_replace(array(), $options);
-
         if ($user instanceof User) {
             $user_uid = $user->uid;
         }

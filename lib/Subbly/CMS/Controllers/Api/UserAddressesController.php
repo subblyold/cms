@@ -29,11 +29,11 @@ class UserAddressesController extends BaseController
     {
         list($offset, $limit) = $this->apiOffsetLimit();
         $options = $this->formatOptions(array(
-            'offset'   => $offset,
-            'limit'    => $limit,
+            'offset' => $offset,
+            'limit'  => $limit,
         ));
 
-        $userAddresses = Subbly::api('subbly.user_address')->findByUser($user_uid);
+        $userAddresses = Subbly::api('subbly.user_address')->findByUser($user_uid, $options);
 
         return $this->jsonCollectionResponse('user_addresses', $userAddresses);
     }
