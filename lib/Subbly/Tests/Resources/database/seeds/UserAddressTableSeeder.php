@@ -16,7 +16,7 @@ class UserAddressTableSeeder extends Seeder {
         // generate some others users
         for ($i=1; $i <= 10; $i++)
         {
-            $user = UserAddress::create(array(
+            $userAddress = UserAddress::create(array(
                 'user_id'   => TestCase::getFixture('users.jon_snow')->id,
                 'name'      => $faker->name,
                 'firstname' => $faker->firstName,
@@ -30,7 +30,7 @@ class UserAddressTableSeeder extends Seeder {
                 'phone_home'   => rand(0, 1) === 0 ? null : $faker->phoneNumber,
                 'phone_mobile' => rand(0, 1) === 0 ? null : $faker->phoneNumber,
             ));
-            TestCase::addFixture('user_addresses.user_address_' . $i, $user);
+            TestCase::addFixture('user_addresses.user_address_' . $i, $userAddress);
         }
     }
 

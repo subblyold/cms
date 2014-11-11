@@ -4,9 +4,6 @@ namespace Subbly\Tests\Support;
 
 trait ApplicationTrait
 {
-    /** @var \Faker\Generator  $faker */
-    private static $faker;
-
     /**
      * Get the faker generator
      *
@@ -14,11 +11,12 @@ trait ApplicationTrait
      */
     public static function faker()
     {
-        if (!isset(self::$faker)) {
-            self::$faker = \Faker\Factory::create();
-        }
+        $i = array_rand($locales = array(
+            'en_GB', 'en_US',
+            'fr_FR',
+        ));
 
-        return self::$faker;
+        return \Faker\Factory::create($locales[$i]);
     }
 
     /**
