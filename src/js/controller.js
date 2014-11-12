@@ -120,6 +120,7 @@ var SubblyController = Backbone.Controller.extend(
       }
     }
 
+    // returns view object by its path
   , getViewByPath: function( index )
     {
       if( !this._reversedPointer[ index ] )

@@ -25,10 +25,26 @@ var SubblyView = Backbone.View.extend(
           this.el.classList.add( c )
         }, this)
 
+      // Subbly's views `initialize` callback
+      // do not use it
+      if( this.onSubblyInitialize )
+        this.onSubblyInitialize( options )
+
+      // Public views `initialize` callback
+      // you can use it
       if( this.onInitialize )
         this.onInitialize( options )
 
       return this
+    }
+
+    // view events
+  , events: {}
+
+    // Add events hash to the view
+  , addEvents: function( events )
+    {
+      this.events = _.extend( {}, this.events, events )
     }
 
     // Hook to override if needed
