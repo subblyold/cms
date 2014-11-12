@@ -7,8 +7,8 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\Product;
 use Subbly\Tests\Support\TestCase;
 
-class ProductTableSeeder extends Seeder {
-
+class ProductTableSeeder extends Seeder
+{
     public function run()
     {
         $faker = TestCase::faker();
@@ -29,5 +29,4 @@ class ProductTableSeeder extends Seeder {
             TestCase::addFixture('products.product_' . $i, $product);
         }
     }
-
 }

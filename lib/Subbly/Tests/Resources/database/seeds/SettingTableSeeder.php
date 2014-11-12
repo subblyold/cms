@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 use Subbly\Subbly;
 
-class SettingTableSeeder extends Seeder {
-
+class SettingTableSeeder extends Seeder
+{
     public function run()
     {
         Subbly::api('subbly.setting')->registerDefaultSettings(
@@ -17,5 +17,4 @@ class SettingTableSeeder extends Seeder {
 
         Subbly::api('subbly.setting')->all();
     }
-
 }

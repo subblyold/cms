@@ -7,8 +7,8 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\Order;
 use Subbly\Tests\Support\TestCase;
 
-class OrderTableSeeder extends Seeder {
-
+class OrderTableSeeder extends Seeder
+{
     public function run()
     {
         $faker = TestCase::faker();
@@ -21,5 +21,4 @@ class OrderTableSeeder extends Seeder {
             TestCase::addFixture('orders.order_' . $i, $order);
         }
     }
-
 }
