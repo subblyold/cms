@@ -35,19 +35,19 @@ Route::group(array(
 
     // UsersController
     Route::get('/users/search', 'UsersController@search');
-    Route::resource('/users', 'UsersController', array('except' => array('create', 'edit')));
+    Route::resource('users', 'UsersController', array('except' => array('create', 'edit')));
 
     // UserAddressesController
-    Route::get('/user-addresses/{users}/search', 'UserAddressesController@search');
-    Route::resource('users.user-addresses', 'UserAddressesController', array('except' => array('create', 'edit')));
+    Route::get('/users/{users}/user-addresses/search', 'UserAddressesController@search');
+    Route::resource('users.addresses', 'UserAddressesController', array('except' => array('create', 'edit')));
 
     // ProductsController
     Route::get('/products/search', 'ProductsController@search');
-    Route::resource('/products', 'ProductsController', array('except' => array('create', 'edit')));
+    Route::resource('products', 'ProductsController', array('except' => array('create', 'edit')));
 
     // OrdersController
     Route::get('/orders/search', 'OrdersController@search');
-    Route::resource('/orders', 'OrdersController', array('except' => array('create', 'edit')));
+    Route::resource('orders', 'OrdersController', array('except' => array('create', 'edit')));
 
     // SettingsController
     Route::get('/settings', 'SettingsController@index');
