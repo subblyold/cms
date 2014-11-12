@@ -236,8 +236,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( this.collection )
         this.collection.resetPagination()
 
-      this._$nano.nanoScroller({ destroy: true })
-      scroll2sicky.unload()
+      SubblyView.prototype.onClose.apply( this, arguments )
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
       // subbly.off( 'row::delete',          this.removeRow, this ) 

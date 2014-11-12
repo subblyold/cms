@@ -90,7 +90,9 @@ var SubblyView = Backbone.View.extend(
 
   , onClose: function()
     {
-      // this._$nano.nanoScroller({ destroy: true })
+      if( this._$nano )
+        this._$nano.nanoScroller({ destroy: true })
+
       scroll2sicky.unload()
     }
 })
