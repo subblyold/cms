@@ -20,7 +20,7 @@ trait SubblyModel
      *
      * @return array
      */
-    public function getVisible()
+    final public function getVisible()
     {
         return $this->visible;
     }
@@ -101,7 +101,7 @@ trait SubblyModel
      *
      * @throws \Exception
      */
-    private function protectMethod()
+    final private function protectMethod()
     {
         if (!(
             App::environment('testing')
@@ -119,7 +119,7 @@ trait SubblyModel
      *
      * @throws \Subbly\Model\Exception\UnvalidModelException
      */
-    private function processValidation()
+    final private function processValidation()
     {
         if ($this->isValid() !== true) {
             throw new UnvalidModelException($this);
