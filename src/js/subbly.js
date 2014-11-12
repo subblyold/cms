@@ -19,6 +19,9 @@ var SubblyCore = function( config )
   // current user credentials
   this._credentials       = false
 
+  // XHR call reference
+  this._fetchXhr          = {}
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
@@ -48,6 +51,8 @@ var SubblyCore = function( config )
 SubblyCore.prototype.init = function()
 {
   console.info( 'Initialize App router' )
+  console.info( 'Components list' )
+  console.log( Components )
 
   this._router = new Router()
 
@@ -307,6 +312,63 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
+/*
+ * Generic method to fetch model/collection
+ * stores the XHR call which allows the abort on route change
+ * trigger local loading event
+ *
+ * @params  {object}  object to fetch
+ * @params  {object}  data and callbacks options
+ * @params  {object}  call context
+ * @return  {object}
+ */
+SubblyCore.prototype.fetch = function( obj, options, context )
+{
+  var options = options || {}
+    , xhrId   = _.uniqueId( 'xhr_' )
+
+  if( context )
+    context.trigger( 'fetch::calling' )
+
+  this._fetchXhr[ xhrId ] = obj.fetch({
+      data:    options.data || {} 
+    , xhrId:   xhrId
+    , success: function( bbObj, response, opts )
+      {
+        if( context )
+          context.trigger( 'fetch::responds' )
+
+        if( options.success && _.isFunction( options.success ) )
+          options.success( bbObj, response, opts )
+      }
+    , error: function( bbObj, response, opts )
+      {
+        if( context )
+          context.trigger( 'fetch::responds' )
+
+        if( options.error && _.isFunction( options.error ) )
+          options.error( bbObj, response, opts  )
+      }
+  })
+}
+
+/*
+ * Abort unfinish XHR call on route change
+ *
+ * @return  {void}
+ */
+SubblyCore.prototype.cleanXhr = function()
+{
+  _( this._fetchXhr )
+    .forEach( function( xhr, key )
+    {
+      if( xhr.readyState > 0 && xhr.readyState < 4 )
+        xhr.abort()
+
+      delete this._fetchXhr[ key ]
+    }, this)
+}
+
 
 // PLUGINS
 //-------------------------------
@@ -381,12 +443,16 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
 SubblyCore.prototype.register = function( vendor, name, plugin )
 {
+  console.groupCollapsed( 'Register Plugin ' + vendor + '.' + name )
+
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
 
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
+
+  console.groupEnd()
 }
 
 // Global Init

@@ -14,7 +14,6 @@ var SubblyController = Backbone.Controller.extend(
   , _controllerName:  null
   , _mainRouter:      false
   , _mainNav:         false
-  , _fetchXhr:        {}
   , _instance:        'Controller'
 
   , initialize: function() 
@@ -47,12 +46,7 @@ var SubblyController = Backbone.Controller.extend(
   , remove: function() 
     {
       //Stop pending fetch
-      _( this._fetchXhr )
-        .forEach( function( f )
-        {
-          if( f.readyState > 0 && f.readyState < 4 )
-            f.abort()
-        }, this)
+      subbly.cleanXhr()
 
       // Close views
       _( this._viewsPointers )
@@ -64,41 +58,7 @@ var SubblyController = Backbone.Controller.extend(
       // Reset variables
       this._parentView      = false
       this._viewsPointers   = {}
-      this._fetchXhr        = {}
       this._reversedPointer = {}
-    }
-
-    // Generic method to fetch model/collection
-    // stores the XHR call which allows the abort on route change
-    // trigger local loading event
-  , fetch: function( obj, options, context )
-    {
-      var options = options || {}
-        , xhrId   = _.uniqueId( 'xhr_' )
-
-      if( context )
-        context.trigger( 'fetch::calling' )
-
-      this._fetchXhr[ xhrId ] = obj.fetch({
-          data:    options.data || {} 
-        , xhrId:   xhrId
-        , success: function( bbObj, response, opts )
-          {
-            if( context )
-              context.trigger( 'fetch::responds' )
-
-            if( options.success && _.isFunction( options.success ) )
-              options.success( bbObj, response, opts )
-          }
-        , error: function( bbObj, response, opts )
-          {
-            if( context )
-              context.trigger( 'fetch::responds' )
-
-            if( options.error && _.isFunction( options.error ) )
-              options.error( bbObj, response, opts  )
-          }
-      })
     }
 
     // create DOM elements
@@ -162,8 +122,11 @@ var SubblyController = Backbone.Controller.extend(
     {
       if( !this._reversedPointer[ index ] )
       {
-console.log( this._reversedPointer )
-console.log( index )
+        console.group('View index does not exists')
+        console.log( this._reversedPointer )
+        console.log( index )
+        console.groupEnd()
+
         throw new Error( 'View index does not exists' )
       }
       

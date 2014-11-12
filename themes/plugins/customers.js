@@ -1,10 +1,13 @@
 
 (function( window )
 {
+  // CONTROLLER
+  // --------------------------------
+
   var Customers = 
   {
-      _tplStructure:   'half' // full|half|third
-    , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.Customer' ]
+      _tplStructure:   'half'
+    , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.CustomerSheet' ]
     , _controllerName: 'customers'
     , _mainNavRegister:
       {
@@ -30,11 +33,21 @@
 
     , list: function() 
       {
+        this.displayView()
+      }
+
+    , details: function( uid ) 
+      {
+        this.displayView()
+      }
+
+    , displayView: function()
+      {
         this._mainRouter._currentView = this
 
         this.getCollection()
 
-        this.fetch( this.collection,
+        Subbly.fetch( this.collection,
         {
             data:   {
                 offset: 0
@@ -52,29 +65,40 @@
           .displayTpl()
       }
 
-    , details: function( uid ) 
+    , sheet: function(  uid ) 
       {
-        this.getCollection()
-        
-        var user = this.collection.get( '48cc9851f125ea646d7dd3e26988abae' )
+        var scope = this
+          , user  = Subbly.api('Subbly.Model.User', {
+          uid: uid
+        })
 
-        this.fetch( user,
+        Subbly.fetch( user,
         {
             data: { includes: ['addresses', 'orders'] }
           , success: function( model, response )
             {
-    console.log( model.displayName() )
-    console.log( response )
+              var json = model.toJSON()
+
+              json.displayName = model.displayName()
+
+              scope.getViewByPath( 'Subbly.View.CustomerSheet' )
+                .setValue( 'model', model )
+                .displayTpl( json )
             }
         }, this )
       }
   }
 
-  var CustomersUserRow = 
+
+  // VIEWS
+  // --------------------------------
+
+
+  // List's row view
+  var CustomersRow = 
   {
-      tagName:   'li'
-    , className: 'cln-lst-rw cust-row js-trigger-goto'
-    , _viewName: 'Customer'
+      className: 'cln-lst-rw cust-row js-trigger-goto'
+    , _viewName: 'CustomerRow'
 
     , onInitialize: function( options )
       {
@@ -90,25 +114,56 @@
 
         this.$el.html( html )
 
+        this.el.dataset.uid  = this.model.get('uid')
+
         return this
+      }
+
+    , goTo: function( event )
+      {
+        this.callController( 'sheet', this.model.get('uid') )
       }
   }
 
-  var CustomersUsers = 
+  // Customers List view
+  var CustomersList = 
   {
       _viewName:     'Customers'
     , _viewTpl:      TPL.customers.list
     , _classlist:    ['view-half-list']
     , _listSelector: '#customers-list'
     , _tplRow:        TPL.customers.listrow
-    , _viewRow:       'Subbly.View.Customer'
+    , _viewRow:       'Subbly.View.CustomerRow'
+
+    , onInitialDisplay: function()
+      {
+        var $firstRow = this._$list.children(':first')
+          , uid       = $firstRow.attr('data-uid')
+
+        $firstRow.addClass('active')
+
+        this.callController( 'sheet', uid )
+      }
   }
+
+  // Customers Sheet view
+  var CustomerSheet = 
+  {
+      _viewName:     'CustomerSheet'
+    , _viewTpl:      TPL.customers.sheet
+  }
+
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
 
   Subbly.register( 'Subbly', 'Customers', 
   {
-      'ViewList:Customers':   CustomersUsers
-    , 'ViewListRow:Customer': CustomersUserRow
-    , 'Controller:Customers': Customers
+      'ViewList:Customers':        CustomersList
+    , 'ViewListRow:CustomerRow':   CustomersRow
+    , 'View:CustomerSheet':        CustomerSheet
+    , 'Controller:Customers':      Customers
   })
 
 })( window )

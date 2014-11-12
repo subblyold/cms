@@ -19786,7 +19786,7 @@ var scroll2sicky = (function()
     )
 
     $nano.on('update', refresh )
-    $window.on( 'resize', function()
+    $window.on( 'resize:scroll2sicky', function()
     {
       getDisplay( $elements.querySelector('.scrll-stck') )
     })
@@ -19795,6 +19795,7 @@ var scroll2sicky = (function()
   var unload = function()
   {
     $nano.off('update', refresh )
+    $window.off( 'resize:scroll2sicky' )
   }
 
   return {
@@ -20398,11 +20399,15 @@ var SubblyView = Backbone.View.extend(
   , _viewTpl:    false
   , _classlist:  []
   , _controller: false
+  , _$nano:      false
 
   , initialize: function( options )
     {
       this._viewId     = options.viewId
       this._controller = options.controller
+
+      if( this._classIdentifier )
+        this._classlist.push( this._classIdentifier )
 
       // add extra class
       _( this._classlist )
@@ -20416,20 +20421,24 @@ var SubblyView = Backbone.View.extend(
 
       return this
     }
-    
-//     , onInitialize: function()
-//       {
-//   console.log( 'onInitialize Customers')
-//         this.on( 'fetch::calling', function()
-//         {
-// console.log('fetch::calling')
-//         } )
 
-//         this.on( 'fetch::responds', function()
-//         {
-// console.log('fetch::responds')
-//         } )
-//       }
+    // Hook to override if needed
+  , onInitialize: function()
+    {
+      // this.on( 'fetch::calling', ..., ... )
+      // this.on( 'fetch::responds', ..., ... 
+    }
+
+    // Call controller method from view
+  , callController: function( method )
+    {
+      if( !this._controller[ method ] )
+        throw new Error( 'controller "' + this._controllerName + '" does not have  "' + method + '" method' )
+
+      var args = [].slice.call( arguments, 1 )
+
+      return this._controller[ method ].apply( this._controller, args )
+    }
 
   , setValue: function( key, value )
     {
@@ -20452,11 +20461,12 @@ var SubblyView = Backbone.View.extend(
       this.$el.html( html )
 
       // Setup nanoscroller
-      var $nano = this.$el.find('div.nano')
-        , scope = this
+      this._$nano = this.$el.find('div.nano')
+      
+      var scope = this
 
-      $nano.nanoScroller()
-      $nano.on( 'scrollend', function( event )
+      this._$nano.nanoScroller()
+      this._$nano.on( 'scrollend', function( event )
       {
         scope.trigger('view::scrollend')
       })
@@ -20467,6 +20477,12 @@ var SubblyView = Backbone.View.extend(
         this.onDisplayTpl()
 
       return this
+    }
+
+  , onClose: function()
+    {
+      // this._$nano.nanoScroller({ destroy: true })
+      scroll2sicky.unload()
     }
 })
 
@@ -20486,7 +20502,6 @@ var SubblyController = Backbone.Controller.extend(
   , _controllerName:  null
   , _mainRouter:      false
   , _mainNav:         false
-  , _fetchXhr:        {}
   , _instance:        'Controller'
 
   , initialize: function() 
@@ -20519,12 +20534,7 @@ var SubblyController = Backbone.Controller.extend(
   , remove: function() 
     {
       //Stop pending fetch
-      _( this._fetchXhr )
-        .forEach( function( f )
-        {
-          if( f.readyState > 0 && f.readyState < 4 )
-            f.abort()
-        }, this)
+      subbly.cleanXhr()
 
       // Close views
       _( this._viewsPointers )
@@ -20536,41 +20546,7 @@ var SubblyController = Backbone.Controller.extend(
       // Reset variables
       this._parentView      = false
       this._viewsPointers   = {}
-      this._fetchXhr        = {}
       this._reversedPointer = {}
-    }
-
-    // Generic method to fetch model/collection
-    // stores the XHR call which allows the abort on route change
-    // trigger local loading event
-  , fetch: function( obj, options, context )
-    {
-      var options = options || {}
-        , xhrId   = _.uniqueId( 'xhr_' )
-
-      if( context )
-        context.trigger( 'fetch::calling' )
-
-      this._fetchXhr[ xhrId ] = obj.fetch({
-          data:    options.data || {} 
-        , xhrId:   xhrId
-        , success: function( bbObj, response, opts )
-          {
-            if( context )
-              context.trigger( 'fetch::responds' )
-
-            if( options.success && _.isFunction( options.success ) )
-              options.success( bbObj, response, opts )
-          }
-        , error: function( bbObj, response, opts )
-          {
-            if( context )
-              context.trigger( 'fetch::responds' )
-
-            if( options.error && _.isFunction( options.error ) )
-              options.error( bbObj, response, opts  )
-          }
-      })
     }
 
     // create DOM elements
@@ -20634,8 +20610,11 @@ var SubblyController = Backbone.Controller.extend(
     {
       if( !this._reversedPointer[ index ] )
       {
-console.log( this._reversedPointer )
-console.log( index )
+        console.group('View index does not exists')
+        console.log( this._reversedPointer )
+        console.log( index )
+        console.groupEnd()
+
         throw new Error( 'View index does not exists' )
       }
       
@@ -20681,6 +20660,9 @@ var SubblyCore = function( config )
   // current user credentials
   this._credentials       = false
 
+  // XHR call reference
+  this._fetchXhr          = {}
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
@@ -20710,6 +20692,8 @@ var SubblyCore = function( config )
 SubblyCore.prototype.init = function()
 {
   console.info( 'Initialize App router' )
+  console.info( 'Components list' )
+  console.log( Components )
 
   this._router = new Router()
 
@@ -20969,6 +20953,63 @@ SubblyCore.prototype.api = function( serviceName, args )
   return service
 }
 
+/*
+ * Generic method to fetch model/collection
+ * stores the XHR call which allows the abort on route change
+ * trigger local loading event
+ *
+ * @params  {object}  object to fetch
+ * @params  {object}  data and callbacks options
+ * @params  {object}  call context
+ * @return  {object}
+ */
+SubblyCore.prototype.fetch = function( obj, options, context )
+{
+  var options = options || {}
+    , xhrId   = _.uniqueId( 'xhr_' )
+
+  if( context )
+    context.trigger( 'fetch::calling' )
+
+  this._fetchXhr[ xhrId ] = obj.fetch({
+      data:    options.data || {} 
+    , xhrId:   xhrId
+    , success: function( bbObj, response, opts )
+      {
+        if( context )
+          context.trigger( 'fetch::responds' )
+
+        if( options.success && _.isFunction( options.success ) )
+          options.success( bbObj, response, opts )
+      }
+    , error: function( bbObj, response, opts )
+      {
+        if( context )
+          context.trigger( 'fetch::responds' )
+
+        if( options.error && _.isFunction( options.error ) )
+          options.error( bbObj, response, opts  )
+      }
+  })
+}
+
+/*
+ * Abort unfinish XHR call on route change
+ *
+ * @return  {void}
+ */
+SubblyCore.prototype.cleanXhr = function()
+{
+  _( this._fetchXhr )
+    .forEach( function( xhr, key )
+    {
+      if( xhr.readyState > 0 && xhr.readyState < 4 )
+        xhr.abort()
+
+      delete this._fetchXhr[ key ]
+    }, this)
+}
+
 
 // PLUGINS
 //-------------------------------
@@ -21043,12 +21084,16 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
 SubblyCore.prototype.register = function( vendor, name, plugin )
 {
+  console.groupCollapsed( 'Register Plugin ' + vendor + '.' + name )
+
   _.each( plugin, function( component, typeName )
   {
     var arr = typeName.split(':')
 
     this.extend( vendor, arr[0], arr[1], component )
   }, this )
+
+  console.groupEnd()
 }
 
 // Global Init
@@ -21094,6 +21139,11 @@ Components.Subbly.Collection.List = SubblyCollectionList = SubblyCollection.exte
 
       if( this.init )
         this.init( options )
+    }
+
+  , resetPagination: function()
+    {
+      this.page   = 1
     }
 
   , queryParams: function()
@@ -21440,29 +21490,17 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _viewRow:        false
   , _tplRow:         false
   , _initialDisplay: false
+  , _isLoadingMore:  false
+  , _$list:          false
+  , _$listItems:     false
   , collection:      false
 
   ,  onInitialize: function()
     {
-console.log( 'initialize list view ' + this._viewName)
-
-      var scope = this
+      console.log( 'initialize list view ' + this._viewName )
 
       this.on( 'view::scrollend', this.nextPage, this )
-
-      subbly.on( 'pagination::fetch', function()
-      {
-// console.log( scope )
-// return
-        scope._controller.fetch( scope.collection,
-        {
-            success: function(bbObj, response)
-            {
-console.log( bbObj)
-console.log( bbObj)
-            }
-        }, this )
-      })
+      subbly.on( 'pagination::fetch', this.loadMore, this )
     }
 
   , onDisplayTpl: function()
@@ -21480,6 +21518,9 @@ console.log( bbObj)
 
   , nextPage: function()
     {
+      if( this._isLoadingMore )
+        return
+
       if( !this.collection.nextPage() )
         return
 
@@ -21494,9 +21535,45 @@ console.log( bbObj)
       subbly.trigger( 'pagination::fetch' )
     }
 
+  , loadMore: function()
+    {
+      if( this._isLoadingMore )
+        return
+
+      this._isLoadingMore = true
+
+      var li   = document.createElement('li')
+        , span = document.createElement('span')
+        , txt  = document.createTextNode( 'loading' )
+
+      span.className = 'f-lrg strong'
+      span.appendChild( txt )
+
+      li.className = 'cln-lst-rw cln-lst-load'
+      li.id        = 'list-pagination-loader'
+      li.appendChild( span )
+
+      this._$list.append( li )
+
+      subbly.fetch( this.collection,
+      {
+          success: _.bind( this.render, this )
+      }, this )
+    }
+
   , render: function()
     {
-      this.cleanRows()
+      if( !this.collection )
+        return
+      // this.cleanRows()
+
+      // fetch flag
+      this._isLoadingMore = false
+
+      var $loader = $( document.getElementById( 'list-pagination-loader') )
+
+      if( $loader.length )
+        $loader.remove()
 
       // this._viewsPointers = {}
 
@@ -21506,9 +21583,6 @@ console.log( bbObj)
         this.displayInviteMsg()
         return
       }
-
-      if( !this.collection )
-        return
 
       this.collection.each( function( model )
       {
@@ -21531,12 +21605,14 @@ console.log( bbObj)
       if( this._fragment )
       {
         this._$list.append( this._fragment )
+        this._$listItems = this._$list.find('.list-row')
 
         if( !this._initialDisplay )
         {
           this._initialDisplay = true
 
-          this._$list.children(':first').addClass('active')
+          if( this.onInitialDisplay )
+            this.onInitialDisplay()
         }
 
         delete this._fragment
@@ -21573,6 +21649,14 @@ console.log( bbObj)
       this.$el.find('.app-content').html( div )
     }
 
+    // Hook to override if need
+    // called the first time list 
+    // is display
+  , onInitialDisplay: function()
+    {
+
+    }
+
     // Hook to override
     // if conditional logic needed
     // add code here in local function.
@@ -21601,9 +21685,10 @@ console.log( bbObj)
   , addRow: function( model )
     {
       return subbly.api( this._viewRow, {
-          model:  model
-        , parent: this
-        , tpl:    this._tplRowCompiled
+          model:      model
+        , parent:     this
+        , tpl:        this._tplRowCompiled
+        , controller: this._controller
       })
     }
 
@@ -21629,9 +21714,17 @@ console.log( bbObj)
       if( this.onCloseList )
         this.onCloseList()
 
-      subbly.off( 'pagination::changed',  this.render, this ) 
-      subbly.off( 'row::delete',          this.removeRow, this ) 
-      subbly.off( 'collection::truncate', this.cleanRows, this )
+      if( this.collection )
+        this.collection.resetPagination()
+
+      this._$nano.nanoScroller({ destroy: true })
+      scroll2sicky.unload()
+
+      // subbly.off( 'pagination::changed',  this.render, this ) 
+      // subbly.off( 'row::delete',          this.removeRow, this ) 
+      // subbly.off( 'collection::truncate', this.cleanRows, this )
+      this.off( 'view::scrollend', this.nextPage, this )
+      subbly.off( 'pagination::fetch', this.loadMore, this )
 
       this.cleanRows()
     }
@@ -21639,7 +21732,10 @@ console.log( bbObj)
 
 Components.Subbly.View.ViewlistRow = SubblyViewListRow = SubblyView.extend(
 {
-    events: _.extend( {}, SubblyView.prototype.events, 
+    _classIdentifier: 'list-row'
+  , tagName:          'li'
+
+  , events: _.extend( {}, SubblyView.prototype.events, 
     {
         'click.js-trigger-goto':  'goTo'
       , 'click .js-trigger-goto': 'goTo'
@@ -21821,11 +21917,6 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         , $trigger = $( document.getElementById( nodeId ) )
         , $parent  = $trigger.parent('div.user-nav-container')
 
-      var hideList = function()
-      {
-        $parent.removeClass('active')
-      }
-
       var handleClickOutside = function( event )
       {
         event.stopPropagation()
@@ -21833,12 +21924,24 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         if( !$( event.target ).parents('#' + nodeId ).length )
           hideList()
       }
+
+      var hideList = function()
+      {
+        $parent.removeClass('active')
+        $body.off( 'click', handleClickOutside )
+      }
       
       $trigger
         .on( 'click', function( event )
         {
           event.stopPropagation()
           event.preventDefault()
+
+          if( $parent.hasClass('active') )
+          {
+            hideList()
+            return
+          }
 
           $parent.addClass('active')
 

@@ -20,6 +20,11 @@ Components.Subbly.Collection.List = SubblyCollectionList = SubblyCollection.exte
         this.init( options )
     }
 
+  , resetPagination: function()
+    {
+      this.page   = 1
+    }
+
   , queryParams: function()
     {
       return {

@@ -209,7 +209,7 @@ module.exports = function(grunt)
         {
             javascript: 
             {
-              files: ['src/js/*.js', 'src/js/*/*.js'] //, 'src/js/*/*.js'
+              files: ['src/js/*.js', 'src/js/*/*.js', 'themes/plugins/*.js'] //, 'src/js/*/*.js'
             , tasks: ['concat_sourcemap']
             , options: 
               {

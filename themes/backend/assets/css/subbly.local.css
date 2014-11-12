@@ -940,6 +940,12 @@ a.badge:focus {
 .cln-lst-blk {
   line-height: 100px;
 }
+.cln-lst-load {
+  text-align: center;
+}
+.cln-lst-load span {
+  line-height: 100px;
+}
 .pdt-list {
   background: #ffffff;
   border-radius: 4px;
@@ -1274,17 +1280,23 @@ input[type="search"] {
   border-color: #7ab1f6;
   color: #ffffff;
 }
-.btn-icon {
+.btn-icon,
+.btn-w-icon {
   border-color: #bbbbbb;
   position: relative;
-  width: 40px;
+  padding: 0 20px;
 }
-.btn-icon .icon {
+.btn-icon .icon,
+.btn-w-icon .icon {
   left: -4px;
   margin: 0;
   position: relative;
-  font-size: 14px;
-  top: 2px;
+  font-size: 16px;
+  top: 3px;
+}
+.btn-icon {
+  padding: 0 15px;
+  width: 40px;
 }
 .thmb-col {
   font-size: 0;

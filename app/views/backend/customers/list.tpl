@@ -23,7 +23,11 @@
         <span class="cln-lst-itm cln-lst-blk cln-lst-itm-tago">
           18 min ago
         </span>
-      </li> /.cln-lst-rw -->
+      </li>
+      <li class="cln-lst-rw cln-lst-load">
+        <span class="f-lrg strong">Loading</span>
+      </li>
+       /.cln-lst-rw -->
     </ul><!-- /.cln-lst -->
     <p style="height:100%">&nbsp;</p>
   </div><!-- /.nano-content -->
