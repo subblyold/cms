@@ -17,7 +17,7 @@ class UserAddressService extends Service
     /**
      * Return an empty model
      *
-     * @return Subbly\Model\UserAddress
+     * @return \Subbly\Model\UserAddress
      *
      * @api
      */
@@ -35,7 +35,7 @@ class UserAddressService extends Service
      * @param string  $uid
      * @param array   $options
      *
-     * @return User
+     * @return \Subbly\Model\UserAddress
      *
      * @api
      */
@@ -56,7 +56,7 @@ class UserAddressService extends Service
      * @param string|\Subbly\Model\User  $user    The User model or the User uid
      * @param array                      $options Some options
      *
-     * @return \Subbly\Model\UserAddress
+     * @return \Subbly\Model\Collection
      *
      * @api
      */
