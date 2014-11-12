@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-
     public function run()
     {
         Eloquent::unguard();
@@ -37,7 +36,16 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        $tables = array('settings', 'users', 'user_addresses', 'products', 'orders', 'users_groups', 'groups');
+        $tables = array(
+            'settings',
+            'users',
+            'user_addresses',
+            'products',
+            'product_categories',
+            'orders',
+            'users_groups',
+            'groups',
+        );
 
         foreach ($tables as $table) {
             DB::table($table)->delete();
@@ -60,6 +68,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call('Subbly\\Tests\\Resources\\database\\seeds\\ProductTableSeeder');
         $this->command->info('Product table seeded!');
+
+        $this->call('Subbly\\Tests\\Resources\\database\\seeds\\ProductCategoryTableSeeder');
+        $this->command->info('ProductCategory table seeded!');
 
         $this->call('Subbly\\Tests\\Resources\\database\\seeds\\OrderTableSeeder');
         $this->command->info('Order table seeded!');

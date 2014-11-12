@@ -26,6 +26,7 @@ class Container extends Pimple\Container
                 'Subbly\\Api\\Service\\CartService',
                 'Subbly\\Api\\Service\\OrderService',
                 'Subbly\\Api\\Service\\ProductService',
+                'Subbly\\Api\\Service\\ProductCategoryService',
                 'Subbly\\Api\\Service\\SettingService',
                 'Subbly\\Api\\Service\\UserService',
                 'Subbly\\Api\\Service\\UserAddressService',
