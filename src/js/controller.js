@@ -53,6 +53,8 @@ var SubblyController = Backbone.Controller.extend(
         .forEach( function( v )
         {
           this._viewsPointers[ v._viewId ].close()
+
+          delete this._viewsPointers[ v._viewId ]
         }, this)
 
       // Reset variables
@@ -118,6 +120,7 @@ var SubblyController = Backbone.Controller.extend(
       }
     }
 
+    // returns view object by its path
   , getViewByPath: function( index )
     {
       if( !this._reversedPointer[ index ] )

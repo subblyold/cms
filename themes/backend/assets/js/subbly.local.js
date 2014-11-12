@@ -20416,10 +20416,26 @@ var SubblyView = Backbone.View.extend(
           this.el.classList.add( c )
         }, this)
 
+      // Subbly's views `initialize` callback
+      // do not use it
+      if( this.onSubblyInitialize )
+        this.onSubblyInitialize( options )
+
+      // Public views `initialize` callback
+      // you can use it
       if( this.onInitialize )
         this.onInitialize( options )
 
       return this
+    }
+
+    // view events
+  , events: {}
+
+    // Add events hash to the view
+  , addEvents: function( events )
+    {
+      this.events = _.extend( {}, this.events, events )
     }
 
     // Hook to override if needed
@@ -20481,7 +20497,9 @@ var SubblyView = Backbone.View.extend(
 
   , onClose: function()
     {
-      // this._$nano.nanoScroller({ destroy: true })
+      if( this._$nano )
+        this._$nano.nanoScroller({ destroy: true })
+
       scroll2sicky.unload()
     }
 })
@@ -20541,6 +20559,8 @@ var SubblyController = Backbone.Controller.extend(
         .forEach( function( v )
         {
           this._viewsPointers[ v._viewId ].close()
+
+          delete this._viewsPointers[ v._viewId ]
         }, this)
 
       // Reset variables
@@ -20606,6 +20626,7 @@ var SubblyController = Backbone.Controller.extend(
       }
     }
 
+    // returns view object by its path
   , getViewByPath: function( index )
     {
       if( !this._reversedPointer[ index ] )
@@ -21495,7 +21516,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _$listItems:     false
   , collection:      false
 
-  ,  onInitialize: function()
+  , onSubblyInitialize: function()
     {
       console.log( 'initialize list view ' + this._viewName )
 
@@ -21511,11 +21532,30 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       this._$list = this.$el.find( this._listSelector )
 
       // Compile row template
-      this._tplRowCompiled = Handlebars.compile( this._tplRow )
+      if( this._tplRow )
+        this._tplRowCompiled = Handlebars.compile( this._tplRow )
 
       this.render()
+
+      return this
     }
 
+    // Return jQuery object
+    // of the list's holder
+  , getListEl: function()
+    {
+      return this._$list
+    }
+
+    // Return jQuery object
+    // of the list's rows
+  , getListRows: function()
+    {
+      return this._$listItems
+    }
+
+    // Test if there a next page available 
+    // Trigger 'pagination::fetch' event
   , nextPage: function()
     {
       if( this._isLoadingMore )
@@ -21527,6 +21567,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       subbly.trigger( 'pagination::fetch' )
     }
 
+    // Test if there a previous page available 
+    // Trigger 'pagination::fetch' event
   , prevPage: function()
     {
       if( !this.collection.prevPage() )
@@ -21535,6 +21577,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       subbly.trigger( 'pagination::fetch' )
     }
 
+    // Display the `loading` row
+    // on pagination
   , loadMore: function()
     {
       if( this._isLoadingMore )
@@ -21561,11 +21605,11 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       }, this )
     }
 
+    // Render list's row
   , render: function()
     {
       if( !this.collection )
         return
-      // this.cleanRows()
 
       // fetch flag
       this._isLoadingMore = false
@@ -21584,20 +21628,28 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         return
       }
 
+      this._fragment = ( !this._fragment && this._viewRow )
+                       ? document.createDocumentFragment()
+                       : ''
+
       this.collection.each( function( model )
       {
-        if( !this._fragment )
-          this._fragment = document.createDocumentFragment()
-
         //this does not break. _.each will always run
         //the iterator function for the entire array
         //return value from the iterator is ignored
         if( !this.beforeAddRow( model ) )
           return
 
-        var view = this.addRow( model )
+        if( this._viewRow )
+        {
+          var view = this.displayRowView( model )
 
-        this.registerRow( model.cid, view )
+          this.registerRow( model.cid, view )
+        }
+        else
+        {
+          this._fragment += this.displayRow( model )
+        }
 
         this.afterAddRow( model )
       }, this )
@@ -21611,16 +21663,22 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         {
           this._initialDisplay = true
 
-          if( this.onInitialDisplay )
-            this.onInitialDisplay()
+          if( this.onInitialRender )
+            this.onInitialRender()
         }
 
         delete this._fragment
       }
+
+      if( this.onAfterRender )
+        this.onAfterRender()
       
       subbly.trigger( 'loader::hide' )
     }
 
+    // TODO: to design
+    // Show an default message 
+    // if there is no entry
   , displayInviteMsg: function()
     {
       var div       = document.createElement('div')
@@ -21652,7 +21710,14 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Hook to override if need
     // called the first time list 
     // is display
-  , onInitialDisplay: function()
+  , onInitialRender: function()
+    {
+
+    }
+
+    // Hook to override if needed
+    // called after rows have been append
+  , onAfterRender: function()
     {
 
     }
@@ -21674,6 +21739,15 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       // add code here in local function
     }
 
+    // Hook to override if needed
+    // append row to the list
+  , displayRow: function( model )
+    {
+
+    }
+
+    // Register row to `_viewsPointers`
+    // allow it to be remove properly
   , registerRow: function( cid, view )
     {
       this._viewsPointers[ cid ] = view
@@ -21682,7 +21756,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     }
 
     // Allow to override method localy
-  , addRow: function( model )
+  , displayRowView: function( model )
     {
       return subbly.api( this._viewRow, {
           model:      model
@@ -21692,6 +21766,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       })
     }
 
+    // Remove a row views 
+    // based on model CID
   , removeRow: function( cid )
     {
       this._viewsPointers[ cid ].close()
@@ -21700,6 +21776,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       subbly.trigger( 'row::deleted' )
     }
 
+    // Remove all rows views
   , cleanRows: function()
     {
       _( this._viewsPointers )
@@ -21717,8 +21794,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( this.collection )
         this.collection.resetPagination()
 
-      this._$nano.nanoScroller({ destroy: true })
-      scroll2sicky.unload()
+      SubblyView.prototype.onClose.apply( this, arguments )
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
       // subbly.off( 'row::delete',          this.removeRow, this ) 

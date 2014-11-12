@@ -51,7 +51,7 @@
         {
             data:   {
                 offset: 0
-              , limit:  1
+              , limit:  5
             }
           , success: _.bind( this.cbAlaCon, this )
         }, this )
@@ -71,6 +71,12 @@
           , user  = Subbly.api('Subbly.Model.User', {
           uid: uid
         })
+
+        var $listRows  = this.getViewByPath( 'Subbly.View.Customers' ).getListRows()
+          , $activeRow = $listRows.filter('[data-uid="' + uid + '"]')
+
+        $listRows.removeClass('active')
+        $activeRow.addClass('active')
 
         Subbly.fetch( user,
         {
@@ -94,36 +100,38 @@
   // --------------------------------
 
 
-  // List's row view
-  var CustomersRow = 
-  {
-      className: 'cln-lst-rw cust-row js-trigger-goto'
-    , _viewName: 'CustomerRow'
+  // List's row view (optional)
+  // use it if you need to have 
+  // full control on model (delete, etc.)
+  // var CustomersRow = 
+  // {
+  //     className: 'cln-lst-rw cust-row js-trigger-goto'
+  //   , _viewName: 'CustomerRow'
 
-    , onInitialize: function( options )
-      {
-        this.tplRow = options.tpl
-      }
+  //   , onInitialize: function( options )
+  //     {
+  //       this.tplRow = options.tpl
+  //     }
 
-    , render: function()
-      {
-        var html = this.tplRow({
-            displayName: this.model.displayName()
-          , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
-        })
+  //   , render: function()
+  //     {
+  //       var html = this.tplRow({
+  //           displayName: this.model.displayName()
+  //         , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
+  //       })
 
-        this.$el.html( html )
+  //       this.$el.html( html )
 
-        this.el.dataset.uid  = this.model.get('uid')
+  //       this.el.dataset.uid  = this.model.get('uid')
 
-        return this
-      }
+  //       return this
+  //     }
 
-    , goTo: function( event )
-      {
-        this.callController( 'sheet', this.model.get('uid') )
-      }
-  }
+  //   , goTo: function( event )
+  //     {
+  //       this.callController( 'sheet', this.model.get('uid') )
+  //     }
+  // }
 
   // Customers List view
   var CustomersList = 
@@ -133,16 +141,35 @@
     , _classlist:    ['view-half-list']
     , _listSelector: '#customers-list'
     , _tplRow:        TPL.customers.listrow
-    , _viewRow:       'Subbly.View.CustomerRow'
+    // , _viewRow:       'Subbly.View.CustomerRow'
 
-    , onInitialDisplay: function()
+    , onInitialize: function()
       {
-        var $firstRow = this._$list.children(':first')
+        this.addEvents( {'click li.js-trigger-goto':  'goTo'} )
+      }
+
+    , onInitialRender: function()
+      {
+        var $firstRow = this.getListEl().children(':first')
           , uid       = $firstRow.attr('data-uid')
 
-        $firstRow.addClass('active')
-
         this.callController( 'sheet', uid )
+      }
+
+    , displayRow: function( model )
+      {
+        var html = this._tplRowCompiled({
+            displayName: model.displayName()
+          , createdDate: moment.utc( model.get('created_at') ).fromNow()
+          , uid:         model.get('uid')
+        })
+
+        return html
+      }
+
+    , goTo: function( event )
+      {
+        this.callController( 'sheet', event.currentTarget.dataset.uid )
       }
   }
 
