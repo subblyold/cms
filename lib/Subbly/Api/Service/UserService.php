@@ -16,7 +16,7 @@ class UserService extends Service
     /**
      * Return an empty model
      *
-     * @return Subbly\Model\User
+     * @return \Subbly\Model\User
      *
      * @api
      */

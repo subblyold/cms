@@ -9,8 +9,8 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\User;
 use Subbly\Tests\Support\TestCase;
 
-class GroupsTableSeeder extends Seeder {
-
+class GroupsTableSeeder extends Seeder
+{
     public function run()
     {
         $groups = array(

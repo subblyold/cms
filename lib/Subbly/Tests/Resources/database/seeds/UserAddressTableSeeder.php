@@ -7,13 +7,12 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\UserAddress;
 use Subbly\Tests\Support\TestCase;
 
-class UserAddressTableSeeder extends Seeder {
-
+class UserAddressTableSeeder extends Seeder
+{
     public function run()
     {
         $faker = TestCase::faker();
 
-        // generate some others users
         for ($i=1; $i <= 10; $i++)
         {
             $userAddress = UserAddress::create(array(
@@ -33,5 +32,4 @@ class UserAddressTableSeeder extends Seeder {
             TestCase::addFixture('user_addresses.user_address_' . $i, $userAddress);
         }
     }
-
 }

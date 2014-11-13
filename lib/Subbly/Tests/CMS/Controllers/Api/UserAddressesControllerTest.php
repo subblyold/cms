@@ -10,7 +10,6 @@ class UserAddressesControllerTest extends TestCase
         'name'         => 'string',
         'firstname'    => 'string',
         'lastname'     => 'string',
-        'lastname'     => 'string',
         'address1'     => 'string',
         'address2'     => array('string', 'null'),
         'zipcode'      => 'string',
@@ -28,7 +27,7 @@ class UserAddressesControllerTest extends TestCase
     {
         $user = TestCase::getFixture('users.jon_snow');
 
-        $response = $this->callJSON('GET', "/api/v1/users/{$user->uid}/user-addresses");
+        $response = $this->callJSON('GET', "/api/v1/users/{$user->uid}/addresses");
 
         $this->assertResponseOk();
         $this->assertResponseJSONValid();
@@ -49,7 +48,7 @@ class UserAddressesControllerTest extends TestCase
          * NOT OK
          */
         // "user_address" not defined
-        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/user-addresses");
+        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/addresses");
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -58,7 +57,7 @@ class UserAddressesControllerTest extends TestCase
         $this->assertObjectHasAttribute('error', $json->response);
 
         // :user_uid not found
-        $response = $this->callJSON('POST', "/api/v1/users/b42fdf18bbd6291136f3b48b9ab378dd/user-addresses");
+        $response = $this->callJSON('POST', "/api/v1/users/b42fdf18bbd6291136f3b48b9ab378dd/addresses");
 
         $this->assertResponseStatus(404);
         $this->assertResponseJSONValid();
@@ -67,7 +66,7 @@ class UserAddressesControllerTest extends TestCase
         $this->assertObjectHasAttribute('error', $json->response);
 
         // "user" defined but empty
-        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/user-addresses", array('user_address' => array()));
+        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/addresses", array('user_address' => array()));
 
         $this->assertResponseStatus(400);
         $this->assertResponseJSONValid();
@@ -87,7 +86,7 @@ class UserAddressesControllerTest extends TestCase
             'city'      => $faker->city,
             'country'   => $faker->country,
         );
-        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/user-addresses", array('user_address' => $data));
+        $response = $this->callJSON('POST', "/api/v1/users/{$user->uid}/addresses", array('user_address' => $data));
 
         $this->assertResponseStatus(201);
         $this->assertResponseJSONValid();

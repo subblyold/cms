@@ -9,8 +9,8 @@ use Spatie\EloquentSortable\SortableInterface;
 
 class Product extends Model  implements ModelInterface, SortableInterface
 {
-    use Sortable;
     use Concerns\SubblyModel;
+    use Sortable;
 
     protected $table = 'products';
 
@@ -20,6 +20,10 @@ class Product extends Model  implements ModelInterface, SortableInterface
     protected $visible = array('position', 'status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity', 'images', 'options', 'categories', 'created_at', 'updated_at');
 
     protected $fillable = array('status', 'sku', 'name', 'description', 'price', 'sale_price', 'quantity');
+
+    public $sortable = array(
+        'order_column_name' => 'position',
+    );
 
     /**
      * Validation rules
@@ -33,10 +37,6 @@ class Product extends Model  implements ModelInterface, SortableInterface
 
     protected $defaultValues = array(
         'status' => self::STATUS_DRAFT,
-    );
-
-    public $sortable = array(
-        'order_column_name' => 'position',
     );
 
     const STATUS_DRAFT      = 'draft';

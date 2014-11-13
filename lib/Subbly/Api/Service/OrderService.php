@@ -184,6 +184,16 @@ class OrderService extends Service
     }
 
     /**
+     *
+     */
+    public function delete()
+    {
+        // TODO
+        // Check order status first.
+        // Is an order can be deletable???
+    }
+
+    /**
      * Service name
      */
     public function name()

@@ -22,7 +22,7 @@ class UserAddressesController extends BaseController
     /**
      * Get list of UserAddress for a User
      *
-     * @route GET /api/v1/users/:user_uid/user-addresses
+     * @route GET /api/v1/users/:user_uid/addresses
      * @authentication required
      */
     public function index($user_uid)
@@ -41,9 +41,9 @@ class UserAddressesController extends BaseController
     }
 
     /**
-     * Create a new User
+     * Create a new UserAddress
      *
-     * @route POST /api/v1/users/:user_uid/user-addresses
+     * @route POST /api/v1/users/:user_uid/addresses
      * @authentication required
      */
     public function store($user_uid)
@@ -70,7 +70,7 @@ class UserAddressesController extends BaseController
     /**
      * Update a UserAddress
      *
-     * @route PUT|PATCH /api/v1/users/:user_uid/user-addresses/:uid
+     * @route PUT|PATCH /api/v1/users/:user_uid/addresses/:uid
      * @authentication required
      */
     public function update($user_uid, $uid)

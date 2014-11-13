@@ -4,16 +4,44 @@ namespace Subbly\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductCategory extends Model implements ModelInterface
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableInterface;
+
+class ProductCategory extends Model implements ModelInterface, SortableInterface
 {
     use Concerns\SubblyModel;
+    use Sortable;
+
+    protected $table = 'product_categories';
 
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * Fields
      */
-    protected $table = 'product_categories';
+    protected $visible = array('name', 'position', 'created_at', 'updated_at');
+
+    protected $fillable = array('name');
+
+    public $sortable = array(
+        'order_column_name' => 'position',
+    );
+
+    /**
+     * Validations
+     */
+    protected $rules = array(
+        'product_id' => 'required|exists:products,id',
+        'name'       => 'required',
+    );
+
+    /**
+     *
+     */
+    protected function performInsert(\Illuminate\Database\Eloquent\Builder $query, array $options)
+    {
+        $this->attributes['uid'] = md5(uniqid(mt_rand(), true));
+
+        parent::performInsert($query, $options);
+    }
 
     /**
      * Relashionship

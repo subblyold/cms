@@ -7,8 +7,8 @@ use Illuminate\Database\Seeder;
 use Subbly\Model\User;
 use Subbly\Tests\Support\TestCase;
 
-class UserTableSeeder extends Seeder {
-
+class UserTableSeeder extends Seeder
+{
     public function run()
     {
         $faker = TestCase::faker();
@@ -35,5 +35,4 @@ class UserTableSeeder extends Seeder {
             TestCase::addFixture('users.user_' . $i, $user);
         }
     }
-
 }
