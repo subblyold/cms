@@ -2,18 +2,29 @@
     "name": "subbly/cms",
     "description": "",
     "type": "project",
+    "keywords": ["e-commerce", "cms"],
+    "license": "MIT",
 
     "authors": [
         {
+            "name": "Benjamin Guedj",
+            "email": "benjamin@subbly.com",
+            "role": "Designer - founder"
+        },
+        {
+            "name": "Michael Lefebvre",
+            "email": "michael@subbly.com",
+            "role": "Developer"
+        },
+        {
             "name": "Nicolas Brousse",
-            "email": "nicolas@subbly.com"
+            "email": "nicolas@subbly.com",
+            "role": "Developer"
         }
     ],
 
     "require": {
         "php": ">=5.4.0",
-        "subbly/framework": "~0.1"
-    },
-
-    "minimum-stability": "stable"
+        "subbly/framework": "~0.1@dev"
+    }
 }
