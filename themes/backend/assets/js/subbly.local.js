@@ -19729,89 +19729,67 @@ var __module0__ = (function(__dependency1__, __dependency2__, __dependency3__, _
 }).call(this);
 
 
-var scroll2sicky = (function()
+var scroll2sicky = function( $el )
 {
-  var $elements
-    , $nano
-    , $window
-    , lists
+  this.$element = this.getDisplay( $el[0].querySelector('.scrll-stck') )
 
-  var refresh = function( event, values )
+  if( !this.$element )
+    return
+
+  this.$nano    = $el.find('div.nano')
+  this.$window  = $( window )
+  this.list     = new scroll2sickyList( this.$element, this )
+
+  this.resizeCB = function()
   {
-    lists.forEach( function( item )
-    {
-      item.update( values.position )
-    })
+    if( $el[0].querySelectorAll('.scrll-stck')[0] )
+      this.getDisplay( $el[0].querySelectorAll('.scrll-stck')[0] )
   }
 
-  var reset = function()
-  {
-    lists.forEach( function( item )
-    {
-      item.reset()
-    })
-  }
+  this.$nano.on('update', _.bind( this.refresh, this ) )
+  this.$window.on( 'resize.scroll2sicky', _.bind( this.resizeCB, this ) )
 
-  var getDisplay = function( element )
-  {
-    var cnt    = element.querySelector('.scrll-stck-cnt')
-      , height = cnt.offsetHeight
-      , width  = element.offsetWidth
+  return this
+}
 
-    element.style.height = height + 'px'
-    cnt.style.width      = width + 'px'
+scroll2sicky.prototype.refresh = function( event, values )
+{
+  this.list.update( values.position )
+}
 
-    return cnt    
-  }
+scroll2sicky.prototype.reset = function()
+{
+  this.list.reset()
+}
 
-  // TODO, $el should not have more than one stickable element
-  var init = function( $el )
-  {    
-    $elements = $el[0]
-    $nano     = $el.find('div.nano')
-    $window   = $( window )
+scroll2sicky.prototype.getDisplay = function( element )
+{
+  if( _.isNull( element ) )
+    return false
 
-    lists = []
+  var cnt    = element.querySelector('.scrll-stck-cnt')
+    , height = cnt.offsetHeight
+    , width  = element.offsetWidth
 
-    ;[].forEach.call(
-        $elements.querySelectorAll('.scrll-stck')
-      , function( element )
-        {
-          var cnt  = getDisplay( element )
-            , list = new scroll2sickyList( cnt )
+  element.style.height = height + 'px'
+  cnt.style.width      = width + 'px'
 
-          // Add this element to the collection
-          lists.push( list )
-        }
-    )
+  return cnt
+}
 
-    $nano.on('update', refresh )
-    $window.on( 'resize:scroll2sicky', function()
-    {
-      getDisplay( $elements.querySelector('.scrll-stck') )
-    })
-  }
+scroll2sicky.prototype.kill = function()
+{
+  if( !this.$element )
+    return
 
-  var unload = function()
-  {
-    $nano.off('update', refresh )
-    $window.off( 'resize:scroll2sicky' )
-  }
-
-  return {
-      'init':   init
-    , 'unload': unload
-    , 'reset':  reset
-  }
-
-})()
-
+  this.$window.off( 'resize.scroll2sicky' )
+}
 
 /**
  * The basic type of list; applies sticky classe to
  * list items based on scroll state.
  */
-function scroll2sickyList( element )
+function scroll2sickyList( element, context )
 {
   this.element = element
 
@@ -20400,6 +20378,7 @@ var SubblyView = Backbone.View.extend(
   , _classlist:  []
   , _controller: false
   , _$nano:      false
+  , _sticky:     false
 
   , initialize: function( options )
     {
@@ -20487,10 +20466,10 @@ var SubblyView = Backbone.View.extend(
         scope.trigger('view::scrollend')
       })
 
-      scroll2sicky.init( this.$el )
-
       if( this.onDisplayTpl )
         this.onDisplayTpl()
+
+      this._sticky = new scroll2sicky( this.$el )
 
       return this
     }
@@ -20500,7 +20479,8 @@ var SubblyView = Backbone.View.extend(
       if( this._$nano )
         this._$nano.nanoScroller({ destroy: true })
 
-      scroll2sicky.unload()
+      if( this._sticky )
+        this._sticky.kill()
     }
 })
 

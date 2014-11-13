@@ -9,6 +9,7 @@ var SubblyView = Backbone.View.extend(
   , _classlist:  []
   , _controller: false
   , _$nano:      false
+  , _sticky:     false
 
   , initialize: function( options )
     {
@@ -96,10 +97,10 @@ var SubblyView = Backbone.View.extend(
         scope.trigger('view::scrollend')
       })
 
-      scroll2sicky.init( this.$el )
-
       if( this.onDisplayTpl )
         this.onDisplayTpl()
+
+      this._sticky = new scroll2sicky( this.$el )
 
       return this
     }
@@ -109,6 +110,7 @@ var SubblyView = Backbone.View.extend(
       if( this._$nano )
         this._$nano.nanoScroller({ destroy: true })
 
-      scroll2sicky.unload()
+      if( this._sticky )
+        this._sticky.kill()
     }
 })
