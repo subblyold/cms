@@ -188,7 +188,7 @@
   Subbly.register( 'Subbly', 'Customers', 
   {
       'ViewList:Customers':        CustomersList
-    , 'ViewListRow:CustomerRow':   CustomersRow
+    // , 'ViewListRow:CustomerRow':   CustomersRow
     , 'View:CustomerSheet':        CustomerSheet
     , 'Controller:Customers':      Customers
   })
