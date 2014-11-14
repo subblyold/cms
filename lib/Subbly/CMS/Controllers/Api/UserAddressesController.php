@@ -93,4 +93,27 @@ class UserAddressesController extends BaseController
             ),
         ));
     }
+
+    /**
+      * Delete a UserAddress
+      *
+      * @route DELETE /api/v1/users/:user_uid/addresses/:uid
+      * @authentication required
+     */
+    public function delete($user_uid, $uid)
+    {
+        $user = Subbly::api('subbly.user')->find($user_uid);
+
+        $userAddress = Subbly::api('subbly.user_address')->delete($uid);
+
+        return $this->jsonResponse(array(
+            'user_address' => $userAddress,
+        ),
+        array(
+            'status' => array(
+                'code'    => 200,
+                'message' => 'UserAddress deleted',
+            ),
+        ));
+    }
 }
