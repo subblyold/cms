@@ -7,6 +7,9 @@ class OrdersControllerTest extends TestCase
 {
     private $orderJSONFormat = array(
         'status' => 'string',
+
+        '(user)'     => 'object',
+        '(products)' => array('array', 'null'),
     );
 
     public function testIndex()
