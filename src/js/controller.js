@@ -28,18 +28,26 @@ var SubblyController = Backbone.Controller.extend(
 
   , onBeforeRoute: function()
     {
-      this.displayViews()
+      // Do not clean current view
+      // if we call it again (e.g. frame view)
+      if( this._mainRouter.controllersAreTheSame( this._getName() ) )
+        return
 
-      this._mainRouter._currentView = this
+      // this._mainRouter._currentView = this
 
       if( this.onBefore )
         this.onBefore()
+
+      this.displayViews()
     }
 
   , onAfterRoute: function()
     {
       if( this.onAfter )
         this.onAfter()
+
+      // register current controller
+      this._mainRouter.setCurrentController( this )
     }
 
     // Clean DOM and JS memory
@@ -47,6 +55,10 @@ var SubblyController = Backbone.Controller.extend(
     {
       //Stop pending fetch
       subbly.cleanXhr()
+
+      // 
+      if( this.onRemove )
+        this.onRemove()
 
       // Close views
       _( this._viewsPointers )
@@ -61,6 +73,11 @@ var SubblyController = Backbone.Controller.extend(
       this._parentView      = false
       this._viewsPointers   = {}
       this._reversedPointer = {}
+    }
+
+  , _getName: function()
+    {
+      return this._controllerName
     }
 
     // create DOM elements
@@ -152,4 +169,17 @@ var SubblyController = Backbone.Controller.extend(
       if( this._mainNavRegister )
         this._mainRouter.registerMainNav( this._mainNavRegister )
     }
+
+  , getCurrentViewName: function()
+    {
+      return this._controllerName
+    }
+
+  , setCurrentViewName: function( viewName )
+    {
+      this._controllerName = viewName
+      
+      return this
+    }
+
 })

@@ -3,7 +3,7 @@ var Router = Backbone.Router.extend(
 {
     _controllers:  {}
   , _viewspointer: {}
-  , _currentView:  false
+  , _currentCtr:   false // active controller
   , _mainNav:      []
 
   , routes: {
@@ -17,6 +17,7 @@ var Router = Backbone.Router.extend(
     {
       var router = this
 
+      // Load plugins controllers
       _.each( Components, function( vendorComponents, vendor )
       {
         if( !vendorComponents.Controller )
@@ -29,46 +30,81 @@ var Router = Backbone.Router.extend(
 
       }, this )
 
+      // Load buil-in controllers
       this._viewspointer.login   = subbly.api( 'Subbly.View.Login' )
       this._viewspointer.mainNav = subbly.api( 'Subbly.View.MainNav', {
           items: this._mainNav
       })
 
+      // Start router
       Backbone.history.start({
           hashChange: true 
         , pushState:  true 
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
+
+      // Router events callback
       Backbone.history.on('route', function( router, route, params )
       {
         subbly.trigger( 'hash::changed', route, params  )
       })
 
-      subbly.on( 'hash::change', this.closeCurrent, this )
+      // subbly.on( 'hash::change', this.closeCurrent, this )
 
       return this
     }
 
-    // Methods
+    // Controller Methods
     // ----------------------------
 
+    // Remove active controller
   , closeCurrent: function()
     {
       if(
-             this._currentView 
-          && this._currentView.remove 
+             this._currentCtr 
+          && this._currentCtr.remove 
         )
       {
-        console.groupCollapsed( 'Close current view' )
-          console.log( this._currentView  )
-        console.groupEnd()
+        console.groupCollapsed( 'Close current controller' )
+          
+          console.log( this._currentCtr  )
+          this._currentCtr.remove()
 
-        this._currentView.remove()
+        console.groupEnd()
       }
     }
 
-    // Routes
+    // return the active controller
+  , getCurrentController: function()
+    {
+      return this._currentCtr
+    }
+
+    // Keep reference to the active controller
+  , setCurrentController: function( ctr )
+    {
+      this._currentCtr = ctr
+
+      return this
+    }
+
+    // Test if called controller is not the same
+    // as the one already displayed
+  , controllersAreTheSame: function( controllerName )
+    {
+      if( !this._currentCtr )
+        return false
+
+      var result = ( this._currentCtr._getName() === controllerName )
+      
+      if( !result )
+        this.closeCurrent()
+
+      return result
+    }
+
+    // Built-in Routes
     // ----------------------------
 
   , default: function()
@@ -79,7 +115,7 @@ var Router = Backbone.Router.extend(
 
   , login: function()
     {
-      // this._currentView = this._viewspointer.login
+      // this._currentCtr = this._viewspointer.login
 
       this._viewspointer.login.display()
     }
@@ -94,12 +130,11 @@ var Router = Backbone.Router.extend(
       subbly.trigger( 'hash::notFound', route )
     }
 
-    // Methods
+    // Main Nav Methods
     // ----------------------------
 
   , registerMainNav: function( navItem )
     {
-// console.log( navItem )
       this._mainNav.push( navItem )
     }
 })

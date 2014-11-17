@@ -58,11 +58,17 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
-  this.on( 'hash::change', function( href )
+  this.on( 'hash::change', function( href, trigger )
   {
+    trigger = ( _.isUndefined( trigger ) ) ? true : trigger
+
+    var opts = ( trigger ) 
+               ? { trigger: true }
+               : { replace: true } 
+
     if( scope._changesAreSaved )
     {
-      scope._router.navigate( href, { trigger: true } )
+      scope._router.navigate( href, opts )
     }
     else
     {
@@ -73,8 +79,8 @@ SubblyCore.prototype.init = function()
       //   , success:  __('label.leave')
       //   , onSubmit: function()
       //     {
-      //       Pubsub.trigger( 'form::reset' )
-      //       AppRouter.navigate( href, { trigger: true } )
+      //       scope.trigger( 'form::reset' )
+      //       AppRouter.navigate( href, opts )
       //     }
       // })
     }
