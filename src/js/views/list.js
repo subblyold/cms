@@ -14,9 +14,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _$listItems:     false
   , collection:      false
 
-  , onSubblyInitialize: function()
+  // , onSubblyInitialize: function()
+  , initialize: function( options )
     {
-      console.log( 'initialize list view ' + this._viewName )
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // console.log( 'initialize list view ' + this._viewName )
 
       this.on( 'view::scrollend', this.nextPage, this )
       subbly.on( 'pagination::fetch', this.loadMore, this )

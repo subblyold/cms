@@ -26,11 +26,6 @@ var SubblyView = Backbone.View.extend(
           this.el.classList.add( c )
         }, this)
 
-      // Subbly's views `initialize` callback
-      // do not use it
-      if( this.onSubblyInitialize )
-        this.onSubblyInitialize( options )
-
       // Public views `initialize` callback
       // you can use it
       if( this.onInitialize )
