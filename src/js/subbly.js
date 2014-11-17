@@ -376,23 +376,30 @@ SubblyCore.prototype.cleanXhr = function()
 
 SubblyCore.prototype.getCookie = function( cookieName )
 {
+  console.groupCollapsed( 'get cookie: ' + cookieName )
+
   if( !document.cookie )
   {
     console.warn('no cookie for this domain')
+    console.groupEnd()
     return false
   }
 
   // retrive data from cookies
-  var regexp = new RegExp("(?:^" + cookieName + "|;\s*"+ cookieName + ")=(.*?)(?:;|$)", 'g')
-    , result = regexp.exec( document.cookie )
-    , data   = ( result === null ) ? false : result[1]
-
+  var data = decodeURIComponent( document.cookie.replace( new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent( cookieName ).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null
+  
+  console.log( document.cookie )
+  console.log( data )
+  
   if( data === 'null' )
   {
     console.warn('cookie "' + cookieName + '" found but data are null')
+    console.groupEnd()
+
     return false
   }
-  
+
+  console.groupEnd()
   return data
 }
 
