@@ -1,7 +1,7 @@
 
 Components.Subbly.Model.Product = SubblyModel.extend(
 {
-    idAttribute:  'uid'
+    idAttribute:  'sku'
   , serviceName:  'products'
   , singleResult: 'product'
 })
