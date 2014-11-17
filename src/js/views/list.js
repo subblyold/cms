@@ -296,6 +296,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( this.collection )
         this.collection.resetPagination()
 
+      this._initialDisplay = false
+
       SubblyView.prototype.onClose.apply( this, arguments )
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
