@@ -14,6 +14,10 @@ class ProductsControllerTest extends TestCase
         'quantity'    => 'integer',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
+
+        '(images)'     => 'array',
+        '(options)'    => 'array',
+        '(categories)' => 'array',
     );
 
     public function testIndex()

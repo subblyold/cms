@@ -78,11 +78,11 @@ trait JSONAssertionsTrait
      * @param string
      * @param mixed
      */
-    public function assertJSONEquals($key, $data)
+    public function assertJSONEquals($key, $data, $strict = false)
     {
         $accessor = PropertyAccess::createPropertyAccessor(true, true);
-        $json     = $this->getJSONContent();
-        $content  = $accessor->getValue($json->response, $key);
+        $json     = $this->getJSONContent(true);
+        $content  = $accessor->getValue($json['response'], "[$key]");
 
         foreach ($content as $k=>$v)
         {
@@ -91,8 +91,8 @@ trait JSONAssertionsTrait
                 : $k
             ;
 
-            // TODO change it or not?
-            if (is_array($data) && !isset($data[$k])) {
+            // If none strict mode and $data key does not exists, continue with next
+            if ($strict === false && is_array($data) && !isset($data[$k])) {
                 continue;
             }
 
@@ -115,8 +115,6 @@ trait JSONAssertionsTrait
 
     /**
      *
-     *
-     * TODO add required or optional definition. !key! or (key)
      */
     public function assertJSONTypes($keyOrFieldTypes)
     {
@@ -146,17 +144,22 @@ trait JSONAssertionsTrait
 
         // Get JSON content
         $accessor = PropertyAccess::createPropertyAccessor(true, true);
-        $json     = $this->getJSONContent();
         $content  = $this->getJSONContent()->response;
 
         if ($params['key'] !== null) {
-            $content = $accessor->getValue($json->response, $params['key']);
+            $content = $accessor->getValue($content, $params['key']);
         }
 
         // Check assertions
         foreach ($params['field_types'] as $fieldName=>$formats)
         {
-            if (!property_exists($content, $fieldName)) {
+            if (!property_exists($content, $fieldName))
+            {
+                // If optional field
+                if (starts_with($fieldName, '(') && ends_with($fieldName, ')')) {
+                    continue;
+                }
+
                 throw new \Exception(sprintf('The field named "%s" does not exists into the content "%s"',
                     $fieldName,
                     json_encode($content, true)

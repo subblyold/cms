@@ -11,6 +11,10 @@ class UsersControllerTest extends TestCase
         'email'      => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+
+        '(orders)'    => array('array', 'null'),
+        '(addresses)' => array('array', 'null'),
+        '(groups)'    => array('array', 'null'),
     );
 
 
