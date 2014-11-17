@@ -212,7 +212,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this._credentials = credentials
 
-  document.cookie = this._credentialsCookie + '=' + this._credentials + '; path=/'
+  this.setCookie( this._credentialsCookie, this._credentials )
 }
 
 /*
@@ -237,22 +237,10 @@ SubblyCore.prototype.getCredentials = function()
 
 SubblyCore.prototype.isLogin = function()
 {
-  if( !document.cookie )
-  {
-    console.warn('no cookie for this domain')
-    return false
-  }
+  var credentials = this.getCookie( this._credentialsCookie )
 
-  // retrive credentials from cookies
-  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
-    , result      = regexp.exec( document.cookie )
-    , credentials = ( result === null ) ? false : result[1]
-
-  if( credentials === 'null' )
-  {
-    console.warn('cookie found but credentials are null')
+  if( !credentials )
     return false
-  }
   
   this.trigger( 'user::loggedIn', credentials )
 
@@ -272,7 +260,7 @@ SubblyCore.prototype.logout = function()
 
   this._credentials = false
 
-  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
+  this.setCookie( this._credentialsCookie, null )
 
   this.trigger( 'hash::change', 'login' )
 }
@@ -373,6 +361,50 @@ SubblyCore.prototype.cleanXhr = function()
 
       delete this._fetchXhr[ key ]
     }, this)
+}
+
+
+// PLUGINS
+//-------------------------------
+
+
+/*
+ * get Cookie
+ *
+ * @return  {mixed}
+ */
+
+SubblyCore.prototype.getCookie = function( cookieName )
+{
+  if( !document.cookie )
+  {
+    console.warn('no cookie for this domain')
+    return false
+  }
+
+  // retrive data from cookies
+  var regexp = new RegExp("(?:^" + cookieName + "|;\s*"+ cookieName + ")=(.*?)(?:;|$)", 'g')
+    , result = regexp.exec( document.cookie )
+    , data   = ( result === null ) ? false : result[1]
+
+  if( data === 'null' )
+  {
+    console.warn('cookie "' + cookieName + '" found but data are null')
+    return false
+  }
+  
+  return data
+}
+
+/*
+ * set Cookie
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.setCookie = function( cookieName, value, expire )
+{
+  document.cookie = cookieName + '=' + value + '; path=/'
 }
 
 
