@@ -1,7 +1,7 @@
 
 Components.Subbly.Model.Order = SubblyModel.extend(
 {
-    idAttribute:  'uid'
+    idAttribute:  'id'
   , serviceName:  'orders'
   , singleResult: 'order'
 })
