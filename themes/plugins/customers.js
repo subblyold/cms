@@ -9,7 +9,7 @@
       _tplStructure:   'half'
     , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.CustomerSheet' ]
     , _controllerName: 'customers'
-    , _viewDisplayed:  false
+    , _listDisplayed:  false
     , _mainNavRegister:
       {
           name:       'Customers'
@@ -18,61 +18,45 @@
       }
 
     , routes: {
-          'customers':      'list'
-        , 'customers/:uid': 'details'
-      }
-
-    , onBefore: function()
-      {
-        console.log( 'onBefore')
-      }
-
-    // Local method
-    , getCollection: function()
-      {
-        if( !this.collection )
-          this.collection = Subbly.api('Subbly.Collection.Users')
+          'customers':      'display'
+        , 'customers/:uid': 'display'
       }
 
     , onRemove: function()
       {
-        this._viewDisplayed = false
+        this._listDisplayed = false
       }
 
       // Routes
       //-------------------------------
 
-    , list: function() 
+    , display: function( uid ) 
       {
-        this.displayView()
-      }
-
-    , details: function( uid ) 
-      {
-        if( !this._viewDisplayed )
+        if( !this._listDisplayed )
         {
           var scope = this
 
           this.displayView( function()
           {
-            scope.sheet( uid )
+            if( !_.isNull( uid ) )
+              scope.sheet( uid )
           })
 
           return
         }
-
-        this.sheet( uid )
+        
+        if( !_.isNull( uid ) )
+          this.sheet( uid )
+        else
+          this.getViewByPath( 'Subbly.View.Customers' )
+            .onInitialRender()
       }
 
     , displayView: function( sheetCB )
       {
-        this._mainRouter._currentView = this
-
-        this.getCollection()
-
         var scope  = this
 
-        Subbly.fetch( this.collection,
+        Subbly.fetch( Subbly.api('Subbly.Collection.Users'),
         {
             data:   {
                 offset: 0
@@ -80,7 +64,7 @@
             }
           , success: function( collection, response )
             {
-              scope._viewDisplayed = true
+              scope._listDisplayed = true
               scope.getViewByPath( 'Subbly.View.Customers' )
                 .setValue( 'collection', collection )
                 .displayTpl()
@@ -93,16 +77,10 @@
 
     , sheet: function(  uid ) 
       {
+        this.getViewByPath( 'Subbly.View.Customers' ).setActiveRow( uid )
+
         var scope = this
-          , user  = Subbly.api('Subbly.Model.User', {
-          uid: uid
-        })
-
-        // var $listRows  = this.getViewByPath( 'Subbly.View.Customers' ).getListRows()
-        //   , $activeRow = $listRows.filter('[data-uid="' + uid + '"]')
-
-        // $listRows.removeClass('active')
-        // $activeRow.addClass('active')
+          , user  = Subbly.api('Subbly.Model.User', { uid: uid })
 
         Subbly.fetch( user,
         {
@@ -169,19 +147,23 @@
     , _tplRow:        TPL.customers.listrow
     // , _viewRow:       'Subbly.View.CustomerRow'
 
+      // On view initialize
     , onInitialize: function()
       {
+        // add view's event
         this.addEvents( {'click li.js-trigger-goto':  'goTo'} )
       }
 
+      // Call on list first render
     , onInitialRender: function()
       {
         var $firstRow = this.getListEl().children(':first')
           , uid       = $firstRow.attr('data-uid')
 
-        // this.callController( 'sheet', uid )
+        this.callController( 'sheet', uid )
       }
 
+      // Build single list's row
     , displayRow: function( model )
       {
         var html = this._tplRowCompiled({
@@ -193,12 +175,23 @@
         return html
       }
 
+      // Higthligth active row
+    , setActiveRow: function( uid )
+      {
+        var $listRows  = this.getListRows()
+          , $activeRow = $listRows.filter('[data-uid="' + uid + '"]')
+
+        $listRows.removeClass('active')
+        $activeRow.addClass('active')
+      }
+
+      // go to customer profile
     , goTo: function( event )
       {
         var uid = event.currentTarget.dataset.uid
 
         Subbly.trigger( 'hash::change', 'customers/' + uid, true )
-        this.callController( 'sheet', uid )
+        // this.callController( 'sheet', uid )
       }
   }
 
@@ -216,10 +209,10 @@
 
   Subbly.register( 'Subbly', 'Customers', 
   {
-      'ViewList:Customers':        CustomersList
+      'ViewList:Customers':   CustomersList
     // , 'ViewListRow:CustomerRow':   CustomersRow
-    , 'View:CustomerSheet':        CustomerSheet
-    , 'Controller:Customers':      Customers
+    , 'View:CustomerSheet':   CustomerSheet
+    , 'Controller:Customers': Customers
   })
 
 })( window )
