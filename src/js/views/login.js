@@ -1,9 +1,9 @@
 
-Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
+Components.Subbly.View.Login = SubblyViewForm.extend(
 {
     el: '#login'
 
-  , initialize: function()
+  , onInitialize: function()
     {
       var rules = [
           {
@@ -35,8 +35,6 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
         this.btnReset()
 
       }, this)
-
-      return this
     }
 
   , display: function()
@@ -86,45 +84,40 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       this.$btn.button('reset')
     }
 
-  , submit: function( event )
+  , onSubmit: function()
     {
       this.$btn.button('loading')
 
-      if( !_.isUndefined( event ) )
-          event.preventDefault()
+      var credentials  = 
+          {
+              username: this.getFormValue( 'email' )
+            , password: this.getFormValue( 'password' )
+          }
+        , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
+        , login        = this
+        , authenticate = new xhrCall(
+          {
+              url:       'auth/test-credentials'
+            , headers: {
+                Authorization: 'Basic ' + encode
+              }
+            , success: function( response )
+              {
+                subbly.trigger( 'user::loggedIn', encode )
+              }
+            , error:   function( jqXHR, textStatus, errorThrown )
+              {
+                $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
 
-      if( this.validateForm() )
-      {
-        var credentials  = 
-            {
-                username: this._form.data.email
-              , password: this._form.data.password 
-            }
-          , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
-          , login        = this
-          , authenticate = new xhrCall(
-            {
-                url:       'auth/test-credentials'
-              , headers: {
-                  Authorization: 'Basic ' + encode
-                }
-              , success: function( response )
-                {
-                  subbly.trigger( 'user::loggedIn', encode )
-                }
-              , error:   function( jqXHR, textStatus, errorThrown )
-                {
-                  $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
-
-                  login.$formInputs.addClass('warning')
-                  document.getElementById('login-email').focus()
-                  login.btnReset()
-                }
-            })
+                login.$formInputs.addClass('warning')
+                document.getElementById('login-email').focus()
+                login.btnReset()
+              }
+          })
         
-        return
-      }
+      //   return
+      // }
 
-      this.btnReset()
+      // this.btnReset()
     }
 })

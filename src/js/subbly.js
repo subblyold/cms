@@ -347,6 +347,46 @@ SubblyCore.prototype.fetch = function( obj, options, context )
 }
 
 /*
+ * Generic method to save a model
+ * format json
+ * stores the XHR call to prevent cancel
+ *
+ * @params  {object}  model to save
+ * @params  {object}  data to set
+ * @params  {object}  callbacks options
+ * @params  {object}  call context
+ * @return  {object}
+ */
+SubblyCore.prototype.store = function( model, data, options, context )
+{
+  var data    = data || false
+    , options = options || {}
+
+  if( !data )
+    throw new Error( 'No data pass to Subbly.store' )
+
+  options.json = {}
+
+  options.json[ model.singleResult ] = data 
+
+  // model.clear({silent: true})
+
+  model.save( options.json, 
+  {
+      success: function( model, response, opts )
+      {
+        if( options.success && _.isFunction( options.success ) )
+          options.success( model, response, opts )
+      }
+    , error: function( model, response, opts )
+      {
+        if( options.error && _.isFunction( options.error ) )
+          options.error( model, response, opts  )
+      }
+  })
+}
+
+/*
  * Abort unfinish XHR call on route change
  *
  * @return  {void}

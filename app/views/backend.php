@@ -30,7 +30,7 @@
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <p class="btn-login">
-          <button type="submit" class="btn" id="login-submit" data-loading-text="loading">
+          <button type="submit" class="btn js-submit-form" id="login-submit" data-loading-text="loading">
             Login in
           </button>
         </p>

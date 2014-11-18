@@ -55,6 +55,27 @@
   {
       _viewName:     'ProductEntry'
     , _viewTpl:      TPL.products.entry
+
+    , onDisplayTpl: function( tplData )
+      {
+        // !! always set form after html render
+        this.setForm({
+            id:       'subbly-product-entry'
+          , rules:    this.model.getRules()
+          , skip:     false
+        })
+      }
+
+    , onSubmit: function()
+      {
+        subbly.store( this.model, this.getFormValues(), 
+        {
+            success: function( model, response  )
+            {
+              subbly.trigger( 'hash::change', 'products' )
+            }
+        })
+      }
   }
 
 

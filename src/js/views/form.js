@@ -5,11 +5,18 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
     _form:            false
   , $formInputs:      false
 
-  , events: {
-        'click button[type="submit"]'                        : 'submit'
-      , 'click button[type="reset"]'                         : 'cancel'
-      , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
-      , 'change :input'                                      : 'removeWarning'
+  , initialize: function( options )
+    {
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // add view's event
+      this.addEvents( {
+          'click .js-submit-form'                        : 'submit'
+        , 'click .js-cancel-form'                        : 'cancel'
+        , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
+        , 'change :input'                                      : 'removeWarning'
+      })
     }
 
     // usefull to override event's method
@@ -87,6 +94,12 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
       Helpers.setNested( this._form.extra, key, value )
     }
 
+
+  , getFormValues: function()
+    {
+      return this._form.data
+    }
+
   , getFormValue: function( key, defaults )
     {
       defaults = defaults || false
@@ -99,6 +112,16 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
 
       return this._form.data[ key ]
     }
+
+  , submit: function( event )
+    {
+      if( !_.isUndefined( event ) )
+          event.preventDefault()
+
+      if( this.validateForm() && this.onSubmit )
+        this.onSubmit()
+    }
+
 
   , validateForm: function()
     {

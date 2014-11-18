@@ -93,7 +93,7 @@ var SubblyView = Backbone.View.extend(
       })
 
       if( this.onDisplayTpl )
-        this.onDisplayTpl()
+        this.onDisplayTpl( tplData )
 
       this._sticky = new scroll2sicky( this.$el )
 
