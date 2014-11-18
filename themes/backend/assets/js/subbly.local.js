@@ -19957,6 +19957,8 @@ var Helpers =
 //   return __( str )
 // })
 
+// Select/Checkbox/Radio button options helper
+// {{isSelected this default="string or reference" attribute="selected"}}
 Handlebars.registerHelper('isSelected', function( value, options )
 {
   if( _.isUndefined( options.hash ) )
@@ -20394,11 +20396,6 @@ var SubblyView = Backbone.View.extend(
         {
           this.el.classList.add( c )
         }, this)
-
-      // Subbly's views `initialize` callback
-      // do not use it
-      if( this.onSubblyInitialize )
-        this.onSubblyInitialize( options )
 
       // Public views `initialize` callback
       // you can use it
@@ -20884,7 +20881,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this._credentials = credentials
 
-  document.cookie = this._credentialsCookie + '=' + this._credentials + '; path=/'
+  this.setCookie( this._credentialsCookie, this._credentials )
 }
 
 /*
@@ -20909,22 +20906,10 @@ SubblyCore.prototype.getCredentials = function()
 
 SubblyCore.prototype.isLogin = function()
 {
-  if( !document.cookie )
-  {
-    console.warn('no cookie for this domain')
-    return false
-  }
+  var credentials = this.getCookie( this._credentialsCookie )
 
-  // retrive credentials from cookies
-  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
-    , result      = regexp.exec( document.cookie )
-    , credentials = ( result === null ) ? false : result[1]
-
-  if( credentials === 'null' )
-  {
-    console.warn('cookie found but credentials are null')
+  if( !credentials )
     return false
-  }
   
   this.trigger( 'user::loggedIn', credentials )
 
@@ -20944,7 +20929,7 @@ SubblyCore.prototype.logout = function()
 
   this._credentials = false
 
-  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
+  this.setCookie( this._credentialsCookie, null )
 
   this.trigger( 'hash::change', 'login' )
 }
@@ -21053,6 +21038,57 @@ SubblyCore.prototype.cleanXhr = function()
 
 
 /*
+ * get Cookie
+ *
+ * @return  {mixed}
+ */
+
+SubblyCore.prototype.getCookie = function( cookieName )
+{
+  console.groupCollapsed( 'get cookie: ' + cookieName )
+
+  if( !document.cookie )
+  {
+    console.warn('no cookie for this domain')
+    console.groupEnd()
+    return false
+  }
+
+  // retrive data from cookies
+  var data = decodeURIComponent( document.cookie.replace( new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent( cookieName ).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null
+  
+  console.log( document.cookie )
+  console.log( data )
+  
+  if( data === 'null' )
+  {
+    console.warn('cookie "' + cookieName + '" found but data are null')
+    console.groupEnd()
+
+    return false
+  }
+
+  console.groupEnd()
+  return data
+}
+
+/*
+ * set Cookie
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.setCookie = function( cookieName, value, expire )
+{
+  document.cookie = cookieName + '=' + value + '; path=/'
+}
+
+
+// PLUGINS
+//-------------------------------
+
+
+/*
  * Extend Subbly Components
  *
  * @params  {string}  component type
@@ -21142,6 +21178,22 @@ subbly = new SubblyCore( subblyConfig )
 
 window.Subbly = subbly
 
+
+
+Components.Subbly.Model.Order = SubblyModel.extend(
+{
+    idAttribute:  'id'
+  , serviceName:  'orders'
+  , singleResult: 'order'
+})
+
+
+Components.Subbly.Model.Product = SubblyModel.extend(
+{
+    idAttribute:  'sku'
+  , serviceName:  'products'
+  , singleResult: 'product'
+})
 
 
 Components.Subbly.Model.User = SubblyModel.extend(
@@ -21270,6 +21322,28 @@ Components.Subbly.Collection.List = SubblyCollectionList = SubblyCollection.exte
 })
 
 
+Components.Subbly.Collection.Orders = Components.Subbly.Collection.List.extend(
+{
+    model:       Components.Subbly.Model.Order
+  , serviceName: 'orders'
+
+  , comparator: function( model )
+    {
+        return model.get('id')
+    }
+})
+
+Components.Subbly.Collection.Products = Components.Subbly.Collection.List.extend(
+{
+    model:       Components.Subbly.Model.Product
+  , serviceName: 'products'
+
+  , comparator: function( model )
+    {
+        return model.get('position')
+    }
+})
+
 Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 {
     model:       Components.Subbly.Model.User
@@ -21282,9 +21356,9 @@ Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 })
 var SubblyViewForm
 
-Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
+Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
 {
-    form:             false
+    _form:            false
   , $formInputs:      false
 
   , events: {
@@ -21346,7 +21420,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       if( _.isUndefined( options.id ) )
         return
 
-      this.form = {
+      this._form = {
           id:       options.id
         , element:  document.getElementById( options.id )
         , data:     options.data      || {}
@@ -21355,18 +21429,18 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
         , skip:     ( _.isUndefined( options.skip ) ) ? true  : options.skip      // ignore blank fields 
       }
 
-      this.form.$el = $( this.form.element )
+      this._form.$el = $( this._form.element )
     }
 
   , setRules: function( rules )
     {
-      if( this.form )
-        this.form.rules = rules
+      if( this._form )
+        this._form.rules = rules
     }
     
   , setExtra: function( key, value, init )
     {
-      Helpers.setNested( this.form.extra, key, value )
+      Helpers.setNested( this._form.extra, key, value )
     }
 
   , getFormValue: function( key, defaults )
@@ -21376,30 +21450,30 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       // if( _.isUndefined( key ) )
       //   throw new Error( 'getFormValue need a key' )
 
-      if( !this.form.data[ key ] )
+      if( !this._form.data[ key ] )
         return defaults
 
-      return this.form.data[ key ]
+      return this._form.data[ key ]
     }
 
   , validateForm: function()
     {
-      if( !this.form )
+      if( !this._form )
         return
 
-      this.$formInputs = this.form.$el.find(':input[name]')
+      this.$formInputs = this._form.$el.find(':input[name]')
 
       this.$formInputs.removeClass('warning')
 
-      var formData = this.$formInputs.serializeObject( this.form.skip )
+      var formData = this.$formInputs.serializeObject( this._form.skip )
 
-      this.form.data = Helpers.deepMerge( formData, this.form.extra )
+      this._form.data = Helpers.deepMerge( formData, this._form.extra )
 
       this.errors = []
   
-      for( var key in this.form.rules )
+      for( var key in this._form.rules )
       {
-        this._validateField( this.form.rules[ key ] )
+        this._validateField( this._form.rules[ key ] )
       }
 
       if (this.errors.length > 0)
@@ -21428,13 +21502,13 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 
   , addRules: function(fields)
     {
-      if( this.form )
+      if( this._form )
       {
         for (var i = -1, l = fields.length; ++i < l;) 
         {
           var field = fields[ i ]
 
-          this.form.rules.push({
+          this._form.rules.push({
               name:    field.name
             , rules:   field.rules
             , value:   null
@@ -21451,7 +21525,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
     {
       var rules = field.rules.split('|')
 
-      field.value = Helpers.getNested( this.form.data, field.name )
+      field.value = Helpers.getNested( this._form.data, field.name )
 
       // If the value is null and not required, we don't need to run through validation             
       if( field.rules.indexOf('required') === -1 
@@ -21504,7 +21578,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
           
           var _obj = {
                   field:   field
-                , element: this.form.element.querySelector('[name="'+ field.name + '"]')
+                , element: this._form.element.querySelector('[name="'+ field.name + '"]')
               }
           
           this.errors.push( _obj )
@@ -21532,9 +21606,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _$listItems:     false
   , collection:      false
 
-  , onSubblyInitialize: function()
+  // , onSubblyInitialize: function()
+  , initialize: function( options )
     {
-      console.log( 'initialize list view ' + this._viewName )
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // console.log( 'initialize list view ' + this._viewName )
 
       this.on( 'view::scrollend', this.nextPage, this )
       subbly.on( 'pagination::fetch', this.loadMore, this )
@@ -21810,6 +21888,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( this.collection )
         this.collection.resetPagination()
 
+      this._initialDisplay = false
+
       SubblyView.prototype.onClose.apply( this, arguments )
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
@@ -21872,7 +21952,7 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       subbly.on( 'user::loggedIn', function()
       {
         this.hide()
-        this.form.$el.reset()
+        this._form.$el.reset()
         this.btnReset()
 
       }, this)
@@ -21938,8 +22018,8 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       {
         var credentials  = 
             {
-                username: this.form.data.email
-              , password: this.form.data.password 
+                username: this._form.data.email
+              , password: this._form.data.password 
             }
           , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
           , login        = this

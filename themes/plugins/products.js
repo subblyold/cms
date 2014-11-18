@@ -62,8 +62,8 @@
       {
         // add view's event
         this.addEvents( {
-            'click li.js-trigger-goto': 'goTo'
-          , 'click a.js-toggle-view':   'toggleView'
+            'click .js-tigger-goto':  'goTo'
+          , 'click a.js-toggle-view': 'toggleView'
         } )
         
         this.tplList  = Handlebars.compile( TPL.products.listrow )
@@ -111,8 +111,10 @@
 
         this.collection.each( function( model )
         {
-          this._fragmentGrid += this.tplGrid({})
-          this._fragmentList += this.tplList({})
+          var json = model.toJSON()
+
+          this._fragmentGrid += this.tplGrid( json )
+          this._fragmentList += this.tplList( json )
 
         }, this )
 
@@ -150,9 +152,9 @@
       // go to customer profile
     , goTo: function( event )
       {
-        var uid = event.currentTarget.dataset.uid
+        var sku = event.currentTarget.dataset.sku
 
-        Subbly.trigger( 'hash::change', 'products/' + uid, true )
+        Subbly.trigger( 'hash::change', 'products/' + sku )
       }
 
     , toggleView: function( event )
@@ -172,16 +174,14 @@
       }
   }
 
-
-
   // REGISTER PLUGIN
   // --------------------------------
 
 
   Subbly.register( 'Subbly', 'Products', 
   {
-      'ViewList:Products':   ProductsList
-    , 'Controller:Products': Products
+      'ViewList:Products':     ProductsList
+    , 'Controller:Products':   Products
   })
 
 })( window )

@@ -1,8 +1,8 @@
 var SubblyViewForm
 
-Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
+Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
 {
-    form:             false
+    _form:            false
   , $formInputs:      false
 
   , events: {
@@ -64,7 +64,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       if( _.isUndefined( options.id ) )
         return
 
-      this.form = {
+      this._form = {
           id:       options.id
         , element:  document.getElementById( options.id )
         , data:     options.data      || {}
@@ -73,18 +73,18 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
         , skip:     ( _.isUndefined( options.skip ) ) ? true  : options.skip      // ignore blank fields 
       }
 
-      this.form.$el = $( this.form.element )
+      this._form.$el = $( this._form.element )
     }
 
   , setRules: function( rules )
     {
-      if( this.form )
-        this.form.rules = rules
+      if( this._form )
+        this._form.rules = rules
     }
     
   , setExtra: function( key, value, init )
     {
-      Helpers.setNested( this.form.extra, key, value )
+      Helpers.setNested( this._form.extra, key, value )
     }
 
   , getFormValue: function( key, defaults )
@@ -94,30 +94,30 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       // if( _.isUndefined( key ) )
       //   throw new Error( 'getFormValue need a key' )
 
-      if( !this.form.data[ key ] )
+      if( !this._form.data[ key ] )
         return defaults
 
-      return this.form.data[ key ]
+      return this._form.data[ key ]
     }
 
   , validateForm: function()
     {
-      if( !this.form )
+      if( !this._form )
         return
 
-      this.$formInputs = this.form.$el.find(':input[name]')
+      this.$formInputs = this._form.$el.find(':input[name]')
 
       this.$formInputs.removeClass('warning')
 
-      var formData = this.$formInputs.serializeObject( this.form.skip )
+      var formData = this.$formInputs.serializeObject( this._form.skip )
 
-      this.form.data = Helpers.deepMerge( formData, this.form.extra )
+      this._form.data = Helpers.deepMerge( formData, this._form.extra )
 
       this.errors = []
   
-      for( var key in this.form.rules )
+      for( var key in this._form.rules )
       {
-        this._validateField( this.form.rules[ key ] )
+        this._validateField( this._form.rules[ key ] )
       }
 
       if (this.errors.length > 0)
@@ -146,13 +146,13 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 
   , addRules: function(fields)
     {
-      if( this.form )
+      if( this._form )
       {
         for (var i = -1, l = fields.length; ++i < l;) 
         {
           var field = fields[ i ]
 
-          this.form.rules.push({
+          this._form.rules.push({
               name:    field.name
             , rules:   field.rules
             , value:   null
@@ -169,7 +169,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
     {
       var rules = field.rules.split('|')
 
-      field.value = Helpers.getNested( this.form.data, field.name )
+      field.value = Helpers.getNested( this._form.data, field.name )
 
       // If the value is null and not required, we don't need to run through validation             
       if( field.rules.indexOf('required') === -1 
@@ -222,7 +222,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
           
           var _obj = {
                   field:   field
-                , element: this.form.element.querySelector('[name="'+ field.name + '"]')
+                , element: this._form.element.querySelector('[name="'+ field.name + '"]')
               }
           
           this.errors.push( _obj )

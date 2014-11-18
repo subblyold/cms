@@ -1335,13 +1335,13 @@ input[type="search"] {
   z-index: 100;
 }
 .thmb.list .icon-handler {
-  left: 16px;
+  left: 15px;
 }
 .thmb.product {
   height: 217px;
 }
 .thmb.product .icon-handler {
-  right: 16px;
+  right: 15px;
 }
 .thmb:hover .icon-handler {
   opacity: 1;
@@ -1364,14 +1364,14 @@ input[type="search"] {
   height: 100%;
 }
 .list .thmb-img {
-  height: calc(100% - 76px);
+  height: calc(100% - 66px);
 }
 .thmb-capt {
   background: #ffffff;
   border-radius: 0 0 4px 4px;
   bottom: 0;
   left: 0;
-  padding: 20px 25px;
+  padding: 15px;
   position: absolute;
   width: 100%;
   z-index: 100;
@@ -1381,7 +1381,7 @@ input[type="search"] {
   text-overflow: ellipsis;
   white-space: nowrap;
   display: block;
-  width: 120px;
+  width: 130px;
 }
 .thmb-capt .badge {
   -webkit-transform: translate(0, -50%);
@@ -1390,7 +1390,7 @@ input[type="search"] {
   -o-transform: translate(0, -50%);
   transform: translate(0, -50%);
   position: absolute;
-  right: 25px;
+  right: 15px;
   top: 50%;
 }
 .dashboard {

@@ -1,4 +1,6 @@
 
+@product-thumb-padding: 15px;
+
 .thmb-col {
   font-size: 0;
   margin: 0 -@thumbnail-margin;
@@ -30,14 +32,14 @@
   }
 
   &.list .icon-handler {
-    left: @padding-large-horizontal;
+    left: @product-thumb-padding;
   }
 
   &.product {
     height: 217px;
     
     .icon-handler {
-      right: @padding-large-horizontal;
+      right: @product-thumb-padding;
     }  
   }
 
@@ -70,7 +72,7 @@
 }
 
 .list .thmb-img {
-  height: calc(100% - 76px);
+  height: calc(100% - 66px);
 }
 
 .thmb-capt {
@@ -78,7 +80,7 @@
   border-radius: 0 0 @border-radius-large @border-radius-large;
   bottom: 0;
   left: 0;
-  padding: @thumbnail-caption-padding-vert @thumbnail-caption-padding-horz;
+  padding: @product-thumb-padding;
   position: absolute;
   width: 100%;
   z-index: 100;
@@ -86,13 +88,13 @@
   .pdt-name {
     .text-overflow;
     display: block;
-    width: 120px;
+    width: 130px;
   }
 
   .badge {
     .transform( translate(0, -50%));
     position: absolute;
-    right: @thumbnail-caption-padding-horz;
+    right: @product-thumb-padding;
     top: 50%;
   }
 }

@@ -8,6 +8,8 @@
 //   return __( str )
 // })
 
+// Select/Checkbox/Radio button options helper
+// {{isSelected this default="string or reference" attribute="selected"}}
 Handlebars.registerHelper('isSelected', function( value, options )
 {
   if( _.isUndefined( options.hash ) )

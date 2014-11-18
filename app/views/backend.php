@@ -126,5 +126,6 @@
   <script src="<?= URL::to('/themes/plugins/orders.js') ?>"></script>
   <script src="<?= URL::to('/themes/plugins/dashboard.js') ?>"></script>
   <script src="<?= URL::to('/themes/plugins/products.js') ?>"></script>
+  <script src="<?= URL::to('/themes/plugins/product.js') ?>"></script>
 </body>
 </html>

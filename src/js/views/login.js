@@ -31,7 +31,7 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       subbly.on( 'user::loggedIn', function()
       {
         this.hide()
-        this.form.$el.reset()
+        this._form.$el.reset()
         this.btnReset()
 
       }, this)
@@ -97,8 +97,8 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       {
         var credentials  = 
             {
-                username: this.form.data.email
-              , password: this.form.data.password 
+                username: this._form.data.email
+              , password: this._form.data.password 
             }
           , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
           , login        = this
