@@ -11,19 +11,19 @@
           {{/isNew}}
         </h3>
       </div><!-- /.column-title -->
-      <form class="form c-pdg-h c-pdg-bas-t c-pdg-b">
+      <form class="form c-pdg-h c-pdg-bas-t c-pdg-b" id="subbly-product-entry">
         <div class="form-row">
           <div class="form-field input-8">
             <label class="form-label">
               Title
             </label>
-            <input type="text" class="form-input" value="{{name}}">
+            <input type="text" class="form-input" name="name" value="{{name}}">
           </div><!-- /.form-field -->
           <div class="form-field input-4">
             <label class="form-label">
               Reference
             </label>
-            <input type="text" class="form-input" value="{{sku}}">
+            <input type="text" class="form-input" name="sku" value="{{sku}}">
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <div class="form-row">
@@ -31,7 +31,7 @@
             <label class="form-label">
               Description
             </label>
-            <textarea class="form-input" row="5" col="3">{{description}}</textarea>
+            <textarea class="form-input" name="description" row="5" col="3">{{description}}</textarea>
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <div class="form-row">
@@ -39,7 +39,7 @@
             <label class="form-label">
               Category
             </label>
-            <p>
+            <p class="alignment-justify">
               <a href="javascript:;" class="btn btn-action">
                 Edit category
               </a>
@@ -53,13 +53,13 @@
             <label class="form-label">
               Price ($)
             </label>
-            <input type="text" class="form-input" value="{{price}}">
+            <input type="text" class="form-input" name="price" value="{{price}}">
           </div><!-- /.form-field -->
           <div class="form-field input-4 input-addon">
             <label class="form-label">
               Sales price
             </label>
-            <input type="text" class="form-input" value="{{sale_place}}">
+            <input type="text" class="form-input" name="sale_price" value="{{sale_place}}">
             <a href="javascript:;" class="form-input-addon">
               OFF
             </a>
@@ -70,7 +70,7 @@
             <label class="form-label">
               Quantity
             </label>
-            <input type="text" class="form-input" value="{{quantity}}">
+            <input type="text" class="form-input" name="quantity" value="{{quantity}}">
           </div><!-- /.form-field -->
         </div><!-- /.form-row -->
         <p class="c-pdg-bas-v">
@@ -89,9 +89,9 @@
               Status
             </label>
             <span class="form-select-holder">
-              <select class="form-input">
+              <select class="form-input" name="status">
                 {{#each statusList}}
-                <option value="0" {{isSelected this default=../status attribute="selected"}}>{{this}}</option>
+                <option value="{{this}}" {{isSelected this default=../status attribute="selected"}}>{{this}}</option>
                 {{/each}}
               </select>
             </span>
@@ -99,10 +99,10 @@
         </div><!-- /.form-row -->
         <hr class="hr" style="margin-left:-40px; margin-right:-40px;">
         <p class="ta-r c-pdg-v">
-          <a href="javascript:;" class="btn btn-borderless">
+          <a href="javascript:;" class="btn btn-borderless js-cancel-form">
             Cancel 
           </a>
-          <a href="javascript:;" class="btn btn-valid">
+          <a href="javascript:;" class="btn btn-valid js-submit-form">
             Save product
           </a>
         </p>
@@ -113,7 +113,7 @@
 <div class="view-third">
   <div class="nano">
     <div class="nano-content">
-      <div class="c-pdg-t c-pdg-h">
+      <div class="c-pdg-t product-gallery">
         <strong class="strong dp-b" style="margin:50px 0 10px;">Images</strong>
         <a href="javascript:;" class="btn btn-action dp-b ta-c">
           Add image

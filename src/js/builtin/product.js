@@ -13,8 +13,8 @@
       }
 
     , routes: {
-          'products/add-new':   'display'
-        , 'products/:sku':      'display'
+          'products/_new': 'display'
+        , 'products/:sku': 'display'
       }
 
       // Routes
@@ -23,7 +23,7 @@
     , display: function( sku ) 
       {
         var scope   = this
-          , isNew   = ( sku === 'add-new' )
+          , isNew   = ( sku === '_new' )
           , opts    = ( isNew ) ? {} : { sku: sku }
           , product = subbly.api('Subbly.Model.Product', opts )
 

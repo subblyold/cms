@@ -40,7 +40,6 @@
         Model:      {}
       , Collection: {}
       , View:       {}
-      , Supervisor: {}
       , Controller: {}
       , Component:  {}
     }

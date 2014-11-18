@@ -8,7 +8,7 @@
 
       <form class="fl-r">
         <div class="cl-f">
-          <a href="javascript:;" class="btn btn-action fl-l">
+          <a href="javascript:;" class="btn btn-action fl-l js-trigger-new">
             Add product
           </a>
           <p class="input-search-holder fl-l c-mrg-bas-l">

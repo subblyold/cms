@@ -62,7 +62,8 @@
         this.addEvents( {
             'click .js-tigger-goto':  'goTo'
           , 'click a.js-toggle-view': 'toggleView'
-        } )
+          , 'click a.js-trigger-new': 'addNew'
+        })
         
         this.tplList  = Handlebars.compile( TPL.products.listrow )
         this.tplGrid  = Handlebars.compile( TPL.products.listgrid )
@@ -90,7 +91,7 @@
         //   return
 
         // fetch flag
-        // this._isLoadingMore = false
+        this._isLoadingMore = false
 
         // var $loader = $( document.getElementById( 'list-pagination-loader') )
 
@@ -169,6 +170,11 @@
         $( event.currentTarget ).addClass('active')
 
         this._$window.trigger('resize')
+      }
+
+    , addNew: function()
+      {
+        subbly.trigger( 'hash::change', 'products/_new' )
       }
   }
 
