@@ -60,13 +60,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Trigger 'pagination::fetch' event
   , nextPage: function()
     {
+      console.groupCollapsed('call next page' )
+
       if( this._isLoadingMore )
+      {
+        console.info('already loading')
+        console.groupEnd()
         return
+      }
 
       if( !this.collection.nextPage() )
+      {
+        console.info('no more page')
+        console.groupEnd()
         return
+      }
 
       subbly.trigger( 'pagination::fetch' )
+
+      console.info('call next page')
+      console.groupEnd()
     }
 
     // Test if there a previous page available 
@@ -110,16 +123,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Render list's row
   , render: function()
     {
+      console.groupCollapsed( 'render collection items' )
+
       if( !this.collection )
+      {
+        console.warn('ABORT, no collection items')
+        console.groupEnd()
         return
+      }
 
       // fetch flag
       this._isLoadingMore = false
+      console.info('remove `_isLoadingMore` flag')
 
       var $loader = $( document.getElementById( 'list-pagination-loader') )
 
       if( $loader.length )
+      {
         $loader.remove()
+        console.info('remove loader')
+      }
 
       // this._viewsPointers = {}
 
@@ -127,6 +150,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       {
         subbly.trigger( 'loader::hide' )
         this.displayInviteMsg()
+        console.warn('Collection empty, display invite message')
+        console.groupEnd()
         return
       }
 
@@ -161,9 +186,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this._$list.append( this._fragment )
         this._$listItems = this._$list.find('.list-row')
 
+        console.info('append DOM\'s fragment')
+
         if( !this._initialDisplay )
         {
           this._initialDisplay = true
+
+          console.info('it was the first call to the collection')
 
           if( this.onInitialRender )
             this.onInitialRender()
@@ -176,6 +205,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this.onAfterRender()
       
       subbly.trigger( 'loader::hide' )
+      console.groupEnd()
     }
 
     // TODO: to design
