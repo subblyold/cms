@@ -69,39 +69,7 @@
         </div><!-- /.user-nav-container -->
       </div><!-- /.user-nav -->
       <hr>
-      <ul class="bo-nav" id="bo-nav">
-<!--         <li>
-          <a href="javascript:;" class="fst-nav js-trigger-go-home">
-            Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;" class="fst-nav js-trigger-go-orders active">
-            Orders
-          </a>
-          <span class="badge product">9</span>
-        </li>
-        <li>
-          <a href="javascript:;" class="fst-nav js-trigger-go-customers">
-            Customers
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;" class="fst-nav js-trigger-go-products">
-            Products
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;" class="fst-nav js-trigger-go-settings">
-            Settings
-          </a>
-        </li>
-        <li class="fst-nav js-trigger-go-hangard">
-          <a href="javascript:;">
-            Hangar
-          </a>
-        </li> -->
-      </ul><!-- /.subbly-nav -->
+      <ul class="bo-nav" id="bo-nav"></ul><!-- /.subbly-nav -->
     </section><!-- /.main-nav -->
     <section class="main-view" id="main-view"></section><!-- /.main-view -->
   </div><!-- /. container -->
