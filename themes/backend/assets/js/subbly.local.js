@@ -22079,7 +22079,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
       this.$links = this.$el.find('a.js-trigger-go')
 
-      subbly.on( 'hash::changed', this.hashChanged, this )
+      subbly.on( 'mainnav::hashchanged', this.hashChanged, this )
 
       this.userNav()
 
@@ -22520,6 +22520,10 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       _tplStructure:   'full'
     , _viewsNames:     'Subbly.View.ProductEntry'
     , _controllerName: 'product'
+    , _mainNavRegister:
+      {
+        defaultUrl: 'products'
+      }
 
     , routes: {
           'products/add-new':   'display'
@@ -22850,6 +22854,12 @@ var Router = Backbone.Router.extend(
     {
       this._currentCtr = ctr
 
+      if( 
+              ctr._mainNavRegister
+          &&  ctr._mainNavRegister.defaultUrl
+        )
+        subbly.trigger( 'mainnav::hashchanged', ctr._mainNavRegister.defaultUrl )
+
       return this
     }
 
@@ -22899,7 +22909,14 @@ var Router = Backbone.Router.extend(
 
   , registerMainNav: function( navItem )
     {
-      this._mainNav.push( navItem )
+      var defaults = {
+        order: 0
+      }
+      
+      if( navItem.name )
+      {
+        this._mainNav.push(  $.extend( {}, defaults, navItem ) ) 
+      }
     }
 })
 

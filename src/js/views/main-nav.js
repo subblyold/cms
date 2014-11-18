@@ -20,7 +20,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
       this.$links = this.$el.find('a.js-trigger-go')
 
-      subbly.on( 'hash::changed', this.hashChanged, this )
+      subbly.on( 'mainnav::hashchanged', this.hashChanged, this )
 
       this.userNav()
 

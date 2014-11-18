@@ -7,6 +7,10 @@
       _tplStructure:   'full'
     , _viewsNames:     'Subbly.View.ProductEntry'
     , _controllerName: 'product'
+    , _mainNavRegister:
+      {
+        defaultUrl: 'products'
+      }
 
     , routes: {
           'products/add-new':   'display'

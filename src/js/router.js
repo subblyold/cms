@@ -86,6 +86,12 @@ var Router = Backbone.Router.extend(
     {
       this._currentCtr = ctr
 
+      if( 
+              ctr._mainNavRegister
+          &&  ctr._mainNavRegister.defaultUrl
+        )
+        subbly.trigger( 'mainnav::hashchanged', ctr._mainNavRegister.defaultUrl )
+
       return this
     }
 
@@ -135,6 +141,13 @@ var Router = Backbone.Router.extend(
 
   , registerMainNav: function( navItem )
     {
-      this._mainNav.push( navItem )
+      var defaults = {
+        order: 0
+      }
+      
+      if( navItem.name )
+      {
+        this._mainNav.push(  $.extend( {}, defaults, navItem ) ) 
+      }
     }
 })
