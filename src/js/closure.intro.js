@@ -41,8 +41,15 @@
 
   var Components = 
   {
-      // vendor level
-      Subbly: $.extend( {}, defaultFwObj )
-
+    // TODO: #18
+    // Subbly: $.extend( {}, defaultFwObj )
+    Subbly: {
+        Model:      {}
+      , Collection: {}
+      , View:       {}
+      , Supervisor: {}
+      , Controller: {}
+      , Component:  {}
+    }
   }
 

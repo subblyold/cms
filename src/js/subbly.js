@@ -435,7 +435,17 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
   // create a new Vendor
   if( !Components[ vendor ] )
-    Components[ vendor ] = $.extend( {}, defaultFwObj )
+  {
+    // TODO: #18
+    Components[ vendor ] = {
+          Model:      {}
+        , Collection: {}
+        , View:       {}
+        , Supervisor: {}
+        , Controller: {}
+        , Component:  {}
+      }
+  }
 
   var alias
 
