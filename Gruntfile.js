@@ -170,6 +170,8 @@ module.exports = function(grunt)
                   , 'src/js/controllers/*.js'
                   , 'src/js/views/*.js'
 
+                  , 'src/js/builtin/*.js'
+
                   , 'src/js/router.js'
                   , 'src/js/closure.utils.js'
                   , 'src/js/closure.outro.js'

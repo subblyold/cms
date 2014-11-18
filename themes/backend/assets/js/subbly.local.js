@@ -19863,9 +19863,16 @@ scroll2sickyList.prototype.update = function( scrollTop )
 
   var Components = 
   {
-      // vendor level
-      Subbly: $.extend( {}, defaultFwObj )
-
+    // TODO: #18
+    // Subbly: $.extend( {}, defaultFwObj )
+    Subbly: {
+        Model:      {}
+      , Collection: {}
+      , View:       {}
+      , Supervisor: {}
+      , Controller: {}
+      , Component:  {}
+    }
   }
 
 
@@ -21104,7 +21111,17 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
   // create a new Vendor
   if( !Components[ vendor ] )
-    Components[ vendor ] = $.extend( {}, defaultFwObj )
+  {
+    // TODO: #18
+    Components[ vendor ] = {
+          Model:      {}
+        , Collection: {}
+        , View:       {}
+        , Supervisor: {}
+        , Controller: {}
+        , Component:  {}
+      }
+  }
 
   var alias
 
@@ -22164,6 +22181,596 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       $target.addClass('active')
     }
 })
+
+
+  // CONTROLLER
+  // --------------------------------
+
+  var Customers = 
+  {
+      _tplStructure:   'half'
+    , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.CustomerSheet' ]
+    , _controllerName: 'customers'
+    , _listDisplayed:  false
+    , _mainNavRegister:
+      {
+          name:       'Customers'
+        , order:      180
+        , defaultUrl: 'customers'
+      }
+
+    , routes: {
+          'customers':      'display'
+        , 'customers/:uid': 'display'
+      }
+
+    , onRemove: function()
+      {
+        this._listDisplayed = false
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function( uid ) 
+      {
+        if( !this._listDisplayed )
+        {
+          var scope = this
+
+          this.displayView( function()
+          {
+            if( !_.isNull( uid ) )
+              scope.sheet( uid )
+          })
+
+          return
+        }
+        
+        if( !_.isNull( uid ) )
+          this.sheet( uid )
+        else
+          this.getViewByPath( 'Subbly.View.Customers' )
+            .onInitialRender()
+      }
+
+    , displayView: function( sheetCB )
+      {
+        var scope  = this
+
+        subbly.fetch( subbly.api('Subbly.Collection.Users'),
+        {
+            data:   {
+                offset: 0
+              , limit:  5
+            }
+          , success: function( collection, response )
+            {
+              scope._listDisplayed = true
+              scope.getViewByPath( 'Subbly.View.Customers' )
+                .setValue( 'collection', collection )
+                .displayTpl()
+
+              if( _.isFunction( sheetCB ) )
+                sheetCB()
+            }
+        }, this )
+      }
+
+    , sheet: function(  uid ) 
+      {
+        this.getViewByPath( 'Subbly.View.Customers' ).setActiveRow( uid )
+
+        var scope = this
+          , user  = subbly.api('Subbly.Model.User', { uid: uid })
+
+        subbly.fetch( user,
+        {
+            data: { includes: ['addresses', 'orders'] }
+          , success: function( model, response )
+            {
+              var json = model.toJSON()
+
+              json.displayName = model.displayName()
+
+              scope.getViewByPath( 'Subbly.View.CustomerSheet' )
+                .setValue( 'model', model )
+                .displayTpl( json )
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+
+  // List's row view (optional)
+  // use it if you need to have 
+  // full control on model (delete, etc.)
+  // var CustomersRow = 
+  // {
+  //     className: 'cln-lst-rw cust-row js-trigger-goto'
+  //   , _viewName: 'CustomerRow'
+
+  //   , onInitialize: function( options )
+  //     {
+  //       this.tplRow = options.tpl
+  //     }
+
+  //   , render: function()
+  //     {
+  //       var html = this.tplRow({
+  //           displayName: this.model.displayName()
+  //         , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
+  //       })
+
+  //       this.$el.html( html )
+
+  //       this.el.dataset.uid  = this.model.get('uid')
+
+  //       return this
+  //     }
+
+  //   , goTo: function( event )
+  //     {
+  //       this.callController( 'sheet', this.model.get('uid') )
+  //     }
+  // }
+
+  // Customers List view
+  var CustomersList = 
+  {
+      _viewName:     'Customers'
+    , _viewTpl:      TPL.customers.list
+    , _classlist:    ['view-half-list']
+    , _listSelector: '#customers-list'
+    , _tplRow:        TPL.customers.listrow
+    // , _viewRow:       'subbly.View.CustomerRow'
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {'click li.js-trigger-goto':  'goTo'} )
+      }
+
+      // Call on list first render
+    , onInitialRender: function()
+      {
+        var $firstRow = this.getListEl().children(':first')
+          , uid       = $firstRow.attr('data-uid')
+
+        this.callController( 'sheet', uid )
+      }
+
+      // Build single list's row
+    , displayRow: function( model )
+      {
+        var html = this._tplRowCompiled({
+            displayName: model.displayName()
+          , createdDate: moment.utc( model.get('created_at') ).fromNow()
+          , uid:         model.get('uid')
+        })
+
+        return html
+      }
+
+      // Higthligth active row
+    , setActiveRow: function( uid )
+      {
+        var $listRows  = this.getListRows()
+          , $activeRow = $listRows.filter('[data-uid="' + uid + '"]')
+
+        $listRows.removeClass('active')
+        $activeRow.addClass('active')
+      }
+
+      // go to customer profile
+    , goTo: function( event )
+      {
+        var uid = event.currentTarget.dataset.uid
+
+        subbly.trigger( 'hash::change', 'customers/' + uid, true )
+        // this.callController( 'sheet', uid )
+      }
+  }
+
+  // Customers Sheet view
+  var CustomerSheet = 
+  {
+      _viewName:     'CustomerSheet'
+    , _viewTpl:      TPL.customers.sheet
+  }
+
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Customers', 
+  {
+      'ViewList:Customers':   CustomersList
+    // , 'ViewListRow:CustomerRow':   CustomersRow
+    , 'View:CustomerSheet':   CustomerSheet
+    , 'Controller:Customers': Customers
+  })
+
+
+
+  var dashboard = 
+  {
+      _controllerName: 'dashboard'
+    , _viewsNames:     'Subbly.View.DashboardView'
+    , _mainNavRegister:
+      {
+          name:       'Dashboard'
+        , order:      200
+        , defaultUrl: 'dashboard'
+      }
+
+    , onInitialize: function()
+      {
+  // console.log( 'onInitialize Dashboard')
+      }
+
+    , routes: {
+          'dashboard': 'list'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , list: function() 
+      {
+        this.getViewByPath( this._viewsNames ).displayTpl()
+      }
+  }
+
+  var DashboardView = 
+  {
+      _viewName: 'Dashboard'
+    , _viewTpl:  TPL.dashboard.index
+
+    , display: function()
+      {
+  console.info('display dashboard view')
+      }
+
+    , onClose: function()
+      {
+  console.info('close dashboard view')
+      }
+  }
+
+  Subbly.register('Subbly', 'Dashboard', {
+      'View:DashboardView':   DashboardView
+    , 'Controller:dashboard': dashboard
+  })
+
+
+  var Orders = 
+  {
+      _tplStructure:   'half' // full|half|third
+    , _viewsNames:     [ 'Subbly.View.Orders', 'Subbly.View.Order' ]
+    , _controllerName: 'orders'
+    , _mainNavRegister:
+      {
+          name:       'Orders'
+        , order:      190
+        , defaultUrl: 'orders'
+      }
+
+    , routes: {
+          'orders':      'list'
+        , 'orders/:uid': 'details'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , list: function() 
+      {
+        this._mainRouter._currentView = this
+
+        this.getViewByPath( 'Subbly.View.Orders' ).displayTpl()
+      }
+
+    , details: function( uid ) {}
+  }
+
+  var OrdersUserRow = 
+  {
+      tagName:   'li'
+    , className: 'cln-lst-rw cust-row js-trigger-goto'
+    , _viewName: 'Order'
+
+    , onInitialize: function( options )
+      {
+        this.tplRow = options.tpl
+      }
+
+    , render: function()
+      {
+        var html = this.tplRow({
+            displayName: this.model.displayName()
+          , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
+        })
+
+        this.$el.html( html )
+
+        return this
+      }
+  }
+
+  var OrdersList = 
+  {
+      _viewName:     'Orders'
+    , _viewTpl:      TPL.orders.list
+    , _classlist:    ['view-half-list']
+    , _listSelector: '#orders-list'
+    , _tplRow:        TPL.orders.listrow
+    , _viewRow:       'Subbly.View.Order'
+  }
+
+  subbly.register( 'Subbly', 'Orders', 
+  {
+      'ViewList:Orders':   OrdersList
+    , 'ViewListRow:Order': OrdersUserRow
+    , 'Controller:Orders': Orders
+  })
+
+
+  // CONTROLLER
+  // --------------------------------
+
+  var Product = 
+  {
+      _tplStructure:   'full'
+    , _viewsNames:     'Subbly.View.ProductEntry'
+    , _controllerName: 'product'
+
+    , routes: {
+          'products/add-new':   'display'
+        , 'products/:sku':      'display'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function( sku ) 
+      {
+        var scope   = this
+          , isNew   = ( sku === 'add-new' )
+          , opts    = ( isNew ) ? {} : { sku: sku }
+          , product = subbly.api('Subbly.Model.Product', opts )
+
+        subbly.fetch( product,
+        {
+            data: { includes: ['options', 'images', 'categories'] }
+          , success: function( model, response )
+            {
+              // TODO: get status list from config
+              var json = model.toJSON()
+              
+              json.isNew      = isNew
+              json.statusList = [ 'draft', 'active', 'hidden', 'sold_out', 'coming_soon' ]
+
+              scope.getViewByPath( 'Subbly.View.ProductEntry' )
+                .setValue( 'model', model )
+                .displayTpl( json )
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+  // Product sheet view
+  var ProductEntry = 
+  {
+      _viewName:     'ProductEntry'
+    , _viewTpl:      TPL.products.entry
+  }
+
+
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Products', 
+  {
+      'ViewForm:ProductEntry': ProductEntry
+    , 'Controller:Product':    Product
+  })
+
+
+  // CONTROLLER
+  // --------------------------------
+
+  var Products = 
+  {
+      _tplStructure:   'full'
+    , _viewsNames:     'Subbly.View.Products'
+    , _controllerName: 'products'
+    , _mainNavRegister:
+      {
+          name:       'Products'
+        , order:      170
+        , defaultUrl: 'products'
+      }
+
+    , routes: {
+          'products':      'display'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function() 
+      {
+        var scope  = this
+
+        subbly.fetch( subbly.api('Subbly.Collection.Products'),
+        {
+            data:   {
+                offset: 0
+              , limit:  5
+            }
+          , success: function( collection, response )
+            {
+              scope.getViewByPath( 'Subbly.View.Products' )
+                .setValue( 'collection', collection )
+                .displayTpl()
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+
+
+  // Products List view
+  var ProductsList = 
+  {
+      _viewName:     'Products'
+    , _viewTpl:      TPL.products.list
+    , _displayMode:  'grid'
+    , _cookieName:   'SubblyProductsViewMode'
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {
+            'click .js-tigger-goto':  'goTo'
+          , 'click a.js-toggle-view': 'toggleView'
+        } )
+        
+        this.tplList  = Handlebars.compile( TPL.products.listrow )
+        this.tplGrid  = Handlebars.compile( TPL.products.listgrid )
+        this._$window = $(window)
+
+      }
+
+    , onDisplayTpl: function()
+      {
+        this._$list = $( document.getElementById('products-view-list') )
+        this._$grid = $( document.getElementById('products-view-grid') )
+
+        this._$viewItems = this._$list.add( this._$grid )
+        this._$triggers  = this.$el.find('a.js-toggle-view')
+
+        this.render()
+
+        return this
+      }
+
+      // Render list's row
+    , render: function()
+      {
+        // if( !this.collection )
+        //   return
+
+        // fetch flag
+        // this._isLoadingMore = false
+
+        // var $loader = $( document.getElementById( 'list-pagination-loader') )
+
+        // if( $loader.length )
+        //   $loader.remove()
+
+        // if( !this.collection.length && this._inviteTxt )
+        // {
+        //   subbly.trigger( 'loader::hide' )
+        //   this.displayInviteMsg()
+        //   return
+        // }
+
+        this._fragmentGrid = ''
+        this._fragmentList = ''
+
+        this.collection.each( function( model )
+        {
+          var json = model.toJSON()
+
+          this._fragmentGrid += this.tplGrid( json )
+          this._fragmentList += this.tplList( json )
+
+        }, this )
+
+        if( this._fragmentGrid !== '' )
+        {
+          this._$list.append( this._fragmentList )
+          this._$grid.append( this._fragmentGrid )
+
+          this._$listItems = this._$list.find('li.pdt-lst-itm')
+          this._$gridItems = this._$grid.find('a.list')
+
+          if( !this._initialDisplay )
+          {
+            this._initialDisplay = true
+
+            var viewMode = subbly.getCookie( this._cookieName )
+
+            if( !viewMode )
+              viewMode = this._displayMode
+            else
+              this._displayMode = viewMode
+
+            this._$triggers.filter('[data-view="' + viewMode + '"]').addClass('active')
+
+            $( document.getElementById( 'products-view-' + viewMode ) ).removeClass('dp-n')
+
+          }
+
+          delete this._fragment
+        }
+
+        subbly.trigger( 'loader::hide' )
+      }
+
+      // go to customer profile
+    , goTo: function( event )
+      {
+        var sku = event.currentTarget.dataset.sku
+
+        subbly.trigger( 'hash::change', 'products/' + sku )
+      }
+
+    , toggleView: function( event )
+      {
+        this._displayMode = event.currentTarget.dataset.view
+
+        subbly.setCookie( this._cookieName, this._displayMode )
+
+        this._$viewItems.addClass('dp-n')
+        this._$triggers.removeClass('active')
+
+        $( document.getElementById( 'products-view-' + this._displayMode ) ).removeClass('dp-n')
+
+        $( event.currentTarget ).addClass('active')
+
+        this._$window.trigger('resize')
+      }
+  }
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Products', 
+  {
+      'ViewList:Products':     ProductsList
+    , 'Controller:Products':   Products
+  })
 
 
 var Router = Backbone.Router.extend(
