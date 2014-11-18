@@ -435,17 +435,7 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
   // create a new Vendor
   if( !Components[ vendor ] )
-  {
-    // TODO: #18
-    Components[ vendor ] = {
-          Model:      {}
-        , Collection: {}
-        , View:       {}
-        , Supervisor: {}
-        , Controller: {}
-        , Component:  {}
-      }
-  }
+    Components[ vendor ] = defautlsFwObj()
 
   var alias
 

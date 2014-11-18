@@ -19852,20 +19852,13 @@ scroll2sickyList.prototype.update = function( scrollTop )
     , subbly        = false
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
-    , defaultFwObj  = {
-          Model:      {}
-        , Collection: {}
-        , View:       {}
-        , Supervisor: {}
-        , Controller: {}
-        , Component:  {}
-      }
 
-  var Components = 
+  // Extend default 
+  // components structure
+  // for each Vendors
+  var defautlsFwObj = function()
   {
-    // TODO: #18
-    // Subbly: $.extend( {}, defaultFwObj )
-    Subbly: {
+    var defaults  = {
         Model:      {}
       , Collection: {}
       , View:       {}
@@ -19873,6 +19866,13 @@ scroll2sickyList.prototype.update = function( scrollTop )
       , Controller: {}
       , Component:  {}
     }
+
+    return $.extend( {}, defaults, {} )
+  }
+
+  var Components = 
+  {
+    Subbly: defautlsFwObj()
   }
 
 
@@ -21111,17 +21111,7 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
   // create a new Vendor
   if( !Components[ vendor ] )
-  {
-    // TODO: #18
-    Components[ vendor ] = {
-          Model:      {}
-        , Collection: {}
-        , View:       {}
-        , Supervisor: {}
-        , Controller: {}
-        , Component:  {}
-      }
-  }
+    Components[ vendor ] = defautlsFwObj()
 
   var alias
 

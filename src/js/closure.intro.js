@@ -30,20 +30,13 @@
     , subbly        = false
     , AppRouter     = false
     , transitionEnd = whichTransitionEvent()
-    , defaultFwObj  = {
-          Model:      {}
-        , Collection: {}
-        , View:       {}
-        , Supervisor: {}
-        , Controller: {}
-        , Component:  {}
-      }
 
-  var Components = 
+  // Extend default 
+  // components structure
+  // for each Vendors
+  var defautlsFwObj = function()
   {
-    // TODO: #18
-    // Subbly: $.extend( {}, defaultFwObj )
-    Subbly: {
+    var defaults  = {
         Model:      {}
       , Collection: {}
       , View:       {}
@@ -51,5 +44,12 @@
       , Controller: {}
       , Component:  {}
     }
+
+    return $.extend( {}, defaults, {} )
+  }
+
+  var Components = 
+  {
+    Subbly: defautlsFwObj()
   }
 
