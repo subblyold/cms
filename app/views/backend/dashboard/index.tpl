@@ -8,7 +8,7 @@
       <a href="javascript:;" class="btn btn-action">
         Set your shipping
       </a>
-      <a href="javascript:;" class="btn btn-product">
+      <a href="javascript:;" class="btn btn-product js-trigger-new-product">
         Add a product
       </a>
     </p>

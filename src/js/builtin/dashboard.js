@@ -33,14 +33,18 @@
       _viewName: 'Dashboard'
     , _viewTpl:  TPL.dashboard.index
 
-    , display: function()
+      // On view initialize
+    , onInitialize: function()
       {
-  console.info('display dashboard view')
+        // add view's event
+        this.addEvents( {
+            'click a.js-trigger-new-product': 'addNew'
+        })
       }
 
-    , onClose: function()
+    , addNew: function()
       {
-  console.info('close dashboard view')
+        subbly.trigger( 'hash::change', 'products/_new' )
       }
   }
 
