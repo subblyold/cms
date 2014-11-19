@@ -3,23 +3,24 @@
 {
   'use strict';
 
-  // Defined what event we must call at the end of a CSS transition
-  var whichTransitionEvent = function ()
-  {
-    var t
-      , el = document.createElement('fakeelement')
-      , transitions = 
-        {
-            'transition':       'transitionend'
-          , 'OTransition':      'oTransitionEnd'
-          , 'MozTransition':    'transitionend'
-          , 'WebkitTransition': 'webkitTransitionEnd'
-        }
-
-    for( t in transitions )
-      if( el.style[ t ] !== undefined )
-        return transitions[ t ]
+  // Defined what event we must call at the end of a CSS transition/animation
+  var animEndEventNames = {
+      WebkitAnimation: 'webkitAnimationEnd'
+    , OAnimation:      'oAnimationEnd'
+    , msAnimation:     'MSAnimationEnd'
+    , animation:       'animationend'
   }
+
+  var transitionEndEventNames = {
+      WebkitTransition: 'webkitTransitionEnd'
+    , OTransition:      'oTransitionEnd'
+    , MozTransition:    'transitionend'
+    , transition:       'transitionend'
+  }
+
+  var transitionEndEventName = transitionEndEventNames[ Modernizr.prefixed( 'transition' ) ]
+    , animEndEventName       = animEndEventNames[ Modernizr.prefixed( 'animation' ) ]
+
 
   // Prepare our Variables
   var document      = window.document
@@ -29,7 +30,6 @@
     , $body         = $( document.body )
     , subbly        = false
     , AppRouter     = false
-    , transitionEnd = whichTransitionEvent()
 
   // Extend default 
   // components structure

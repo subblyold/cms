@@ -72,9 +72,13 @@ Components.Subbly.View.Login = SubblyViewForm.extend(
       var login = this
 
       this.$el
-        .one( transitionEnd, function()
+        .one( transitionEndEventName, function()
         {
-          login.$el.hide()
+          login
+            .$el
+            .removeClass('active')
+            .removeClass('logged')
+            .hide()
         })
         .addClass('logged')
     }
