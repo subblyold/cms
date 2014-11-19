@@ -42,6 +42,7 @@
       </form><!-- /.login-box -->
     </div><!-- /.login-contenair -->
   </div><!-- /.login -->
+  <div class="feedback-overlay" id="feedback-overlay"></div>
   <div class="container">
     <section class="main-nav">
       <a href="javascript:;" class="main-logo js-trigger-go-home">

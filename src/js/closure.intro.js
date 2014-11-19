@@ -21,7 +21,6 @@
   var transitionEndEventName = transitionEndEventNames[ Modernizr.prefixed( 'transition' ) ]
     , animEndEventName       = animEndEventNames[ Modernizr.prefixed( 'animation' ) ]
 
-
   // Prepare our Variables
   var document      = window.document
     , $             = window.jQuery

@@ -68,7 +68,6 @@
         this.tplList  = Handlebars.compile( TPL.products.listrow )
         this.tplGrid  = Handlebars.compile( TPL.products.listgrid )
         this._$window = $(window)
-
       }
 
     , onDisplayTpl: function()

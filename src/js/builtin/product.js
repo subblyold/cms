@@ -70,10 +70,11 @@
       {
         subbly.store( this.model, this.getFormValues(), 
         {
-            success: function( model, response  )
-            {
-              subbly.trigger( 'hash::change', 'products' )
-            }
+          success: function( model, response  )
+          {
+            subbly.feedback( 'success', '<p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>')
+            subbly.trigger( 'hash::change', 'products' )
+          }
         })
       }
   }

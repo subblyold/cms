@@ -22,11 +22,16 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
+  // feedback instance
+  this._feedback = new Feedback()
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
+  this._event.on( 'feedback::add',  this.feedback,       this )
+  this._event.on( 'feedback::done', this.feedbackDone,   this )
 
   this._viewAllowedType = [ 
       'Model'
@@ -195,6 +200,29 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
   this._event.trigger( args1, args2, args3, args4, args5, args6, args7 )
 }
 
+/*
+ * Trigger loader
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.feedback = function( type, message )
+{
+  this._feedback.add( type, message )
+}
+
+/*
+ * Trigger loader
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.feedbackDone = function( state )
+{
+  // this._feedback.setState( state )
+  this._feedback.done()
+}
+
 
 // CREDENTIALS / LOGIN
 //-------------------------------
@@ -361,6 +389,7 @@ SubblyCore.prototype.store = function( model, data, options, context )
 {
   var data    = data || false
     , options = options || {}
+    , scope   = this
 
   if( !data )
     throw new Error( 'No data pass to Subbly.store' )
@@ -371,15 +400,21 @@ SubblyCore.prototype.store = function( model, data, options, context )
 
   // model.clear({silent: true})
 
+  this.trigger( 'feedback::add' )
+
   model.save( options.json, 
   {
       success: function( model, response, opts )
       {
+        scope.trigger( 'feedback::done', 'success' )
+
         if( options.success && _.isFunction( options.success ) )
           options.success( model, response, opts )
       }
     , error: function( model, response, opts )
       {
+        scope.trigger( 'feedback::done', 'error' )
+
         if( options.error && _.isFunction( options.error ) )
           options.error( model, response, opts  )
       }

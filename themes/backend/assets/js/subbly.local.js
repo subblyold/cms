@@ -19825,23 +19825,23 @@ scroll2sickyList.prototype.update = function( scrollTop )
 {
   'use strict';
 
-  // Defined what event we must call at the end of a CSS transition
-  var whichTransitionEvent = function ()
-  {
-    var t
-      , el = document.createElement('fakeelement')
-      , transitions = 
-        {
-            'transition':       'transitionend'
-          , 'OTransition':      'oTransitionEnd'
-          , 'MozTransition':    'transitionend'
-          , 'WebkitTransition': 'webkitTransitionEnd'
-        }
-
-    for( t in transitions )
-      if( el.style[ t ] !== undefined )
-        return transitions[ t ]
+  // Defined what event we must call at the end of a CSS transition/animation
+  var animEndEventNames = {
+      WebkitAnimation: 'webkitAnimationEnd'
+    , OAnimation:      'oAnimationEnd'
+    , msAnimation:     'MSAnimationEnd'
+    , animation:       'animationend'
   }
+
+  var transitionEndEventNames = {
+      WebkitTransition: 'webkitTransitionEnd'
+    , OTransition:      'oTransitionEnd'
+    , MozTransition:    'transitionend'
+    , transition:       'transitionend'
+  }
+
+  var transitionEndEventName = transitionEndEventNames[ Modernizr.prefixed( 'transition' ) ]
+    , animEndEventName       = animEndEventNames[ Modernizr.prefixed( 'animation' ) ]
 
   // Prepare our Variables
   var document      = window.document
@@ -19851,7 +19851,6 @@ scroll2sickyList.prototype.update = function( scrollTop )
     , $body         = $( document.body )
     , subbly        = false
     , AppRouter     = false
-    , transitionEnd = whichTransitionEvent()
 
   // Extend default 
   // components structure
@@ -19862,7 +19861,6 @@ scroll2sickyList.prototype.update = function( scrollTop )
         Model:      {}
       , Collection: {}
       , View:       {}
-      , Supervisor: {}
       , Controller: {}
       , Component:  {}
     }
@@ -20315,6 +20313,78 @@ var xhrCall = function( options )
   return xhr
 }
 
+var Feedback = function()
+{
+  this.messageCache = []
+  this.wrapper      = document.body
+  this.overlay      = document.getElementById('feedback-overlay')
+}
+
+/*
+ *  type 'success|error|warning'
+ */
+Feedback.prototype.add = function( type, message )
+{
+  this.entry = document.createElement( 'div' )
+  this.entry.className = 'feedback'
+
+  var inner = document.createElement( 'div' ) 
+  inner.className = 'feedback-inner'
+  inner.innerHTML = message
+
+  this.entry.appendChild( inner )
+
+  this.wrapper.insertBefore( this.entry, document.body.firstChild )
+
+  this.entry.classList.add('show')
+  this.overlay.classList.add('show')
+}
+
+/*
+ * 
+ */
+Feedback.prototype.setState = function( state )
+{
+  this.entry.classList.add( state )
+}
+
+/*
+ * 
+ */
+Feedback.prototype.done = function()
+{
+  this.entry.classList.remove('show')
+  this.overlay.classList.remove('show')
+
+  var $this = $( this.entry )
+
+  $this
+    .one( transitionEndEventName, function()
+    {
+console.log('transitionEndEventName callback')
+      // $this
+      //   .removeClass('done')
+    })
+    .addClass('done')
+}
+
+/*
+ *  type 'success|error|warning'
+ */
+Feedback.prototype.dismiss = function()
+{
+  this.entry.classList.remove('show')
+  this.overlay.classList.remove('show')
+
+  $( this.entry )
+    .one( animEndEventName, function()
+    {
+      $( this ).remove()
+    })
+    .addClass('hide')
+}
+
+
 // Subbly's Backbone base model
 
 var SubblyModel = Backbone.Model.extend(
@@ -20471,7 +20541,7 @@ var SubblyView = Backbone.View.extend(
       })
 
       if( this.onDisplayTpl )
-        this.onDisplayTpl()
+        this.onDisplayTpl( tplData )
 
       this._sticky = new scroll2sicky( this.$el )
 
@@ -20698,11 +20768,16 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
+  // feedback instance
+  this._feedback = new Feedback()
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
+  this._event.on( 'feedback::add',  this.feedback,       this )
+  this._event.on( 'feedback::done', this.feedbackDone,   this )
 
   this._viewAllowedType = [ 
       'Model'
@@ -20871,6 +20946,29 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
   this._event.trigger( args1, args2, args3, args4, args5, args6, args7 )
 }
 
+/*
+ * Trigger loader
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.feedback = function( type, message )
+{
+  this._feedback.add( type, message )
+}
+
+/*
+ * Trigger loader
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.feedbackDone = function( state )
+{
+  // this._feedback.setState( state )
+  this._feedback.done()
+}
+
 
 // CREDENTIALS / LOGIN
 //-------------------------------
@@ -21018,6 +21116,53 @@ SubblyCore.prototype.fetch = function( obj, options, context )
 
         if( options.error && _.isFunction( options.error ) )
           options.error( bbObj, response, opts  )
+      }
+  })
+}
+
+/*
+ * Generic method to save a model
+ * format json
+ * stores the XHR call to prevent cancel
+ *
+ * @params  {object}  model to save
+ * @params  {object}  data to set
+ * @params  {object}  callbacks options
+ * @params  {object}  call context
+ * @return  {object}
+ */
+SubblyCore.prototype.store = function( model, data, options, context )
+{
+  var data    = data || false
+    , options = options || {}
+    , scope   = this
+
+  if( !data )
+    throw new Error( 'No data pass to Subbly.store' )
+
+  options.json = {}
+
+  options.json[ model.singleResult ] = data 
+
+  // model.clear({silent: true})
+
+  this.trigger( 'feedback::add' )
+
+  model.save( options.json, 
+  {
+      success: function( model, response, opts )
+      {
+        scope.trigger( 'feedback::done', 'success' )
+
+        if( options.success && _.isFunction( options.success ) )
+          options.success( model, response, opts )
+      }
+    , error: function( model, response, opts )
+      {
+        scope.trigger( 'feedback::done', 'error' )
+
+        if( options.error && _.isFunction( options.error ) )
+          options.error( model, response, opts  )
       }
   })
 }
@@ -21200,6 +21345,43 @@ Components.Subbly.Model.Product = SubblyModel.extend(
     idAttribute:  'sku'
   , serviceName:  'products'
   , singleResult: 'product'
+
+  // Rules
+  // -------------------
+
+  , getRules: function()
+    {
+      return [
+          {
+              name:    'status'
+            , rules:   'required'
+          }
+        , {
+              name:    'sku'
+            , rules:   'required'
+          }
+        , {
+              name:    'name'
+            , rules:   'required'
+          }
+        , {
+              name:    'description'
+            , rules:   'required'
+          }
+        , {
+              name:    'price'
+            , rules:   'required|numeric'
+          }
+        , {
+              name:    'sale_place'
+            , rules:   'numeric'
+          }
+        , {
+              name:    'quantity'
+            , rules:   'required|numeric'
+          }
+      ]
+    }
 })
 
 
@@ -21368,11 +21550,18 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
     _form:            false
   , $formInputs:      false
 
-  , events: {
-        'click button[type="submit"]'                        : 'submit'
-      , 'click button[type="reset"]'                         : 'cancel'
-      , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
-      , 'change :input'                                      : 'removeWarning'
+  , initialize: function( options )
+    {
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // add view's event
+      this.addEvents( {
+          'click .js-submit-form'                        : 'submit'
+        , 'click .js-cancel-form'                        : 'cancel'
+        , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
+        , 'change :input'                                      : 'removeWarning'
+      })
     }
 
     // usefull to override event's method
@@ -21450,6 +21639,12 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
       Helpers.setNested( this._form.extra, key, value )
     }
 
+
+  , getFormValues: function()
+    {
+      return this._form.data
+    }
+
   , getFormValue: function( key, defaults )
     {
       defaults = defaults || false
@@ -21462,6 +21657,16 @@ Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
 
       return this._form.data[ key ]
     }
+
+  , submit: function( event )
+    {
+      if( !_.isUndefined( event ) )
+          event.preventDefault()
+
+      if( this.validateForm() && this.onSubmit )
+        this.onSubmit()
+    }
+
 
   , validateForm: function()
     {
@@ -21659,13 +21864,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Trigger 'pagination::fetch' event
   , nextPage: function()
     {
+      console.groupCollapsed('call next page' )
+
       if( this._isLoadingMore )
+      {
+        console.info('already loading')
+        console.groupEnd()
         return
+      }
 
       if( !this.collection.nextPage() )
+      {
+        console.info('no more page')
+        console.groupEnd()
         return
+      }
 
       subbly.trigger( 'pagination::fetch' )
+
+      console.info('call next page')
+      console.groupEnd()
     }
 
     // Test if there a previous page available 
@@ -21709,16 +21927,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Render list's row
   , render: function()
     {
+      console.groupCollapsed( 'render collection items' )
+
       if( !this.collection )
+      {
+        console.warn('ABORT, no collection items')
+        console.groupEnd()
         return
+      }
 
       // fetch flag
       this._isLoadingMore = false
+      console.info('remove `_isLoadingMore` flag')
 
       var $loader = $( document.getElementById( 'list-pagination-loader') )
 
       if( $loader.length )
+      {
         $loader.remove()
+        console.info('remove loader')
+      }
 
       // this._viewsPointers = {}
 
@@ -21726,6 +21954,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       {
         subbly.trigger( 'loader::hide' )
         this.displayInviteMsg()
+        console.warn('Collection empty, display invite message')
+        console.groupEnd()
         return
       }
 
@@ -21760,9 +21990,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this._$list.append( this._fragment )
         this._$listItems = this._$list.find('.list-row')
 
+        console.info('append DOM\'s fragment')
+
         if( !this._initialDisplay )
         {
           this._initialDisplay = true
+
+          console.info('it was the first call to the collection')
 
           if( this.onInitialRender )
             this.onInitialRender()
@@ -21775,6 +22009,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this.onAfterRender()
       
       subbly.trigger( 'loader::hide' )
+      console.groupEnd()
     }
 
     // TODO: to design
@@ -21927,11 +22162,11 @@ console.log('goTo')
 })
 
 
-Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
+Components.Subbly.View.Login = SubblyViewForm.extend(
 {
     el: '#login'
 
-  , initialize: function()
+  , onInitialize: function()
     {
       var rules = [
           {
@@ -21963,8 +22198,6 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
         this.btnReset()
 
       }, this)
-
-      return this
     }
 
   , display: function()
@@ -22002,9 +22235,13 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       var login = this
 
       this.$el
-        .one( transitionEnd, function()
+        .one( transitionEndEventName, function()
         {
-          login.$el.hide()
+          login
+            .$el
+            .removeClass('active')
+            .removeClass('logged')
+            .hide()
         })
         .addClass('logged')
     }
@@ -22014,46 +22251,41 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       this.$btn.button('reset')
     }
 
-  , submit: function( event )
+  , onSubmit: function()
     {
       this.$btn.button('loading')
 
-      if( !_.isUndefined( event ) )
-          event.preventDefault()
+      var credentials  = 
+          {
+              username: this.getFormValue( 'email' )
+            , password: this.getFormValue( 'password' )
+          }
+        , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
+        , login        = this
+        , authenticate = new xhrCall(
+          {
+              url:       'auth/test-credentials'
+            , headers: {
+                Authorization: 'Basic ' + encode
+              }
+            , success: function( response )
+              {
+                subbly.trigger( 'user::loggedIn', encode )
+              }
+            , error:   function( jqXHR, textStatus, errorThrown )
+              {
+                $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
 
-      if( this.validateForm() )
-      {
-        var credentials  = 
-            {
-                username: this._form.data.email
-              , password: this._form.data.password 
-            }
-          , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
-          , login        = this
-          , authenticate = new xhrCall(
-            {
-                url:       'auth/test-credentials'
-              , headers: {
-                  Authorization: 'Basic ' + encode
-                }
-              , success: function( response )
-                {
-                  subbly.trigger( 'user::loggedIn', encode )
-                }
-              , error:   function( jqXHR, textStatus, errorThrown )
-                {
-                  $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
-
-                  login.$formInputs.addClass('warning')
-                  document.getElementById('login-email').focus()
-                  login.btnReset()
-                }
-            })
+                login.$formInputs.addClass('warning')
+                document.getElementById('login-email').focus()
+                login.btnReset()
+              }
+          })
         
-        return
-      }
+      //   return
+      // }
 
-      this.btnReset()
+      // this.btnReset()
     }
 })
 
@@ -22423,14 +22655,18 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       _viewName: 'Dashboard'
     , _viewTpl:  TPL.dashboard.index
 
-    , display: function()
+      // On view initialize
+    , onInitialize: function()
       {
-  console.info('display dashboard view')
+        // add view's event
+        this.addEvents( {
+            'click a.js-trigger-new-product': 'addNew'
+        })
       }
 
-    , onClose: function()
+    , addNew: function()
       {
-  console.info('close dashboard view')
+        subbly.trigger( 'hash::change', 'products/_new' )
       }
   }
 
@@ -22526,8 +22762,8 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       }
 
     , routes: {
-          'products/add-new':   'display'
-        , 'products/:sku':      'display'
+          'products/_new': 'display'
+        , 'products/:sku': 'display'
       }
 
       // Routes
@@ -22536,7 +22772,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
     , display: function( sku ) 
       {
         var scope   = this
-          , isNew   = ( sku === 'add-new' )
+          , isNew   = ( sku === '_new' )
           , opts    = ( isNew ) ? {} : { sku: sku }
           , product = subbly.api('Subbly.Model.Product', opts )
 
@@ -22568,6 +22804,28 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
   {
       _viewName:     'ProductEntry'
     , _viewTpl:      TPL.products.entry
+
+    , onDisplayTpl: function( tplData )
+      {
+        // !! always set form after html render
+        this.setForm({
+            id:       'subbly-product-entry'
+          , rules:    this.model.getRules()
+          , skip:     false
+        })
+      }
+
+    , onSubmit: function()
+      {
+        subbly.store( this.model, this.getFormValues(), 
+        {
+          success: function( model, response  )
+          {
+            subbly.feedback( 'success', '<p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>')
+            subbly.trigger( 'hash::change', 'products' )
+          }
+        })
+      }
   }
 
 
@@ -22646,12 +22904,12 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         this.addEvents( {
             'click .js-tigger-goto':  'goTo'
           , 'click a.js-toggle-view': 'toggleView'
-        } )
+          , 'click a.js-trigger-new': 'addNew'
+        })
         
         this.tplList  = Handlebars.compile( TPL.products.listrow )
         this.tplGrid  = Handlebars.compile( TPL.products.listgrid )
         this._$window = $(window)
-
       }
 
     , onDisplayTpl: function()
@@ -22674,7 +22932,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         //   return
 
         // fetch flag
-        // this._isLoadingMore = false
+        this._isLoadingMore = false
 
         // var $loader = $( document.getElementById( 'list-pagination-loader') )
 
@@ -22753,6 +23011,11 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         $( event.currentTarget ).addClass('active')
 
         this._$window.trigger('resize')
+      }
+
+    , addNew: function()
+      {
+        subbly.trigger( 'hash::change', 'products/_new' )
       }
   }
 

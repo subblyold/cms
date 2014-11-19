@@ -154,6 +154,7 @@ module.exports = function(grunt)
                   , 'src/js/helpers/handlebars.js'
                   , 'src/js/helpers/validation.js'
                   , 'src/js/helpers/xhr.js'
+                  , 'src/js/helpers/feedback.js'
                   // , 'src/js/helpers/delete.js'
                   // , 'src/js/helpers/uploader.js'
                   // , 'src/js/helpers/session.js'
