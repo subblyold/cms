@@ -20315,15 +20315,15 @@ var xhrCall = function( options )
 
 var Feedback = function()
 {
-  this.messageCache = []
   this.wrapper      = document.body
   this.overlay      = document.getElementById('feedback-overlay')
+  this.content      = document.getElementById('main-view')
 }
 
 /*
  *  type 'success|error|warning'
  */
-Feedback.prototype.add = function( type, message )
+Feedback.prototype.add = function( message, type )
 {
   this.entry = document.createElement( 'div' )
   this.entry.className = 'feedback'
@@ -20335,6 +20335,38 @@ Feedback.prototype.add = function( type, message )
   this.entry.appendChild( inner )
 
   this.wrapper.insertBefore( this.entry, document.body.firstChild )
+
+  var feedback = this
+    , view     = this.content.querySelector( '.view-full' )
+    , entry    = this.entry
+
+  var remove = function( event ) 
+  {
+    entry.addEventListener( transitionEndEventName, function()
+    {
+      entry.remove()
+    })
+
+    entry.classList.add( 'hide' )
+    view.classList.remove( 'w-feedback' )
+  }
+
+  this.entry.addEventListener( animEndEventName, function()
+  {
+    view.classList.add( 'w-feedback' )
+    this.classList.add( type )
+    this.classList.add( 'done' )
+
+    var timer = window.setTimeout( remove, 3000 )
+
+    this.addEventListener( 'click', function()
+    {
+      window.clearTimeout( timer )
+      remove()
+
+    }, false)
+
+  }, false)
 
   this.entry.classList.add('show')
   this.overlay.classList.add('show')
@@ -20355,33 +20387,6 @@ Feedback.prototype.done = function()
 {
   this.entry.classList.remove('show')
   this.overlay.classList.remove('show')
-
-  var $this = $( this.entry )
-
-  $this
-    .one( transitionEndEventName, function()
-    {
-console.log('transitionEndEventName callback')
-      // $this
-      //   .removeClass('done')
-    })
-    .addClass('done')
-}
-
-/*
- *  type 'success|error|warning'
- */
-Feedback.prototype.dismiss = function()
-{
-  this.entry.classList.remove('show')
-  this.overlay.classList.remove('show')
-
-  $( this.entry )
-    .one( animEndEventName, function()
-    {
-      $( this ).remove()
-    })
-    .addClass('hide')
 }
 
 
@@ -20952,9 +20957,9 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
  * @return  {void}
  */
 
-SubblyCore.prototype.feedback = function( type, message )
+SubblyCore.prototype.feedback = function( message, type )
 {
-  this._feedback.add( type, message )
+  this._feedback.add( 'message', 'success' )
 }
 
 /*

@@ -509,12 +509,25 @@ ol {
   -moz-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  overflow: hidden;
   position: relative;
 }
 .view-full {
+  -webkit-transition: all 300ms ease-out;
+  -moz-transition: all 300ms ease-out;
+  -ms-transition: all 300ms ease-out;
+  -o-transition: all 300ms ease-out;
+  transition: all 300ms ease-out;
   height: 100%;
   position: absolute;
   width: 100%;
+}
+.view-full.w-feedback {
+  -webkit-transform: translateY(66px);
+  -moz-transform: translateY(66px);
+  -ms-transform: translateY(66px);
+  -o-transform: translateY(66px);
+  transform: translateY(66px);
 }
 .view-full > .view-half,
 .view-full > .view-third {
@@ -1364,7 +1377,7 @@ input[type="search"] {
   -ms-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
   -o-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
   transition: visibility 0s linear 0.5s,opacity 0.5s linear;
-  background: rgba(0, 0, 0, 0.5) url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+  background: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
   bottom: 0;
   left: 0;
   opacity: 0;
@@ -1382,32 +1395,35 @@ input[type="search"] {
 }
 .feedback {
   -webkit-transform-origin: 0 0;
-  -webkit-transform: scale3d(0, 0.3, 1);
+  -webkit-transform: scale3d(0, 1, 1);
   -webkit-transition: all 300ms ease-out;
   -moz-transition: all 300ms ease-out;
   -ms-transition: all 300ms ease-out;
   -o-transition: all 300ms ease-out;
   transition: all 300ms ease-out;
-  background: #fff;
-  color: #7a7264;
-  font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
-  font-size: 90%;
-  left: 0;
-  line-height: 1.28571429;
-  opacity: 1;
   padding: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  min-height: 66px;
+  left: 240px;
+  opacity: 1;
   position: fixed;
   top: 0;
   transform-origin: 0 0;
-  transform: scale3d(0, 0.3, 1);
-  width: 100%;
+  transform: scale3d(0, 0.08, 1);
+  width: calc(100% - 240px);
   z-index: 2000;
 }
 .feedback.show {
   -webkit-animation-name: animLoad;
   animation-name: animLoad;
-  -webkit-animation-duration: 25s;
-  animation-duration: 25s;
+  -webkit-animation-duration: 2.5s;
+  animation-duration: 2.5s;
+}
+.feedback.show .feedback-inner {
+  -webkit-animation-name: animFadeMove;
+  animation-name: animFadeMove;
+  -webkit-animation-timing-function: ease-out;
+  animation-timing-function: ease-out;
 }
 .feedback.done {
   opacity: 1;
@@ -1420,52 +1436,48 @@ input[type="search"] {
   transform: translate3d(0, 0, 0);
 }
 .feedback.hide {
-  -webkit-animation-direction: reverse;
-  animation-direction: reverse;
-  -webkit-animation-name: animFade;
-  animation-name: animFade;
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
+  opacity: 0;
 }
 .feedback.success,
 .feedback.error {
-  color: #ffffff;
+  color: #202124;
 }
 .feedback.success {
-  background: #36bb4c;
+  background: #abddb3;
 }
 .feedback.error {
-  background: #dc7363;
+  background: #f3c0c1;
 }
 .feedback-inner {
-  -webkit-transition: all 300ms ease-out;
-  -moz-transition: all 300ms ease-out;
-  -ms-transition: all 300ms ease-out;
-  -o-transition: all 300ms ease-out;
-  transition: all 300ms ease-out;
   position: relative;
   opacity: 0;
   -webkit-transform: translate3d(0, 10px, 0);
   transform: translate3d(0, 10px, 0);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -webkit-animation-delay: 2.4s;
+  animation-delay: 2.4s;
 }
 @-webkit-keyframes animLoad {
   0% {
     opacity: 1;
-    -webkit-transform: scale3d(0, 0.3, 1);
+    -webkit-transform: scale3d(0, 0.08, 1);
   }
   33% {
     opacity: 1;
-    -webkit-transform: scale3d(0.5, 0.3, 1);
+    -webkit-transform: scale3d(0.5, 0.08, 1);
   }
   50% {
     opacity: 1;
-    -webkit-transform: scale3d(0.6, 0.3, 1);
+    -webkit-transform: scale3d(0.6, 0.08, 1);
   }
   80%,
   85% {
     opacity: 1;
-    -webkit-transform: scale3d(1, 0.3, 1);
-    -webkit-animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+    -webkit-transform: scale3d(1, 0.08, 1);
+    -webkit-animation-timing-function: cubic-bezier(0.7, 0, 0.08, 1);
   }
   100% {
     opacity: 1;
@@ -1475,41 +1487,31 @@ input[type="search"] {
 @keyframes animLoad {
   0% {
     opacity: 1;
-    -webkit-transform: scale3d(0, 0.3, 1);
-    transform: scale3d(0, 0.3, 1);
+    -webkit-transform: scale3d(0, 0.08, 1);
+    transform: scale3d(0, 0.08, 1);
   }
   33% {
     opacity: 1;
-    -webkit-transform: scale3d(0.5, 0.3, 1);
-    transform: scale3d(0.5, 0.3, 1);
+    -webkit-transform: scale3d(0.5, 0.08, 1);
+    transform: scale3d(0.5, 0.08, 1);
   }
   50% {
     opacity: 1;
-    -webkit-transform: scale3d(0.6, 0.3, 1);
-    transform: scale3d(0.6, 0.3, 1);
+    -webkit-transform: scale3d(0.6, 0.08, 1);
+    transform: scale3d(0.6, 0.08, 1);
   }
   80%,
   85% {
     opacity: 1;
-    -webkit-transform: scale3d(1, 0.3, 1);
-    transform: scale3d(1, 0.3, 1);
-    -webkit-animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
-    animation-timing-function: cubic-bezier(0.7, 0, 0.3, 1);
+    -webkit-transform: scale3d(1, 0.08, 1);
+    transform: scale3d(1, 0.08, 1);
+    -webkit-animation-timing-function: cubic-bezier(0.7, 0, 0.08, 1);
+    animation-timing-function: cubic-bezier(0.7, 0, 0.08, 1);
   }
   100% {
     opacity: 1;
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
-  }
-}
-@-webkit-keyframes animFadeMove {
-  0% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 10px, 0);
-  }
-  100% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
   }
 }
 @keyframes animFadeMove {

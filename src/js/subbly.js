@@ -206,9 +206,9 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
  * @return  {void}
  */
 
-SubblyCore.prototype.feedback = function( type, message )
+SubblyCore.prototype.feedback = function( message, type )
 {
-  this._feedback.add( type, message )
+  this._feedback.add( 'message', 'success' )
 }
 
 /*
