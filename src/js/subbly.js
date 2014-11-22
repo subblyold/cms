@@ -22,9 +22,6 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
-  // feedback instance
-  this._feedback = new Feedback()
-
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
@@ -206,21 +203,9 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
  * @return  {void}
  */
 
-SubblyCore.prototype.feedback = function( message, type )
+SubblyCore.prototype.feedback = function()
 {
-  this._feedback.add( 'message', 'success' )
-}
-
-/*
- * Trigger loader
- *
- * @return  {void}
- */
-
-SubblyCore.prototype.feedbackDone = function( state )
-{
-  // this._feedback.setState( state )
-  this._feedback.done()
+  return new Feedback()
 }
 
 
@@ -398,22 +383,22 @@ SubblyCore.prototype.store = function( model, data, options, context )
 
   options.json[ model.singleResult ] = data 
 
-  // model.clear({silent: true})
-
-  this.trigger( 'feedback::add' )
+  var _feedback = this.feedback()
+  
+  _feedback.progress()
 
   model.save( options.json, 
   {
       success: function( model, response, opts )
       {
-        scope.trigger( 'feedback::done', 'success' )
+        _feedback.progressEnd( 'success', options.successMsg || response.headers.status.message )
 
         if( options.success && _.isFunction( options.success ) )
           options.success( model, response, opts )
       }
     , error: function( model, response, opts )
       {
-        scope.trigger( 'feedback::done', 'error' )
+        _feedback.progressEnd( 'error', options.errorMsg || response.responseJSON.headers.status.message )
 
         if( options.error && _.isFunction( options.error ) )
           options.error( model, response, opts  )

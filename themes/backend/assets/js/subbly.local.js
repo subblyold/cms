@@ -20313,80 +20313,163 @@ var xhrCall = function( options )
   return xhr
 }
 
+var FEEDBACK_TIMEOUT = 3000
+  , FEEDBACK_TIMER   = null 
+
 var Feedback = function()
 {
-  this.wrapper      = document.body
   this.overlay      = document.getElementById('feedback-overlay')
   this.content      = document.getElementById('main-view')
-}
 
-/*
- *  type 'success|error|warning'
- */
-Feedback.prototype.add = function( message, type )
-{
-  this.entry = document.createElement( 'div' )
-  this.entry.className = 'feedback'
+  var wrapper = document.body
+    , entry   = document.createElement( 'div' )
+    , inner   = document.createElement( 'div' )
+    , scope   = this
 
-  var inner = document.createElement( 'div' ) 
+  entry.className = 'feedback'
   inner.className = 'feedback-inner'
-  inner.innerHTML = message
 
-  this.entry.appendChild( inner )
+  entry.appendChild( inner )
 
-  this.wrapper.insertBefore( this.entry, document.body.firstChild )
+  wrapper.insertBefore( entry, document.body.firstChild )
 
-  var feedback = this
-    , view     = this.content.querySelector( '.view-full' )
-    , entry    = this.entry
+  this.view    = document.getElementById('main-view')
+  this.$entry  = $( entry )
+  this.$msg    = $( inner )
+  this.isDone  = false
 
-  var remove = function( event ) 
-  {
-    entry.addEventListener( transitionEndEventName, function()
+  this.$entry
+    .one( 'click', function()
     {
-      entry.remove()
+      scope.dismiss()
     })
 
-    entry.classList.add( 'hide' )
-    view.classList.remove( 'w-feedback' )
-  }
-
-  this.entry.addEventListener( animEndEventName, function()
-  {
-    view.classList.add( 'w-feedback' )
-    this.classList.add( type )
-    this.classList.add( 'done' )
-
-    var timer = window.setTimeout( remove, 3000 )
-
-    this.addEventListener( 'click', function()
-    {
-      window.clearTimeout( timer )
-      remove()
-
-    }, false)
-
-  }, false)
-
-  this.entry.classList.add('show')
   this.overlay.classList.add('show')
+
+  return this
 }
 
 /*
  * 
  */
-Feedback.prototype.setState = function( state )
+Feedback.prototype.display = function( message )
 {
-  this.entry.classList.add( state )
+  this.isDone = true
+  this.upMainView()
+  this.message( message )
+  this.$msg.addClass('display')
+
+  var scope = this
+
+  FEEDBACK_TIMER = window.setTimeout( function()
+  {
+    scope.dismiss()
+  }, FEEDBACK_TIMEOUT )
 }
 
 /*
  * 
  */
-Feedback.prototype.done = function()
+Feedback.prototype.message = function( message )
 {
-  this.entry.classList.remove('show')
+  this.$msg.text( message )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.state = function( state )
+{
+  this.$entry.addClass( state )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progress = function()
+{
+  this.$entry
+    .css({
+        width:  0
+      , height: '12px'
+    })
+    .animate({
+      width: '100%'
+    }, 30000, function()
+    {
+      console.log('callback')
+    })
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progressEnd = function( state, message )
+{
+  var width = this.$entry.width() 
+    , scope = this
+  
+  this.state( state )
+  
+  this.$entry
+    .stop( true, true )
+    .css( 'width', width)
+    .animate(
+    {
+      width: '100%'
+    }
+    , 500
+    , function()
+    {
+      scope.$entry.animate({ height: 66 }, 250 )
+      scope.display( message )
+    })
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.downMainView = function()
+{
+  this.view.classList.remove( 'w-feedback' )
+}
+
+/*
+ * 
+ */
+Feedback.prototype.upMainView = function()
+{
+  this.view.classList.add( 'w-feedback' )
+}
+
+
+/*
+ * 
+ */
+Feedback.prototype.dismiss = function()
+{
+  if( !this.isDone )
+    return
+
+  window.clearTimeout( FEEDBACK_TIMER )
+
+  var scope = this
+
   this.overlay.classList.remove('show')
+
+  this.$entry.fadeOut( 300, function()
+  {
+    scope.downMainView()
+    this.remove()
+  })
 }
 
 
@@ -20773,9 +20856,6 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
-  // feedback instance
-  this._feedback = new Feedback()
-
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
@@ -20957,21 +21037,9 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
  * @return  {void}
  */
 
-SubblyCore.prototype.feedback = function( message, type )
+SubblyCore.prototype.feedback = function()
 {
-  this._feedback.add( 'message', 'success' )
-}
-
-/*
- * Trigger loader
- *
- * @return  {void}
- */
-
-SubblyCore.prototype.feedbackDone = function( state )
-{
-  // this._feedback.setState( state )
-  this._feedback.done()
+  return new Feedback()
 }
 
 
@@ -21149,22 +21217,22 @@ SubblyCore.prototype.store = function( model, data, options, context )
 
   options.json[ model.singleResult ] = data 
 
-  // model.clear({silent: true})
-
-  this.trigger( 'feedback::add' )
+  var _feedback = this.feedback()
+  
+  _feedback.progress()
 
   model.save( options.json, 
   {
       success: function( model, response, opts )
       {
-        scope.trigger( 'feedback::done', 'success' )
+        _feedback.progressEnd( 'success', options.successMsg || response.headers.status.message )
 
         if( options.success && _.isFunction( options.success ) )
           options.success( model, response, opts )
       }
     , error: function( model, response, opts )
       {
-        scope.trigger( 'feedback::done', 'error' )
+        _feedback.progressEnd( 'error', options.errorMsg || response.responseJSON.headers.status.message )
 
         if( options.error && _.isFunction( options.error ) )
           options.error( model, response, opts  )
@@ -22826,7 +22894,6 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         {
           success: function( model, response  )
           {
-            subbly.feedback( 'success', '<p>Your preferences have been saved successfully. See all your settings in your <a href="#">profile overview</a>.</p>')
             subbly.trigger( 'hash::change', 'products' )
           }
         })

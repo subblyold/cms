@@ -211,11 +211,15 @@ ol {
 }
 
 .main-view {
+  .transition( all, 300ms );
   .flex(1);
   overflow: hidden;
   position: relative;
   // background: @white;
 
+  &.w-feedback {
+    padding-top: @feedback-height
+  }
 }
 
 
@@ -224,14 +228,9 @@ ol {
 // --------------------------------------------------
 
 .view-full {
-  .transition( all, 300ms );
   height:100%;
   position:absolute;
   width:100%;
-
-  &.w-feedback {
-    .transform( translateY( @feedback-height ) )
-  }
 
   & > .view-half,
   & > .view-third {

@@ -1,76 +1,159 @@
 
+var FEEDBACK_TIMEOUT = 3000
+  , FEEDBACK_TIMER   = null 
+
 var Feedback = function()
 {
-  this.wrapper      = document.body
   this.overlay      = document.getElementById('feedback-overlay')
   this.content      = document.getElementById('main-view')
-}
 
-/*
- *  type 'success|error|warning'
- */
-Feedback.prototype.add = function( message, type )
-{
-  this.entry = document.createElement( 'div' )
-  this.entry.className = 'feedback'
+  var wrapper = document.body
+    , entry   = document.createElement( 'div' )
+    , inner   = document.createElement( 'div' )
+    , scope   = this
 
-  var inner = document.createElement( 'div' ) 
+  entry.className = 'feedback'
   inner.className = 'feedback-inner'
-  inner.innerHTML = message
 
-  this.entry.appendChild( inner )
+  entry.appendChild( inner )
 
-  this.wrapper.insertBefore( this.entry, document.body.firstChild )
+  wrapper.insertBefore( entry, document.body.firstChild )
 
-  var feedback = this
-    , view     = this.content.querySelector( '.view-full' )
-    , entry    = this.entry
+  this.view    = document.getElementById('main-view')
+  this.$entry  = $( entry )
+  this.$msg    = $( inner )
+  this.isDone  = false
 
-  var remove = function( event ) 
-  {
-    entry.addEventListener( transitionEndEventName, function()
+  this.$entry
+    .one( 'click', function()
     {
-      entry.remove()
+      scope.dismiss()
     })
 
-    entry.classList.add( 'hide' )
-    view.classList.remove( 'w-feedback' )
-  }
-
-  this.entry.addEventListener( animEndEventName, function()
-  {
-    view.classList.add( 'w-feedback' )
-    this.classList.add( type )
-    this.classList.add( 'done' )
-
-    var timer = window.setTimeout( remove, 3000 )
-
-    this.addEventListener( 'click', function()
-    {
-      window.clearTimeout( timer )
-      remove()
-
-    }, false)
-
-  }, false)
-
-  this.entry.classList.add('show')
   this.overlay.classList.add('show')
+
+  return this
 }
 
 /*
  * 
  */
-Feedback.prototype.setState = function( state )
+Feedback.prototype.display = function( message )
 {
-  this.entry.classList.add( state )
+  this.isDone = true
+  this.upMainView()
+  this.message( message )
+  this.$msg.addClass('display')
+
+  var scope = this
+
+  FEEDBACK_TIMER = window.setTimeout( function()
+  {
+    scope.dismiss()
+  }, FEEDBACK_TIMEOUT )
 }
 
 /*
  * 
  */
-Feedback.prototype.done = function()
+Feedback.prototype.message = function( message )
 {
-  this.entry.classList.remove('show')
+  this.$msg.text( message )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.state = function( state )
+{
+  this.$entry.addClass( state )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progress = function()
+{
+  this.$entry
+    .css({
+        width:  0
+      , height: '12px'
+    })
+    .animate({
+      width: '100%'
+    }, 30000, function()
+    {
+      console.log('callback')
+    })
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progressEnd = function( state, message )
+{
+  var width = this.$entry.width() 
+    , scope = this
+  
+  this.state( state )
+  
+  this.$entry
+    .stop( true, true )
+    .css( 'width', width)
+    .animate(
+    {
+      width: '100%'
+    }
+    , 500
+    , function()
+    {
+      scope.$entry.animate({ height: 66 }, 250 )
+      scope.display( message )
+    })
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.downMainView = function()
+{
+  this.view.classList.remove( 'w-feedback' )
+}
+
+/*
+ * 
+ */
+Feedback.prototype.upMainView = function()
+{
+  this.view.classList.add( 'w-feedback' )
+}
+
+
+/*
+ * 
+ */
+Feedback.prototype.dismiss = function()
+{
+  if( !this.isDone )
+    return
+
+  window.clearTimeout( FEEDBACK_TIMER )
+
+  var scope = this
+
   this.overlay.classList.remove('show')
+
+  this.$entry.fadeOut( 300, function()
+  {
+    scope.downMainView()
+    this.remove()
+  })
 }
