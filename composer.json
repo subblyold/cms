@@ -29,7 +29,8 @@
   , "require": {
         "php":                         ">=5.4"
       , "ext-mcrypt":                  "*"
-      , "laravel/framework":           "4.2.*"
+      , "subbly/framework":            "@dev"
+      , "subbly/backend":              "@dev"
       , "league/oauth2-client":        "~0.3"
       , "barryvdh/laravel-debugbar":   "1.*"
       , "mustache/mustache":           "2.7.0"
