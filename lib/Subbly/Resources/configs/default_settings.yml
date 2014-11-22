@@ -1,8 +1,0 @@
-default_settings:
-  subbly.shop_name:
-    type: string
-    value: My first Subbly Shop
-
-  subbly.contact_email:
-    type: string
-    value: contact@subbly.fr
