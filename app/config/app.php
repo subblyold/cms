@@ -122,9 +122,9 @@ return array(
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
 
-        'Cartalyst\Sentry\SentryServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider',
-        'Spatie\EloquentSortable\SortableServiceProvider',
+        'Cartalyst\\Sentry\\SentryServiceProvider',
+        'Spatie\\EloquentSortable\\SortableServiceProvider',
+        'Subbly\\Framework\\SubblyFrameworkServiceProvider',
     ),
 
     /*
