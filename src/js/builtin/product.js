@@ -70,7 +70,7 @@
       {
         subbly.store( this.model, this.getFormValues(), 
         {
-          success: function( model, response  )
+          success: function( model, response )
           {
             subbly.trigger( 'hash::change', 'products' )
           }

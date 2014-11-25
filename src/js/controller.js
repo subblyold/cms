@@ -33,8 +33,6 @@ var SubblyController = Backbone.Controller.extend(
       if( this._mainRouter.controllersAreTheSame( this._getName() ) )
         return
 
-      // this._mainRouter._currentView = this
-
       if( this.onBefore )
         this.onBefore()
 
@@ -43,11 +41,14 @@ var SubblyController = Backbone.Controller.extend(
 
   , onAfterRoute: function()
     {
+console.log('onAfterRoute: '+ this._controllerName)
       if( this.onAfter )
         this.onAfter()
 
       // register current controller
       this._mainRouter.setCurrentController( this )
+
+      subbly.trigger( 'loader::progressEnd' )
     }
 
     // Clean DOM and JS memory

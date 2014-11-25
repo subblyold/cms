@@ -22,13 +22,17 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
+  // Feedback
+  this._feedback = new Feedback()
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
-  this._event.on( 'feedback::add',  this.feedback,       this )
-  this._event.on( 'feedback::done', this.feedbackDone,   this )
+  // this._event.on( 'feedback::add',  this.feedback,       this )
+  // this._event.on( 'feedback::done', this.feedbackDone,   this )
+  this._event.on( 'loader::progressEnd', this._feedback.progressEnd  )
 
   this._viewAllowedType = [ 
       'Model'
@@ -70,6 +74,7 @@ SubblyCore.prototype.init = function()
 
     if( scope._changesAreSaved )
     {
+      scope._feedback.add().progress()
       scope._router.navigate( href, opts )
     }
     else
@@ -205,7 +210,7 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
 
 SubblyCore.prototype.feedback = function()
 {
-  return new Feedback()
+  return this._feedback
 }
 
 
@@ -331,28 +336,36 @@ SubblyCore.prototype.api = function( serviceName, args )
  */
 SubblyCore.prototype.fetch = function( obj, options, context )
 {
-  var options = options || {}
-    , xhrId   = _.uniqueId( 'xhr_' )
+  var _feedback = this._feedback
+    , options   = options || {}
+    , xhrId     = _.uniqueId( 'xhr_' )
+    , cbShared  = function()
+      {
+        _feedback.progressEnd()
+
+        if( context )
+          context.trigger( 'fetch::responds' )
+      }
 
   if( context )
     context.trigger( 'fetch::calling' )
+  
+  _feedback.add().progress()
 
   this._fetchXhr[ xhrId ] = obj.fetch({
       data:    options.data || {} 
     , xhrId:   xhrId
     , success: function( bbObj, response, opts )
       {
-        if( context )
-          context.trigger( 'fetch::responds' )
+        cbShared()
 
         if( options.success && _.isFunction( options.success ) )
           options.success( bbObj, response, opts )
       }
     , error: function( bbObj, response, opts )
       {
-        if( context )
-          context.trigger( 'fetch::responds' )
-
+        cbShared()
+        
         if( options.error && _.isFunction( options.error ) )
           options.error( bbObj, response, opts  )
       }
@@ -385,7 +398,7 @@ SubblyCore.prototype.store = function( model, data, options, context )
 
   var _feedback = this.feedback()
   
-  _feedback.progress()
+  _feedback.add().progress()
 
   model.save( options.json, 
   {

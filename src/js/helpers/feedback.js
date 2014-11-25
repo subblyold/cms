@@ -4,8 +4,23 @@ var FEEDBACK_TIMEOUT = 3000
 
 var Feedback = function()
 {
-  this.overlay      = document.getElementById('feedback-overlay')
-  this.content      = document.getElementById('main-view')
+  this.overlay   = document.getElementById('feedback-overlay')
+  this.view      = document.getElementById('main-view')
+  this.isDisplay = false
+  this.ended     = false
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.add = function()
+{
+  if( this.isDisplay )
+    return this
+
+  this.isDisplay = true
 
   var wrapper = document.body
     , entry   = document.createElement( 'div' )
@@ -19,7 +34,7 @@ var Feedback = function()
 
   wrapper.insertBefore( entry, document.body.firstChild )
 
-  this.view    = document.getElementById('main-view')
+  // this.view    = document.getElementById('main-view')
   this.$entry  = $( entry )
   this.$msg    = $( inner )
   this.isDone  = false
@@ -30,7 +45,7 @@ var Feedback = function()
       scope.dismiss()
     })
 
-  this.overlay.classList.add('show')
+  // this.overlay.classList.add('show')
 
   return this
 }
@@ -85,10 +100,7 @@ Feedback.prototype.progress = function()
     })
     .animate({
       width: '100%'
-    }, 30000, function()
-    {
-      console.log('callback')
-    })
+    }, 5000, function(){})
 
   return this
 }
@@ -98,24 +110,44 @@ Feedback.prototype.progress = function()
  */
 Feedback.prototype.progressEnd = function( state, message )
 {
+  console.log('trigger progressEnd')
+  if( this.ended || _.isUndefined( this.$entry ) )
+    return this
+  console.log('progressEnd accepted')
+  this.ended = true
+
   var width = this.$entry.width() 
     , scope = this
-  
-  this.state( state )
+
+  if( !_.isUndefined( state ) )
+    this.state( state )
   
   this.$entry
     .stop( true, true )
     .css( 'width', width)
     .animate(
-    {
-      width: '100%'
-    }
-    , 500
-    , function()
-    {
-      scope.$entry.animate({ height: 66 }, 250 )
-      scope.display( message )
-    })
+        { width: '100%' }
+      , 250
+      , function()
+        {
+          if( !_.isUndefined( message ) )
+          {
+            scope.$entry.stop( true, true ).animate({ height: 66 }, 250 )
+            scope.display( message )
+            return
+          }
+
+          scope.ended = false
+          
+          scope.overlay.classList.remove('show')
+
+          scope.$entry.stop( true, true ).fadeOut( 300, function()
+          {
+            scope.isDisplay = false
+            this.remove()
+          })
+        }
+    )
 
   return this
 }
@@ -143,7 +175,7 @@ Feedback.prototype.upMainView = function()
 Feedback.prototype.dismiss = function()
 {
   if( !this.isDone )
-    return
+    return this
 
   window.clearTimeout( FEEDBACK_TIMER )
 
@@ -153,6 +185,10 @@ Feedback.prototype.dismiss = function()
 
   this.$entry.fadeOut( 300, function()
   {
+
+    scope.ended     = false  
+    scope.isDisplay = false
+
     scope.downMainView()
     this.remove()
   })
