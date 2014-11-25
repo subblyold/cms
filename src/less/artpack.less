@@ -220,11 +220,20 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: auto;
   width: 10px;
 
+  &.confirmed,
+  &.paid,
+  &.sent,
+  &.draft {
+    background-color: transparent;
+  }
+
+  &.waiting,
   &.warning {
     background-color: #ff9211;
   }
 
-  &.danger {
+  &.danger,
+  &.refused {
     background-color: @brand-danger;
   }
 }
@@ -279,6 +288,17 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   border-top: 1px solid @border-ligth;
   height: 100px;
+
+  &:hover {
+    background: #f3f3f3;
+    // border-top: 1px solid #f3f3f3; 
+  }
+
+  &.active {
+    .bullet {
+      background-color: @white;
+    }
+  }
 }
 
   // column list's item
