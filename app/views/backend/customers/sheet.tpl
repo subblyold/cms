@@ -9,11 +9,12 @@
       </div>
       <hr class="hr">
       <div class="cl-f">
-        <div class="fl-l">
+        <div class="cust-identifier">
           <strong class="c-blk strong">{{displayName}}</strong>  n° 53<br>
-          {{email}}
+          {{email}}<br>
+          Last visit :  <strong class="c-blk strong">{{lastLogin}}</strong>
         </div><!-- /.fl-l -->
-        <span class="fl-r">
+        <span class="cust-action">
           <a href="javascript:;" class="btn btn-w-icon">
             <i class="icon icon-mail"></i>
             Send
@@ -24,7 +25,7 @@
           </a>
         </span><!-- /.fl-r -->
       </div><!-- /.cl-f -->
-      <hr class="hr">
+<!--       <hr class="hr">
       <ul class="customer-subscriptions">
         <li>
           Newsletter : <strong class="c-blk strong">Yes</strong>
@@ -35,7 +36,7 @@
         <li>
           Last visit :  <strong class="c-blk strong">04/03/2012 at 13:14:13</strong>
         </li>
-      </ul>
+      </ul> -->
       <hr class="hr full">
 
       <h4 class="f-lrg c-pdg-bas-v">Adresses</h4>

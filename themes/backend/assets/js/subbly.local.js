@@ -22610,7 +22610,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
         {
             data:   {
                 offset: 0
-              , limit:  5
+              , limit:  10
             }
           , success: function( collection, response )
             {
@@ -22640,6 +22640,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
               var json = model.toJSON()
 
               json.displayName = model.displayName()
+              json.lastLogin   = moment.utc( model.get('last_login') ).format('llll')
 
               scope.getViewByPath( 'Subbly.View.CustomerSheet' )
                 .setValue( 'model', model )

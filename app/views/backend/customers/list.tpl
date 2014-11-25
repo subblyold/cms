@@ -29,6 +29,6 @@
       </li>
        /.cln-lst-rw -->
     </ul><!-- /.cln-lst -->
-    <p style="height:100%">&nbsp;</p>
+    <!-- <p style="height:100%">&nbsp;</p> -->
   </div><!-- /.nano-content -->
 </div><!-- /.nano -->

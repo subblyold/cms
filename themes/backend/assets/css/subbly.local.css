@@ -1581,6 +1581,14 @@ input[type="search"] {
 .cust-row.active * {
   color: #ffffff !important;
 }
+.cust-identifier {
+  float: left;
+  line-height: 20px;
+}
+.cust-action {
+  float: right;
+  padding-top: 10px;
+}
 .cust-addresses {
   border-bottom: 1px solid #e1e1e1;
   width: 100%;
