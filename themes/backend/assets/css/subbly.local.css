@@ -947,6 +947,16 @@ a.badge:focus {
 .cln-lst-load span {
   line-height: 100px;
 }
+.table {
+  table-layout: fixed;
+  width: 100%;
+  white-space: nowrap;
+}
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .pdt-list {
   background: #ffffff;
   border-radius: 4px;
@@ -1564,6 +1574,9 @@ input[type="search"] {
 .ord-lst-rw .pdt-qty,
 .ord-lst-rw .pdt-ttl-row {
   line-height: 100px;
+}
+.ord-pdts-lst {
+  width: 100%;
 }
 .ord-ttl-dts {
   background: #faf6e6;
