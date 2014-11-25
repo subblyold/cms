@@ -41,7 +41,6 @@ var SubblyController = Backbone.Controller.extend(
 
   , onAfterRoute: function()
     {
-console.log('onAfterRoute: '+ this._controllerName)
       if( this.onAfter )
         this.onAfter()
 

@@ -36,7 +36,42 @@
           Last visit :  <strong class="c-blk strong">04/03/2012 at 13:14:13</strong>
         </li>
       </ul>
-      <hr class="hr" style="margin-left:-40px;margin-right:-40px">
+      <hr class="hr full">
+
+      <h4 class="f-lrg c-pdg-bas-v">Adresses</h4>
+
+      <table class="cust-addresses">
+        <colgroup>
+          <col width="60px">
+          <col width="200px">
+          <col>
+          <col width="30px">
+        </colgroup>
+        {{#keyValue addresses}}
+        <tr data-index="{{key}}">
+          <td>
+            <span class="address-id">{{indexPlusOne key}}</span>
+          </td>
+          <td>
+            {{value.lastname}} {{value.firstname}}
+          </td>
+          <td>
+            {{{userAddress value}}}
+          </td>
+          <td>
+            <a href="javascript:;">
+              <i class="icon icon-edit"></i>
+            </a>
+          </td>
+        </tr>
+        {{/keyValue}}
+      </table>
+      {{^addresses}}
+      <span class="cust-no-addresses">
+        pas d'adresses
+      </span>
+      {{/addresses}}
+
       <p class="ta-r c-pdg-v">
         <a href="javascript:;" class="btn btn-default">
           Delete this customer 

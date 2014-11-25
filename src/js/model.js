@@ -27,4 +27,9 @@ var SubblyModel = Backbone.Model.extend(
       // collection fetch
       return response
     }
+
+  , getNested: function( property, defaults )
+    {
+      return Helpers.getNested( this.attributes, property, defaults || false )
+    }
 })

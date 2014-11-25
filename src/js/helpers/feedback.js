@@ -110,10 +110,9 @@ Feedback.prototype.progress = function()
  */
 Feedback.prototype.progressEnd = function( state, message )
 {
-  console.log('trigger progressEnd')
   if( this.ended || _.isUndefined( this.$entry ) )
     return this
-  console.log('progressEnd accepted')
+
   this.ended = true
 
   var width = this.$entry.width() 

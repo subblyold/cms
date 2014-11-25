@@ -198,3 +198,24 @@ Handlebars.registerHelper('json', function( obj )
 {
   return JSON.stringify( obj, undefined, 4)
 })
+
+Handlebars.registerHelper('indexPlusOne', function( str ) 
+{
+  return (( +str ) + 1 )
+})
+
+Handlebars.registerHelper('userAddress', function( obj ) 
+{
+  var str = [
+      // obj.lastname + ' ' + obj.firstname + '<br>'
+      obj.address1 + '<br>'
+  ]
+
+  if( !_.isNull( obj.address2 ) )
+    str.push( obj.address2 + '<br>' )
+
+  str.push( obj.zipcode + ' ' + obj.city + '<br>' )
+  str.push( obj.country )
+
+  return str.join('')
+})
