@@ -1534,30 +1534,46 @@ input[type="search"] {
 .ordr-row.active * {
   color: #ffffff !important;
 }
-.ord-dtls .thmb-list {
-  border: 1px solid #c7c7c7;
-  margin-top: 23px;
-  overflow: hidden;
-}
 .ord-lst {
-  margin-top: -20px;
-}
-.ord-rw-itm {
-  float: left;
-  padding: 0 7px;
+  border-top: 1px solid #e1e1e1;
+  margin: 20px 0;
+  width: 100%;
 }
 .pdt-dtls {
-  padding-top: 30px;
+  display: block;
+  float: left;
+  padding-left: 16px;
 }
-.pdt-dtls .pdt-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100px;
+.pdt-dtls-lst {
+  padding: 6px 0;
+}
+.pdt-label {
+  display: inline-block;
+  width: 75px;
 }
 .ord-lst-rw {
-  height: 100px;
-  margin: 0 -7px;
+  padding: 16px 0;
+}
+.ord-dtls .thmb-list {
+  border: 1px solid #c7c7c7;
+  overflow: hidden;
+}
+.ord-lst .ord-rw-itm {
+  padding: 0 7px;
+}
+.ord-pdt-dtl {
+  float: left;
+}
+.ord-pdt-dtl:before,
+.ord-pdt-dtl:after {
+  content: " ";
+  display: table;
+}
+.ord-pdt-dtl:after {
+  clear: both;
+}
+.ord-pdt-dtl .ord-rw-itm {
+  display: block;
 }
 .ord-lst-rw:before,
 .ord-lst-rw:after {
@@ -1570,13 +1586,36 @@ input[type="search"] {
 .ord-lst-rw + .ord-lst-rw {
   border-top: 1px solid #e1e1e1;
 }
-.ord-lst-rw .pdt-price,
-.ord-lst-rw .pdt-qty,
-.ord-lst-rw .pdt-ttl-row {
-  line-height: 100px;
-}
 .ord-pdts-lst {
   width: 100%;
+}
+@media screen and (min-width: 1280px) {
+  .pdt-dtls {
+    float: none;
+  }
+  .pdt-dtls-lst {
+    float: right;
+    padding-top: 16px;
+  }
+  .pdt-dtls-lst li {
+    display: inline-block;
+  }
+  .pdt-dtls-primary {
+    float: left;
+    padding-top: 7px;
+    padding-left: 10px;
+  }
+  .pdt-label {
+    display: none;
+  }
+  .pdt-qty {
+    text-align: center;
+    width: 50px;
+  }
+  .pdt-total {
+    min-width: 80px;
+    text-align: right;
+  }
 }
 .ord-ttl-dts {
   background: #faf6e6;

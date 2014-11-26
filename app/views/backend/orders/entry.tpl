@@ -19,72 +19,36 @@
       <p class="ord-sts-rsm"><!-- order status resume -->
         <span class="strong c-blk">Paypal</span> - Confirmed Payment
       </p><!-- /.ord-sts-rsm -->
-      <hr class="hr">
       <ul class="ord-lst"><!-- order list -->
         <li class="ord-lst-rw">
-          <span class="ord-rw-itm"> <!-- order row item -->
-            <span class="thmb-list">
-              <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-06.jpg)"></span>
-            </span>
-          </span><!-- /.ord-rw-itm -->
-          <span class="ord-rw-itm pdt-dtls">
-            <strong class="pdt-name dp-b">30th Anniversary Box Set</strong>
-          </span><!-- /.ord-rw-itm -->
-          <span class="fl-r">
-            <span class="ord-rw-itm pdt-price">
-              1 336,00 €
-            </span>
-            <span class="ord-rw-itm pdt-qty">
-              99
-            </span>
-            <span class="ord-rw-itm pdt-ttl-row">
-              33 264,00 €
-            </span>
+          <span class="thmb-list">
+            <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-06.jpg)"></span>
           </span>
-        </li><!-- /.ord-lst-rw -->
-        <li class="ord-lst-rw">
-          <span class="ord-rw-itm"> <!-- order row item -->
-            <span class="thmb-list">
-              <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-01.jpg)"></span>
-            </span>
-          </span><!-- /.ord-rw-itm -->
-          <span class="ord-rw-itm pdt-dtls">
-            <strong class="pdt-name dp-b">Dark shirt</strong>
-            <span class="pdt-opt">Taille S</span>
-          </span><!-- /.ord-rw-itm -->
-          <span class="fl-r">
-            <span class="ord-rw-itm pdt-price">
-              $136.00
-            </span>
-            <span class="ord-rw-itm pdt-qty">
-              1
-            </span>
-            <span class="ord-rw-itm pdt-ttl-row">
-              $136.00
-            </span>
-          </span>
-        </li><!-- /.ord-lst-rw -->
-        <li class="ord-lst-rw">
-          <span class="ord-rw-itm"> <!-- order row item -->
-            <span class="thmb-list">
-              <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-03.jpg)"></span>
-            </span>
-          </span><!-- /.ord-rw-itm -->
-          <span class="ord-rw-itm pdt-dtls">
-            <strong class="pdt-name dp-b">Reunion tour shirt</strong>
-            <span class="pdt-opt">super long option description</span>
-          </span><!-- /.ord-rw-itm -->
-          <span class="fl-r">
-            <span class="ord-rw-itm pdt-price">
-              $136.00
-            </span>
-            <span class="ord-rw-itm pdt-qty">
-              1
-            </span>
-            <span class="ord-rw-itm pdt-ttl-row">
-              $136.00
-            </span>
-          </span>
+          <span class="pdt-dtls">
+            <span class="pdt-dtls-primary">
+              <strong class="pdt-name dp-b">30th Anniversary Box Set</strong>
+            </span><!-- /.pdt-dtls-primary -->
+            <ul class="pdt-dtls-lst">
+              <li class="pdt-price">
+                <span class="pdt-label">unit price:</span>
+                <span class="pdt-value pdt-price-value">
+                  1 336,00 €
+                </span>
+              </li>
+              <li class="pdt-qty">
+                <span class="pdt-label">quantity:</span>
+                <span class="pdt-value pdt-qty-value">
+                  99
+                </span>
+              </li>
+              <li class="pdt-total">
+                <span class="pdt-label">unit price:</span>
+                <span class="pdt-value pdt-total-value">
+                  1 336,00 €
+                </span>
+              </li>
+            </ul>
+          </span><!-- /.pdt-dtls -->
         </li><!-- /.ord-lst-rw -->
       </ul><!-- /.ord-lst -->
       <hr class="hr">

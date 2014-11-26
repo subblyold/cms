@@ -12,7 +12,7 @@
         <div class="cust-identifier">
           <strong class="c-blk strong">{{displayName}}</strong>  n° 53<br>
           {{email}}<br>
-          Last visit :  <strong class="c-blk strong">{{lastLogin}}</strong>
+          Last visit: {{lastLogin}}
         </div><!-- /.fl-l -->
         <span class="cust-action">
           <a href="javascript:;" class="btn btn-w-icon">
