@@ -19825,23 +19825,23 @@ scroll2sickyList.prototype.update = function( scrollTop )
 {
   'use strict';
 
-  // Defined what event we must call at the end of a CSS transition
-  var whichTransitionEvent = function ()
-  {
-    var t
-      , el = document.createElement('fakeelement')
-      , transitions = 
-        {
-            'transition':       'transitionend'
-          , 'OTransition':      'oTransitionEnd'
-          , 'MozTransition':    'transitionend'
-          , 'WebkitTransition': 'webkitTransitionEnd'
-        }
-
-    for( t in transitions )
-      if( el.style[ t ] !== undefined )
-        return transitions[ t ]
+  // Defined what event we must call at the end of a CSS transition/animation
+  var animEndEventNames = {
+      WebkitAnimation: 'webkitAnimationEnd'
+    , OAnimation:      'oAnimationEnd'
+    , msAnimation:     'MSAnimationEnd'
+    , animation:       'animationend'
   }
+
+  var transitionEndEventNames = {
+      WebkitTransition: 'webkitTransitionEnd'
+    , OTransition:      'oTransitionEnd'
+    , MozTransition:    'transitionend'
+    , transition:       'transitionend'
+  }
+
+  var transitionEndEventName = transitionEndEventNames[ Modernizr.prefixed( 'transition' ) ]
+    , animEndEventName       = animEndEventNames[ Modernizr.prefixed( 'animation' ) ]
 
   // Prepare our Variables
   var document      = window.document
@@ -19851,21 +19851,26 @@ scroll2sickyList.prototype.update = function( scrollTop )
     , $body         = $( document.body )
     , subbly        = false
     , AppRouter     = false
-    , transitionEnd = whichTransitionEvent()
-    , defaultFwObj  = {
-          Model:      {}
-        , Collection: {}
-        , View:       {}
-        , Supervisor: {}
-        , Controller: {}
-        , Component:  {}
-      }
+
+  // Extend default 
+  // components structure
+  // for each Vendors
+  var defautlsFwObj = function()
+  {
+    var defaults  = {
+        Model:      {}
+      , Collection: {}
+      , View:       {}
+      , Controller: {}
+      , Component:  {}
+    }
+
+    return $.extend( {}, defaults, {} )
+  }
 
   var Components = 
   {
-      // vendor level
-      Subbly: $.extend( {}, defaultFwObj )
-
+    Subbly: defautlsFwObj()
   }
 
 
@@ -19957,6 +19962,8 @@ var Helpers =
 //   return __( str )
 // })
 
+// Select/Checkbox/Radio button options helper
+// {{isSelected this default="string or reference" attribute="selected"}}
 Handlebars.registerHelper('isSelected', function( value, options )
 {
   if( _.isUndefined( options.hash ) )
@@ -20146,6 +20153,26 @@ Handlebars.registerHelper('json', function( obj )
   return JSON.stringify( obj, undefined, 4)
 })
 
+Handlebars.registerHelper('indexPlusOne', function( str ) 
+{
+  return (( +str ) + 1 )
+})
+
+Handlebars.registerHelper('userAddress', function( obj ) 
+{
+  var str = [
+      // obj.lastname + ' ' + obj.firstname + '<br>'
+      obj.address1 + '<br>'
+  ]
+
+  if( !_.isNull( obj.address2 ) )
+    str.push( obj.address2 + '<br>' )
+
+  str.push( obj.zipcode + ' ' + obj.city + '<br>' )
+  str.push( obj.country )
+
+  return str.join('')
+})
 /*
  * validation inspired by validate.js by Rick Harrison, http://rickharrison.me
  * validate.js is open sourced under the MIT license.
@@ -20306,6 +20333,201 @@ var xhrCall = function( options )
   return xhr
 }
 
+var FEEDBACK_TIMEOUT = 3000
+  , FEEDBACK_TIMER   = null 
+
+var Feedback = function()
+{
+  this.overlay   = document.getElementById('feedback-overlay')
+  this.view      = document.getElementById('main-view')
+  this.isDisplay = false
+  this.ended     = false
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.add = function()
+{
+  if( this.isDisplay )
+    return this
+
+  this.isDisplay = true
+
+  var wrapper = document.body
+    , entry   = document.createElement( 'div' )
+    , inner   = document.createElement( 'div' )
+    , scope   = this
+
+  entry.className = 'feedback'
+  inner.className = 'feedback-inner'
+
+  entry.appendChild( inner )
+
+  wrapper.insertBefore( entry, document.body.firstChild )
+
+  // this.view    = document.getElementById('main-view')
+  this.$entry  = $( entry )
+  this.$msg    = $( inner )
+  this.isDone  = false
+
+  this.$entry
+    .one( 'click', function()
+    {
+      scope.dismiss()
+    })
+
+  // this.overlay.classList.add('show')
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.display = function( message )
+{
+  this.isDone = true
+  this.upMainView()
+  this.message( message )
+  this.$msg.addClass('display')
+
+  var scope = this
+
+  FEEDBACK_TIMER = window.setTimeout( function()
+  {
+    scope.dismiss()
+  }, FEEDBACK_TIMEOUT )
+}
+
+/*
+ * 
+ */
+Feedback.prototype.message = function( message )
+{
+  this.$msg.text( message )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.state = function( state )
+{
+  this.$entry.addClass( state )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progress = function()
+{
+  this.$entry
+    .css({
+        width:  0
+      , height: '12px'
+    })
+    .animate({
+      width: '100%'
+    }, 5000, function(){})
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.progressEnd = function( state, message )
+{
+  if( this.ended || _.isUndefined( this.$entry ) )
+    return this
+
+  this.ended = true
+
+  var width = this.$entry.width() 
+    , scope = this
+
+  if( !_.isUndefined( state ) )
+    this.state( state )
+  
+  this.$entry
+    .stop( true, true )
+    .css( 'width', width)
+    .animate(
+        { width: '100%' }
+      , 250
+      , function()
+        {
+          if( !_.isUndefined( message ) )
+          {
+            scope.$entry.stop( true, true ).animate({ height: 66 }, 250 )
+            scope.display( message )
+            return
+          }
+
+          scope.ended = false
+          
+          scope.overlay.classList.remove('show')
+
+          scope.$entry.stop( true, true ).fadeOut( 300, function()
+          {
+            scope.isDisplay = false
+            this.remove()
+          })
+        }
+    )
+
+  return this
+}
+
+/*
+ * 
+ */
+Feedback.prototype.downMainView = function()
+{
+  this.view.classList.remove( 'w-feedback' )
+}
+
+/*
+ * 
+ */
+Feedback.prototype.upMainView = function()
+{
+  this.view.classList.add( 'w-feedback' )
+}
+
+
+/*
+ * 
+ */
+Feedback.prototype.dismiss = function()
+{
+  if( !this.isDone )
+    return this
+
+  window.clearTimeout( FEEDBACK_TIMER )
+
+  var scope = this
+
+  this.overlay.classList.remove('show')
+
+  this.$entry.fadeOut( 300, function()
+  {
+
+    scope.ended     = false  
+    scope.isDisplay = false
+
+    scope.downMainView()
+    this.remove()
+  })
+}
+
+
 // Subbly's Backbone base model
 
 var SubblyModel = Backbone.Model.extend(
@@ -20333,6 +20555,11 @@ var SubblyModel = Backbone.Model.extend(
 
       // collection fetch
       return response
+    }
+
+  , getNested: function( property, defaults )
+    {
+      return Helpers.getNested( this.attributes, property, defaults || false )
     }
 })
 
@@ -20394,11 +20621,6 @@ var SubblyView = Backbone.View.extend(
         {
           this.el.classList.add( c )
         }, this)
-
-      // Subbly's views `initialize` callback
-      // do not use it
-      if( this.onSubblyInitialize )
-        this.onSubblyInitialize( options )
 
       // Public views `initialize` callback
       // you can use it
@@ -20467,7 +20689,7 @@ var SubblyView = Backbone.View.extend(
       })
 
       if( this.onDisplayTpl )
-        this.onDisplayTpl()
+        this.onDisplayTpl( tplData )
 
       this._sticky = new scroll2sicky( this.$el )
 
@@ -20514,18 +20736,26 @@ var SubblyController = Backbone.Controller.extend(
 
   , onBeforeRoute: function()
     {
-      this.displayViews()
-
-      this._mainRouter._currentView = this
+      // Do not clean current view
+      // if we call it again (e.g. frame view)
+      if( this._mainRouter.controllersAreTheSame( this._getName() ) )
+        return
 
       if( this.onBefore )
         this.onBefore()
+
+      this.displayViews()
     }
 
   , onAfterRoute: function()
     {
       if( this.onAfter )
         this.onAfter()
+
+      // register current controller
+      this._mainRouter.setCurrentController( this )
+
+      subbly.trigger( 'loader::progressEnd' )
     }
 
     // Clean DOM and JS memory
@@ -20533,6 +20763,10 @@ var SubblyController = Backbone.Controller.extend(
     {
       //Stop pending fetch
       subbly.cleanXhr()
+
+      // 
+      if( this.onRemove )
+        this.onRemove()
 
       // Close views
       _( this._viewsPointers )
@@ -20547,6 +20781,11 @@ var SubblyController = Backbone.Controller.extend(
       this._parentView      = false
       this._viewsPointers   = {}
       this._reversedPointer = {}
+    }
+
+  , _getName: function()
+    {
+      return this._controllerName
     }
 
     // create DOM elements
@@ -20638,6 +20877,19 @@ var SubblyController = Backbone.Controller.extend(
       if( this._mainNavRegister )
         this._mainRouter.registerMainNav( this._mainNavRegister )
     }
+
+  , getCurrentViewName: function()
+    {
+      return this._controllerName
+    }
+
+  , setCurrentViewName: function( viewName )
+    {
+      this._controllerName = viewName
+      
+      return this
+    }
+
 })
 
 
@@ -20664,11 +20916,17 @@ var SubblyCore = function( config )
   // XHR call reference
   this._fetchXhr          = {}
 
+  // Feedback
+  this._feedback = new Feedback()
+
   // Pub/Sub channel
   this._event  = _.extend( {}, Backbone.Events )
 
   this._event.on( 'user::loggedIn', this.setCredentials, this )
   this._event.on( 'user::logout',   this.logout,         this )
+  // this._event.on( 'feedback::add',  this.feedback,       this )
+  // this._event.on( 'feedback::done', this.feedbackDone,   this )
+  this._event.on( 'loader::progressEnd', this._feedback.progressEnd  )
 
   this._viewAllowedType = [ 
       'Model'
@@ -20700,11 +20958,18 @@ SubblyCore.prototype.init = function()
 
   var scope = this
 
-  this.on( 'hash::change', function( href )
+  this.on( 'hash::change', function( href, trigger )
   {
+    trigger = ( _.isUndefined( trigger ) ) ? true : trigger
+
+    var opts = ( trigger ) 
+               ? { trigger: true }
+               : { replace: true } 
+
     if( scope._changesAreSaved )
     {
-      scope._router.navigate( href, { trigger: true } )
+      scope._feedback.add().progress()
+      scope._router.navigate( href, opts )
     }
     else
     {
@@ -20715,8 +20980,8 @@ SubblyCore.prototype.init = function()
       //   , success:  __('label.leave')
       //   , onSubmit: function()
       //     {
-      //       Pubsub.trigger( 'form::reset' )
-      //       AppRouter.navigate( href, { trigger: true } )
+      //       scope.trigger( 'form::reset' )
+      //       AppRouter.navigate( href, opts )
       //     }
       // })
     }
@@ -20831,6 +21096,17 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
   this._event.trigger( args1, args2, args3, args4, args5, args6, args7 )
 }
 
+/*
+ * Trigger loader
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.feedback = function()
+{
+  return this._feedback
+}
+
 
 // CREDENTIALS / LOGIN
 //-------------------------------
@@ -20848,7 +21124,7 @@ SubblyCore.prototype.setCredentials = function( credentials )
 
   this._credentials = credentials
 
-  document.cookie = this._credentialsCookie + '=' + this._credentials + '; path=/'
+  this.setCookie( this._credentialsCookie, this._credentials )
 }
 
 /*
@@ -20873,22 +21149,10 @@ SubblyCore.prototype.getCredentials = function()
 
 SubblyCore.prototype.isLogin = function()
 {
-  if( !document.cookie )
-  {
-    console.warn('no cookie for this domain')
-    return false
-  }
+  var credentials = this.getCookie( this._credentialsCookie )
 
-  // retrive credentials from cookies
-  var regexp      = new RegExp("(?:^" + this._credentialsCookie + "|;\s*"+ this._credentialsCookie + ")=(.*?)(?:;|$)", 'g')
-    , result      = regexp.exec( document.cookie )
-    , credentials = ( result === null ) ? false : result[1]
-
-  if( credentials === 'null' )
-  {
-    console.warn('cookie found but credentials are null')
+  if( !credentials )
     return false
-  }
   
   this.trigger( 'user::loggedIn', credentials )
 
@@ -20908,7 +21172,7 @@ SubblyCore.prototype.logout = function()
 
   this._credentials = false
 
-  document.cookie = this._credentialsCookie + '=' + null + '; path=/'
+  this.setCookie( this._credentialsCookie, null )
 
   this.trigger( 'hash::change', 'login' )
 }
@@ -20966,30 +21230,85 @@ SubblyCore.prototype.api = function( serviceName, args )
  */
 SubblyCore.prototype.fetch = function( obj, options, context )
 {
-  var options = options || {}
-    , xhrId   = _.uniqueId( 'xhr_' )
+  var _feedback = this._feedback
+    , options   = options || {}
+    , xhrId     = _.uniqueId( 'xhr_' )
+    , cbShared  = function()
+      {
+        _feedback.progressEnd()
+
+        if( context )
+          context.trigger( 'fetch::responds' )
+      }
 
   if( context )
     context.trigger( 'fetch::calling' )
+  
+  _feedback.add().progress()
 
   this._fetchXhr[ xhrId ] = obj.fetch({
       data:    options.data || {} 
     , xhrId:   xhrId
     , success: function( bbObj, response, opts )
       {
-        if( context )
-          context.trigger( 'fetch::responds' )
+        cbShared()
 
         if( options.success && _.isFunction( options.success ) )
           options.success( bbObj, response, opts )
       }
     , error: function( bbObj, response, opts )
       {
-        if( context )
-          context.trigger( 'fetch::responds' )
-
+        cbShared()
+        
         if( options.error && _.isFunction( options.error ) )
           options.error( bbObj, response, opts  )
+      }
+  })
+}
+
+/*
+ * Generic method to save a model
+ * format json
+ * stores the XHR call to prevent cancel
+ *
+ * @params  {object}  model to save
+ * @params  {object}  data to set
+ * @params  {object}  callbacks options
+ * @params  {object}  call context
+ * @return  {object}
+ */
+SubblyCore.prototype.store = function( model, data, options, context )
+{
+  var data    = data || false
+    , options = options || {}
+    , scope   = this
+
+  if( !data )
+    throw new Error( 'No data pass to Subbly.store' )
+
+  options.json = {}
+
+  options.json[ model.singleResult ] = data 
+
+  var _feedback = this.feedback()
+  
+  _feedback.add().progress()
+
+  model.save( options.json, 
+  {
+      success: function( model, response, opts )
+      {
+        _feedback.progressEnd( 'success', options.successMsg || response.headers.status.message )
+
+        if( options.success && _.isFunction( options.success ) )
+          options.success( model, response, opts )
+      }
+    , error: function( model, response, opts )
+      {
+        _feedback.progressEnd( 'error', options.errorMsg || response.responseJSON.headers.status.message )
+
+        if( options.error && _.isFunction( options.error ) )
+          options.error( model, response, opts  )
       }
   })
 }
@@ -21017,6 +21336,57 @@ SubblyCore.prototype.cleanXhr = function()
 
 
 /*
+ * get Cookie
+ *
+ * @return  {mixed}
+ */
+
+SubblyCore.prototype.getCookie = function( cookieName )
+{
+  console.groupCollapsed( 'get cookie: ' + cookieName )
+
+  if( !document.cookie )
+  {
+    console.warn('no cookie for this domain')
+    console.groupEnd()
+    return false
+  }
+
+  // retrive data from cookies
+  var data = decodeURIComponent( document.cookie.replace( new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent( cookieName ).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null
+  
+  console.log( document.cookie )
+  console.log( data )
+  
+  if( data === 'null' )
+  {
+    console.warn('cookie "' + cookieName + '" found but data are null')
+    console.groupEnd()
+
+    return false
+  }
+
+  console.groupEnd()
+  return data
+}
+
+/*
+ * set Cookie
+ *
+ * @return  {void}
+ */
+
+SubblyCore.prototype.setCookie = function( cookieName, value, expire )
+{
+  document.cookie = cookieName + '=' + value + '; path=/'
+}
+
+
+// PLUGINS
+//-------------------------------
+
+
+/*
  * Extend Subbly Components
  *
  * @params  {string}  component type
@@ -21032,7 +21402,7 @@ SubblyCore.prototype.extend = function( vendor, type, name, obj )
 
   // create a new Vendor
   if( !Components[ vendor ] )
-    Components[ vendor ] = $.extend( {}, defaultFwObj )
+    Components[ vendor ] = defautlsFwObj()
 
   var alias
 
@@ -21106,6 +21476,59 @@ subbly = new SubblyCore( subblyConfig )
 
 window.Subbly = subbly
 
+
+
+Components.Subbly.Model.Order = SubblyModel.extend(
+{
+    idAttribute:  'id'
+  , serviceName:  'orders'
+  , singleResult: 'order'
+})
+
+
+Components.Subbly.Model.Product = SubblyModel.extend(
+{
+    idAttribute:  'sku'
+  , serviceName:  'products'
+  , singleResult: 'product'
+
+  // Rules
+  // -------------------
+
+  , getRules: function()
+    {
+      return [
+          {
+              name:    'status'
+            , rules:   'required'
+          }
+        , {
+              name:    'sku'
+            , rules:   'required'
+          }
+        , {
+              name:    'name'
+            , rules:   'required'
+          }
+        , {
+              name:    'description'
+            , rules:   'required'
+          }
+        , {
+              name:    'price'
+            , rules:   'required|numeric'
+          }
+        , {
+              name:    'sale_place'
+            , rules:   'numeric'
+          }
+        , {
+              name:    'quantity'
+            , rules:   'required|numeric'
+          }
+      ]
+    }
+})
 
 
 Components.Subbly.Model.User = SubblyModel.extend(
@@ -21234,6 +21657,28 @@ Components.Subbly.Collection.List = SubblyCollectionList = SubblyCollection.exte
 })
 
 
+Components.Subbly.Collection.Orders = Components.Subbly.Collection.List.extend(
+{
+    model:       Components.Subbly.Model.Order
+  , serviceName: 'orders'
+
+  , comparator: function( model )
+    {
+        return model.get('id')
+    }
+})
+
+Components.Subbly.Collection.Products = Components.Subbly.Collection.List.extend(
+{
+    model:       Components.Subbly.Model.Product
+  , serviceName: 'products'
+
+  , comparator: function( model )
+    {
+        return model.get('position')
+    }
+})
+
 Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 {
     model:       Components.Subbly.Model.User
@@ -21246,16 +21691,23 @@ Components.Subbly.Collection.Users = Components.Subbly.Collection.List.extend(
 })
 var SubblyViewForm
 
-Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
+Components.Subbly.View.FormView = SubblyViewForm = SubblyView.extend(
 {
-    form:             false
+    _form:            false
   , $formInputs:      false
 
-  , events: {
-        'click button[type="submit"]'                        : 'submit'
-      , 'click button[type="reset"]'                         : 'cancel'
-      , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
-      , 'change :input'                                      : 'removeWarning'
+  , initialize: function( options )
+    {
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // add view's event
+      this.addEvents( {
+          'click .js-submit-form'                        : 'submit'
+        , 'click .js-cancel-form'                        : 'cancel'
+        , 'keypress :input:not(textarea,[data-bypass="true"])' : 'onEnter'
+        , 'change :input'                                      : 'removeWarning'
+      })
     }
 
     // usefull to override event's method
@@ -21310,7 +21762,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       if( _.isUndefined( options.id ) )
         return
 
-      this.form = {
+      this._form = {
           id:       options.id
         , element:  document.getElementById( options.id )
         , data:     options.data      || {}
@@ -21319,18 +21771,24 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
         , skip:     ( _.isUndefined( options.skip ) ) ? true  : options.skip      // ignore blank fields 
       }
 
-      this.form.$el = $( this.form.element )
+      this._form.$el = $( this._form.element )
     }
 
   , setRules: function( rules )
     {
-      if( this.form )
-        this.form.rules = rules
+      if( this._form )
+        this._form.rules = rules
     }
     
   , setExtra: function( key, value, init )
     {
-      Helpers.setNested( this.form.extra, key, value )
+      Helpers.setNested( this._form.extra, key, value )
+    }
+
+
+  , getFormValues: function()
+    {
+      return this._form.data
     }
 
   , getFormValue: function( key, defaults )
@@ -21340,30 +21798,40 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
       // if( _.isUndefined( key ) )
       //   throw new Error( 'getFormValue need a key' )
 
-      if( !this.form.data[ key ] )
+      if( !this._form.data[ key ] )
         return defaults
 
-      return this.form.data[ key ]
+      return this._form.data[ key ]
     }
+
+  , submit: function( event )
+    {
+      if( !_.isUndefined( event ) )
+          event.preventDefault()
+
+      if( this.validateForm() && this.onSubmit )
+        this.onSubmit()
+    }
+
 
   , validateForm: function()
     {
-      if( !this.form )
+      if( !this._form )
         return
 
-      this.$formInputs = this.form.$el.find(':input[name]')
+      this.$formInputs = this._form.$el.find(':input[name]')
 
       this.$formInputs.removeClass('warning')
 
-      var formData = this.$formInputs.serializeObject( this.form.skip )
+      var formData = this.$formInputs.serializeObject( this._form.skip )
 
-      this.form.data = Helpers.deepMerge( formData, this.form.extra )
+      this._form.data = Helpers.deepMerge( formData, this._form.extra )
 
       this.errors = []
   
-      for( var key in this.form.rules )
+      for( var key in this._form.rules )
       {
-        this._validateField( this.form.rules[ key ] )
+        this._validateField( this._form.rules[ key ] )
       }
 
       if (this.errors.length > 0)
@@ -21392,13 +21860,13 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
 
   , addRules: function(fields)
     {
-      if( this.form )
+      if( this._form )
       {
         for (var i = -1, l = fields.length; ++i < l;) 
         {
           var field = fields[ i ]
 
-          this.form.rules.push({
+          this._form.rules.push({
               name:    field.name
             , rules:   field.rules
             , value:   null
@@ -21415,7 +21883,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
     {
       var rules = field.rules.split('|')
 
-      field.value = Helpers.getNested( this.form.data, field.name )
+      field.value = Helpers.getNested( this._form.data, field.name )
 
       // If the value is null and not required, we don't need to run through validation             
       if( field.rules.indexOf('required') === -1 
@@ -21468,7 +21936,7 @@ Components.Subbly.View.FormView = SubblyViewForm = Backbone.View.extend(
           
           var _obj = {
                   field:   field
-                , element: this.form.element.querySelector('[name="'+ field.name + '"]')
+                , element: this._form.element.querySelector('[name="'+ field.name + '"]')
               }
           
           this.errors.push( _obj )
@@ -21496,9 +21964,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
   , _$listItems:     false
   , collection:      false
 
-  , onSubblyInitialize: function()
+  // , onSubblyInitialize: function()
+  , initialize: function( options )
     {
-      console.log( 'initialize list view ' + this._viewName )
+      // Call parent `initialize` method
+      SubblyView.prototype.initialize.apply( this, arguments )
+
+      // console.log( 'initialize list view ' + this._viewName )
 
       this.on( 'view::scrollend', this.nextPage, this )
       subbly.on( 'pagination::fetch', this.loadMore, this )
@@ -21538,13 +22010,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Trigger 'pagination::fetch' event
   , nextPage: function()
     {
+      console.groupCollapsed('call next page' )
+
       if( this._isLoadingMore )
+      {
+        console.info('already loading')
+        console.groupEnd()
         return
+      }
 
       if( !this.collection.nextPage() )
+      {
+        console.info('no more page')
+        console.groupEnd()
         return
+      }
 
       subbly.trigger( 'pagination::fetch' )
+
+      console.info('call next page')
+      console.groupEnd()
     }
 
     // Test if there a previous page available 
@@ -21588,16 +22073,26 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
     // Render list's row
   , render: function()
     {
+      console.groupCollapsed( 'render collection items' )
+
       if( !this.collection )
+      {
+        console.warn('ABORT, no collection items')
+        console.groupEnd()
         return
+      }
 
       // fetch flag
       this._isLoadingMore = false
+      console.info('remove `_isLoadingMore` flag')
 
       var $loader = $( document.getElementById( 'list-pagination-loader') )
 
       if( $loader.length )
+      {
         $loader.remove()
+        console.info('remove loader')
+      }
 
       // this._viewsPointers = {}
 
@@ -21605,6 +22100,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       {
         subbly.trigger( 'loader::hide' )
         this.displayInviteMsg()
+        console.warn('Collection empty, display invite message')
+        console.groupEnd()
         return
       }
 
@@ -21639,9 +22136,13 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this._$list.append( this._fragment )
         this._$listItems = this._$list.find('.list-row')
 
+        console.info('append DOM\'s fragment')
+
         if( !this._initialDisplay )
         {
           this._initialDisplay = true
+
+          console.info('it was the first call to the collection')
 
           if( this.onInitialRender )
             this.onInitialRender()
@@ -21654,6 +22155,7 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
         this.onAfterRender()
       
       subbly.trigger( 'loader::hide' )
+      console.groupEnd()
     }
 
     // TODO: to design
@@ -21774,6 +22276,8 @@ Components.Subbly.View.Viewlist = SubblyViewList = SubblyView.extend(
       if( this.collection )
         this.collection.resetPagination()
 
+      this._initialDisplay = false
+
       SubblyView.prototype.onClose.apply( this, arguments )
 
       // subbly.off( 'pagination::changed',  this.render, this ) 
@@ -21804,11 +22308,11 @@ console.log('goTo')
 })
 
 
-Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
+Components.Subbly.View.Login = SubblyViewForm.extend(
 {
     el: '#login'
 
-  , initialize: function()
+  , onInitialize: function()
     {
       var rules = [
           {
@@ -21836,12 +22340,10 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       subbly.on( 'user::loggedIn', function()
       {
         this.hide()
-        this.form.$el.reset()
+        this._form.$el.reset()
         this.btnReset()
 
       }, this)
-
-      return this
     }
 
   , display: function()
@@ -21879,9 +22381,13 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       var login = this
 
       this.$el
-        .one( transitionEnd, function()
+        .one( transitionEndEventName, function()
         {
-          login.$el.hide()
+          login
+            .$el
+            .removeClass('active')
+            .removeClass('logged')
+            .hide()
         })
         .addClass('logged')
     }
@@ -21891,46 +22397,41 @@ Components.Subbly.View.Login = Components.Subbly.View.FormView.extend(
       this.$btn.button('reset')
     }
 
-  , submit: function( event )
+  , onSubmit: function()
     {
       this.$btn.button('loading')
 
-      if( !_.isUndefined( event ) )
-          event.preventDefault()
+      var credentials  = 
+          {
+              username: this.getFormValue( 'email' )
+            , password: this.getFormValue( 'password' )
+          }
+        , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
+        , login        = this
+        , authenticate = new xhrCall(
+          {
+              url:       'auth/test-credentials'
+            , headers: {
+                Authorization: 'Basic ' + encode
+              }
+            , success: function( response )
+              {
+                subbly.trigger( 'user::loggedIn', encode )
+              }
+            , error:   function( jqXHR, textStatus, errorThrown )
+              {
+                $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
 
-      if( this.validateForm() )
-      {
-        var credentials  = 
-            {
-                username: this.form.data.email
-              , password: this.form.data.password 
-            }
-          , encode       = window.btoa( unescape( encodeURIComponent( [ this.getFormValue( 'email' ), this.getFormValue( 'password' ) ].join(':') ) ) )
-          , login        = this
-          , authenticate = new xhrCall(
-            {
-                url:       'auth/test-credentials'
-              , headers: {
-                  Authorization: 'Basic ' + encode
-                }
-              , success: function( response )
-                {
-                  subbly.trigger( 'user::loggedIn', encode )
-                }
-              , error:   function( jqXHR, textStatus, errorThrown )
-                {
-                  $( document.getElementById('login-msg') ).text( jqXHR.responseJSON.response.error )
-
-                  login.$formInputs.addClass('warning')
-                  document.getElementById('login-email').focus()
-                  login.btnReset()
-                }
-            })
+                login.$formInputs.addClass('warning')
+                document.getElementById('login-email').focus()
+                login.btnReset()
+              }
+          })
         
-        return
-      }
+      //   return
+      // }
 
-      this.btnReset()
+      // this.btnReset()
     }
 })
 
@@ -21956,7 +22457,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
       this.$links = this.$el.find('a.js-trigger-go')
 
-      subbly.on( 'hash::changed', this.hashChanged, this )
+      subbly.on( 'mainnav::hashchanged', this.hashChanged, this )
 
       this.userNav()
 
@@ -22050,11 +22551,733 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 })
 
 
+  // CONTROLLER
+  // --------------------------------
+
+  var Customers = 
+  {
+      _tplStructure:   'half'
+    , _viewsNames:     [ 'Subbly.View.Customers', 'Subbly.View.CustomerSheet' ]
+    , _controllerName: 'customers'
+    , _listDisplayed:  false
+    , _mainNavRegister:
+      {
+          name:       'Customers'
+        , order:      180
+        , defaultUrl: 'customers'
+      }
+
+    , routes: {
+          'customers':      'display'
+        , 'customers/:uid': 'display'
+      }
+
+    , onRemove: function()
+      {
+        this._listDisplayed = false
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function( uid ) 
+      {
+        if( !this._listDisplayed )
+        {
+          var scope = this
+
+          this.displayView( function()
+          {
+            if( !_.isNull( uid ) )
+              scope.sheet( uid )
+          })
+
+          return
+        }
+        
+        if( !_.isNull( uid ) )
+          this.sheet( uid )
+        else
+          this.getViewByPath( 'Subbly.View.Customers' )
+            .onInitialRender()
+      }
+
+    , displayView: function( sheetCB )
+      {
+        var scope  = this
+
+        subbly.fetch( subbly.api('Subbly.Collection.Users'),
+        {
+            data:   {
+                offset: 0
+              , limit:  10
+            }
+          , success: function( collection, response )
+            {
+              scope._listDisplayed = true
+              scope.getViewByPath( 'Subbly.View.Customers' )
+                .setValue( 'collection', collection )
+                .displayTpl()
+
+              if( _.isFunction( sheetCB ) )
+                sheetCB()
+            }
+        }, this )
+      }
+
+    , sheet: function(  uid ) 
+      {
+        this.getViewByPath( 'Subbly.View.Customers' ).setActiveRow( uid )
+
+        var scope = this
+          , user  = subbly.api('Subbly.Model.User', { uid: uid })
+
+        subbly.fetch( user,
+        {
+            data: { includes: ['addresses', 'orders'] }
+          , success: function( model, response )
+            {
+              var json = model.toJSON()
+
+              json.displayName = model.displayName()
+              json.lastLogin   = moment.utc( model.get('last_login') ).format('llll')
+
+              scope.getViewByPath( 'Subbly.View.CustomerSheet' )
+                .setValue( 'model', model )
+                .displayTpl( json )
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+
+  // List's row view (optional)
+  // use it if you need to have 
+  // full control on model (delete, etc.)
+  // var CustomersRow = 
+  // {
+  //     className: 'cln-lst-rw cust-row js-trigger-goto'
+  //   , _viewName: 'CustomerRow'
+
+  //   , onInitialize: function( options )
+  //     {
+  //       this.tplRow = options.tpl
+  //     }
+
+  //   , render: function()
+  //     {
+  //       var html = this.tplRow({
+  //           displayName: this.model.displayName()
+  //         , createdDate: moment.utc( this.model.get('created_at') ).fromNow()
+  //       })
+
+  //       this.$el.html( html )
+
+  //       this.el.dataset.uid  = this.model.get('uid')
+
+  //       return this
+  //     }
+
+  //   , goTo: function( event )
+  //     {
+  //       this.callController( 'sheet', this.model.get('uid') )
+  //     }
+  // }
+
+  // Customers List view
+  var CustomersList = 
+  {
+      _viewName:     'Customers'
+    , _viewTpl:      TPL.customers.list
+    , _classlist:    ['view-half-list']
+    , _listSelector: '#customers-list'
+    , _tplRow:        TPL.customers.listrow
+    // , _viewRow:       'subbly.View.CustomerRow'
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {'click li.js-trigger-goto':  'goTo'} )
+      }
+
+      // Call on list first render
+    , onInitialRender: function()
+      {
+        var $firstRow = this.getListEl().children(':first')
+          , uid       = $firstRow.attr('data-uid')
+
+        this.callController( 'sheet', uid )
+      }
+
+      // Build single list's row
+    , displayRow: function( model )
+      {
+        var html = this._tplRowCompiled({
+            displayName: model.displayName()
+          , createdDate: moment.utc( model.get('created_at') ).fromNow()
+          , uid:         model.get('uid')
+        })
+
+        return html
+      }
+
+      // Higthligth active row
+    , setActiveRow: function( uid )
+      {
+        var $listRows  = this.getListRows()
+          , $activeRow = $listRows.filter('[data-uid="' + uid + '"]')
+
+        $listRows.removeClass('active')
+        $activeRow.addClass('active')
+      }
+
+      // go to customer profile
+    , goTo: function( event )
+      {
+        var uid = event.currentTarget.dataset.uid
+
+        subbly.trigger( 'hash::change', 'customers/' + uid, true )
+        // this.callController( 'sheet', uid )
+      }
+  }
+
+  // Customers Sheet view
+  var CustomerSheet = 
+  {
+      _viewName:     'CustomerSheet'
+    , _viewTpl:      TPL.customers.sheet
+  }
+
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Customers', 
+  {
+      'ViewList:Customers':   CustomersList
+    // , 'ViewListRow:CustomerRow':   CustomersRow
+    , 'View:CustomerSheet':   CustomerSheet
+    , 'Controller:Customers': Customers
+  })
+
+
+
+  var dashboard = 
+  {
+      _controllerName: 'dashboard'
+    , _viewsNames:     'Subbly.View.DashboardView'
+    , _mainNavRegister:
+      {
+          name:       'Dashboard'
+        , order:      200
+        , defaultUrl: 'dashboard'
+      }
+
+    , onInitialize: function()
+      {
+  // console.log( 'onInitialize Dashboard')
+      }
+
+    , routes: {
+          'dashboard': 'list'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , list: function() 
+      {
+        this.getViewByPath( this._viewsNames ).displayTpl()
+      }
+  }
+
+  var DashboardView = 
+  {
+      _viewName: 'Dashboard'
+    , _viewTpl:  TPL.dashboard.index
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {
+            'click a.js-trigger-new-product': 'addNew'
+        })
+      }
+
+    , addNew: function()
+      {
+        subbly.trigger( 'hash::change', 'products/_new' )
+      }
+  }
+
+  Subbly.register('Subbly', 'Dashboard', {
+      'View:DashboardView':   DashboardView
+    , 'Controller:dashboard': dashboard
+  })
+
+
+  var Orders = 
+  {
+      _tplStructure:   'half' // full|half|third
+    , _viewsNames:     [ 'Subbly.View.Orders', 'Subbly.View.OrderEntry' ]
+    , _controllerName: 'orders'
+    , _mainNavRegister:
+      {
+          name:       'Orders'
+        , order:      190
+        , defaultUrl: 'orders'
+      }
+      
+    , routes: {
+          'orders':     'display'
+        , 'orders/:id': 'display'
+      }
+
+    , onRemove: function()
+      {
+        this._listDisplayed = false
+      }
+      // Routes
+      //-------------------------------
+
+    , display: function( id ) 
+      {
+        if( !this._listDisplayed )
+        {
+          var scope = this
+
+          this.displayView( function()
+          {
+            if( !_.isNull( id ) )
+              scope.sheet( id )
+          })
+
+          return
+        }
+        
+        if( !_.isNull( id ) )
+          this.sheet( id )
+        else
+          this.getViewByPath( 'Subbly.View.Orders' )
+            .onInitialRender()
+      }
+
+    , displayView: function( sheetCB )
+      {
+        var scope  = this
+
+        subbly.fetch( subbly.api('Subbly.Collection.Orders'),
+        {
+            data:   {
+                offset:   0
+              , limit:    5
+              , includes: ['user', 'products']
+            }
+          , success: function( collection, response )
+            {
+              scope._listDisplayed = true
+              scope.getViewByPath( 'Subbly.View.Orders' )
+                .setValue( 'collection', collection )
+                .displayTpl()
+
+              if( _.isFunction( sheetCB ) )
+                sheetCB()
+            }
+        }, this )
+      }
+
+    , sheet: function(  id ) 
+      {
+        this.getViewByPath( 'Subbly.View.Orders' ).setActiveRow( id )
+
+        var scope  = this
+          , order  = subbly.api('Subbly.Model.Order', { id: id })
+
+        subbly.fetch( order,
+        {
+            data: { includes: ['user', 'shipping_address', 'billing_address', 'products'] }
+          , success: function( model, response )
+            {
+              var json = model.toJSON()
+              json.listStatus   = [ 'draft', 'confirmed', 'refused', 'waiting', 'paid', 'sent' ]
+              json.customerName = 'Fake Name'
+              json.createdDate  = moment.utc( model.get('created_at') ).fromNow()
+
+              scope.getViewByPath( 'Subbly.View.OrderEntry' )
+                .setValue( 'model', model )
+                .displayTpl( json )
+            }
+        }, this )
+      }
+  }
+
+
+  // Order Entry view
+  var OrderEntry = 
+  {
+      _viewName:     'OrderEntry'
+    , _viewTpl:      TPL.orders.entry
+  }
+
+  var OrdersList = 
+  {
+      _viewName:     'Orders'
+    , _viewTpl:      TPL.orders.list
+    , _classlist:    ['view-half-list']
+    , _listSelector: '#orders-list'
+    , _tplRow:        TPL.orders.listrow
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {'click li.js-trigger-goto':  'goTo'} )
+      }
+
+      // Call on list first render
+    , onInitialRender: function()
+      {
+        var $firstRow = this.getListEl().children(':first')
+          , id       = $firstRow.attr('data-id')
+
+        this.callController( 'sheet', id )
+      }
+
+      // Build single list's row
+    , displayRow: function( model )
+      {
+        var html = this._tplRowCompiled({
+            id:           model.get('id')
+          , totalPrice:   model.get('total_price')
+          , totalItems:   model.get('products').length
+          , orderStatus:  model.get('status')
+          , customerName: 'Fake Name'
+          , createdDate:  moment.utc( model.get('created_at') ).fromNow()
+        })
+
+        return html
+      }
+
+      // Higthligth active row
+    , setActiveRow: function( id )
+      {
+        var $listRows  = this.getListRows()
+          , $activeRow = $listRows.filter('[data-id="' + id + '"]')
+
+        $listRows.removeClass('active')
+        $activeRow.addClass('active')
+      }
+
+      // go to customer profile
+    , goTo: function( event )
+      {
+        var id = event.currentTarget.dataset.id
+
+        subbly.trigger( 'hash::change', 'orders/' + id )
+      }
+  }
+
+  subbly.register( 'Subbly', 'Orders', 
+  {
+      'ViewList:Orders':   OrdersList
+    , 'View:OrderEntry':   OrderEntry
+    , 'Controller:Orders': Orders
+  })
+
+
+  // CONTROLLER
+  // --------------------------------
+
+  var Product = 
+  {
+      _tplStructure:   'full'
+    , _viewsNames:     'Subbly.View.ProductEntry'
+    , _controllerName: 'product'
+    , _mainNavRegister:
+      {
+        defaultUrl: 'products'
+      }
+
+    , routes: {
+          'products/_new': 'display'
+        , 'products/:sku': 'display'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function( sku ) 
+      {
+        var scope   = this
+          , isNew   = ( sku === '_new' )
+          , opts    = ( isNew ) ? {} : { sku: sku }
+          , product = subbly.api('Subbly.Model.Product', opts )
+
+        subbly.fetch( product,
+        {
+            data: { includes: ['options', 'images', 'categories'] }
+          , success: function( model, response )
+            {
+              // TODO: get status list from config
+              var json = model.toJSON()
+              
+              json.isNew      = isNew
+              json.statusList = [ 'draft', 'active', 'hidden', 'sold_out', 'coming_soon' ]
+
+              scope.getViewByPath( 'Subbly.View.ProductEntry' )
+                .setValue( 'model', model )
+                .displayTpl( json )
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+  // Product sheet view
+  var ProductEntry = 
+  {
+      _viewName:     'ProductEntry'
+    , _viewTpl:      TPL.products.entry
+
+    , onDisplayTpl: function( tplData )
+      {
+        // !! always set form after html render
+        this.setForm({
+            id:       'subbly-product-entry'
+          , rules:    this.model.getRules()
+          , skip:     false
+        })
+      }
+
+    , onSubmit: function()
+      {
+        subbly.store( this.model, this.getFormValues(), 
+        {
+          success: function( model, response )
+          {
+            subbly.trigger( 'hash::change', 'products' )
+          }
+        })
+      }
+  }
+
+
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Products', 
+  {
+      'ViewForm:ProductEntry': ProductEntry
+    , 'Controller:Product':    Product
+  })
+
+
+  // CONTROLLER
+  // --------------------------------
+
+  var Products = 
+  {
+      _tplStructure:   'full'
+    , _viewsNames:     'Subbly.View.Products'
+    , _controllerName: 'products'
+    , _mainNavRegister:
+      {
+          name:       'Products'
+        , order:      170
+        , defaultUrl: 'products'
+      }
+
+    , routes: {
+          'products':      'display'
+      }
+
+      // Routes
+      //-------------------------------
+
+    , display: function() 
+      {
+        var scope  = this
+
+        subbly.fetch( subbly.api('Subbly.Collection.Products'),
+        {
+            data:   {
+                offset: 0
+              , limit:  5
+            }
+          , success: function( collection, response )
+            {
+              scope.getViewByPath( 'Subbly.View.Products' )
+                .setValue( 'collection', collection )
+                .displayTpl()
+            }
+        }, this )
+      }
+  }
+
+
+  // VIEWS
+  // --------------------------------
+
+
+
+  // Products List view
+  var ProductsList = 
+  {
+      _viewName:     'Products'
+    , _viewTpl:      TPL.products.list
+    , _displayMode:  'grid'
+    , _cookieName:   'SubblyProductsViewMode'
+
+      // On view initialize
+    , onInitialize: function()
+      {
+        // add view's event
+        this.addEvents( {
+            'click .js-tigger-goto':  'goTo'
+          , 'click a.js-toggle-view': 'toggleView'
+          , 'click a.js-trigger-new': 'addNew'
+        })
+        
+        this.tplList  = Handlebars.compile( TPL.products.listrow )
+        this.tplGrid  = Handlebars.compile( TPL.products.listgrid )
+        this._$window = $(window)
+      }
+
+    , onDisplayTpl: function()
+      {
+        this._$list = $( document.getElementById('products-view-list') )
+        this._$grid = $( document.getElementById('products-view-grid') )
+
+        this._$viewItems = this._$list.add( this._$grid )
+        this._$triggers  = this.$el.find('a.js-toggle-view')
+
+        this.render()
+
+        return this
+      }
+
+      // Render list's row
+    , render: function()
+      {
+        // if( !this.collection )
+        //   return
+
+        // fetch flag
+        this._isLoadingMore = false
+
+        // var $loader = $( document.getElementById( 'list-pagination-loader') )
+
+        // if( $loader.length )
+        //   $loader.remove()
+
+        // if( !this.collection.length && this._inviteTxt )
+        // {
+        //   subbly.trigger( 'loader::hide' )
+        //   this.displayInviteMsg()
+        //   return
+        // }
+
+        this._fragmentGrid = ''
+        this._fragmentList = ''
+
+        this.collection.each( function( model )
+        {
+          var json = model.toJSON()
+
+          this._fragmentGrid += this.tplGrid( json )
+          this._fragmentList += this.tplList( json )
+
+        }, this )
+
+        if( this._fragmentGrid !== '' )
+        {
+          this._$list.append( this._fragmentList )
+          this._$grid.append( this._fragmentGrid )
+
+          this._$listItems = this._$list.find('li.pdt-lst-itm')
+          this._$gridItems = this._$grid.find('a.list')
+
+          if( !this._initialDisplay )
+          {
+            this._initialDisplay = true
+
+            var viewMode = subbly.getCookie( this._cookieName )
+
+            if( !viewMode )
+              viewMode = this._displayMode
+            else
+              this._displayMode = viewMode
+
+            this._$triggers.filter('[data-view="' + viewMode + '"]').addClass('active')
+
+            $( document.getElementById( 'products-view-' + viewMode ) ).removeClass('dp-n')
+
+          }
+
+          delete this._fragment
+        }
+
+        subbly.trigger( 'loader::hide' )
+      }
+
+      // go to customer profile
+    , goTo: function( event )
+      {
+        var sku = event.currentTarget.dataset.sku
+
+        subbly.trigger( 'hash::change', 'products/' + sku )
+      }
+
+    , toggleView: function( event )
+      {
+        this._displayMode = event.currentTarget.dataset.view
+
+        subbly.setCookie( this._cookieName, this._displayMode )
+
+        this._$viewItems.addClass('dp-n')
+        this._$triggers.removeClass('active')
+
+        $( document.getElementById( 'products-view-' + this._displayMode ) ).removeClass('dp-n')
+
+        $( event.currentTarget ).addClass('active')
+
+        this._$window.trigger('resize')
+      }
+
+    , addNew: function()
+      {
+        subbly.trigger( 'hash::change', 'products/_new' )
+      }
+  }
+
+  // REGISTER PLUGIN
+  // --------------------------------
+
+
+  subbly.register( 'Subbly', 'Products', 
+  {
+      'ViewList:Products':     ProductsList
+    , 'Controller:Products':   Products
+  })
+
+
 var Router = Backbone.Router.extend(
 {
     _controllers:  {}
   , _viewspointer: {}
-  , _currentView:  false
+  , _currentCtr:   false // active controller
   , _mainNav:      []
 
   , routes: {
@@ -22068,6 +23291,7 @@ var Router = Backbone.Router.extend(
     {
       var router = this
 
+      // Load plugins controllers
       _.each( Components, function( vendorComponents, vendor )
       {
         if( !vendorComponents.Controller )
@@ -22080,46 +23304,87 @@ var Router = Backbone.Router.extend(
 
       }, this )
 
+      // Load buil-in controllers
       this._viewspointer.login   = subbly.api( 'Subbly.View.Login' )
       this._viewspointer.mainNav = subbly.api( 'Subbly.View.MainNav', {
           items: this._mainNav
       })
 
+      // Start router
       Backbone.history.start({
           hashChange: true 
         , pushState:  true 
         , root:       subbly.getConfig( 'baseUrl' )
       })
 
+
+      // Router events callback
       Backbone.history.on('route', function( router, route, params )
       {
         subbly.trigger( 'hash::changed', route, params  )
       })
 
-      subbly.on( 'hash::change', this.closeCurrent, this )
+      // subbly.on( 'hash::change', this.closeCurrent, this )
 
       return this
     }
 
-    // Methods
+    // Controller Methods
     // ----------------------------
 
+    // Remove active controller
   , closeCurrent: function()
     {
       if(
-             this._currentView 
-          && this._currentView.remove 
+             this._currentCtr 
+          && this._currentCtr.remove 
         )
       {
-        console.groupCollapsed( 'Close current view' )
-          console.log( this._currentView  )
-        console.groupEnd()
+        console.groupCollapsed( 'Close current controller' )
+          
+          console.log( this._currentCtr  )
+          this._currentCtr.remove()
 
-        this._currentView.remove()
+        console.groupEnd()
       }
     }
 
-    // Routes
+    // return the active controller
+  , getCurrentController: function()
+    {
+      return this._currentCtr
+    }
+
+    // Keep reference to the active controller
+  , setCurrentController: function( ctr )
+    {
+      this._currentCtr = ctr
+
+      if( 
+              ctr._mainNavRegister
+          &&  ctr._mainNavRegister.defaultUrl
+        )
+        subbly.trigger( 'mainnav::hashchanged', ctr._mainNavRegister.defaultUrl )
+
+      return this
+    }
+
+    // Test if called controller is not the same
+    // as the one already displayed
+  , controllersAreTheSame: function( controllerName )
+    {
+      if( !this._currentCtr )
+        return false
+
+      var result = ( this._currentCtr._getName() === controllerName )
+      
+      if( !result )
+        this.closeCurrent()
+
+      return result
+    }
+
+    // Built-in Routes
     // ----------------------------
 
   , default: function()
@@ -22130,7 +23395,7 @@ var Router = Backbone.Router.extend(
 
   , login: function()
     {
-      // this._currentView = this._viewspointer.login
+      // this._currentCtr = this._viewspointer.login
 
       this._viewspointer.login.display()
     }
@@ -22145,13 +23410,19 @@ var Router = Backbone.Router.extend(
       subbly.trigger( 'hash::notFound', route )
     }
 
-    // Methods
+    // Main Nav Methods
     // ----------------------------
 
   , registerMainNav: function( navItem )
     {
-// console.log( navItem )
-      this._mainNav.push( navItem )
+      var defaults = {
+        order: 0
+      }
+      
+      if( navItem.name )
+      {
+        this._mainNav.push(  $.extend( {}, defaults, navItem ) ) 
+      }
     }
 })
 

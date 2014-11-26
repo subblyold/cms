@@ -125,6 +125,7 @@ return array(
         'Cartalyst\\Sentry\\SentryServiceProvider',
         'Spatie\\EloquentSortable\\SortableServiceProvider',
         'Subbly\\Framework\\SubblyFrameworkServiceProvider',
+        'Subbly\\Backend\\SubblyBackendServiceProvider',
     ),
 
     /*
