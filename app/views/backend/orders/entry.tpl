@@ -22,27 +22,27 @@
       <ul class="ord-lst"><!-- order list -->
         <li class="ord-lst-rw">
           <span class="thmb-list">
-            <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-06.jpg)"></span>
+            <span class="thmb-img" style="background-image:url(/src/fixtures/img/product-03.jpg)"></span>
           </span>
           <span class="pdt-dtls">
             <span class="pdt-dtls-primary">
-              <strong class="pdt-name dp-b">30th Anniversary Box Set</strong>
+              <span>
+                <strong class="pdt-name dp-b">Reunion tour shirt</strong>
+                <span class="pdt-opt dp-b">taille s</span>
+              </span>
             </span><!-- /.pdt-dtls-primary -->
             <ul class="pdt-dtls-lst">
               <li class="pdt-price">
-                <span class="pdt-label">unit price:</span>
                 <span class="pdt-value pdt-price-value">
                   1 336,00 €
                 </span>
               </li>
               <li class="pdt-qty">
-                <span class="pdt-label">quantity:</span>
                 <span class="pdt-value pdt-qty-value">
-                  99
+                  999
                 </span>
               </li>
               <li class="pdt-total">
-                <span class="pdt-label">unit price:</span>
                 <span class="pdt-value pdt-total-value">
                   1 336,00 €
                 </span>
