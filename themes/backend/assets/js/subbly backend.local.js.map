@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "file": "subbly.local.js",
+  "file": "subbly backend.local.js",
   "sources": [
     "assets/lib/jquery/jquery-2.1.1.js",
     "assets/lib/jquery/jquery.nanoscroller.js",
