@@ -2,6 +2,16 @@
   "dashboard": {
     "welcome": "Bienvenue dans votre boutique"
   },
+  "settings": {
+    "tabs": {
+      "general": "General",
+      "payment": "Paiement",
+      "billing": "Facturations",
+      "shippingTaxs": "Frais de port & taxes",
+      "languageCurrency": "Langue & devise",
+      "users": "Utilisateurs"
+    }
+  },
   "labels": {
       "item": {
         "single": "%1$s article",

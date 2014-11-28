@@ -21928,7 +21928,7 @@ SubblyCore.prototype.trigger = function( args1, args2, args3, args4, args5, args
 /*
  * Feedback shortcust
  *
- * @return  {void}
+ * @return  {object}
  */
 
 SubblyCore.prototype.feedback = function()
@@ -21946,6 +21946,17 @@ SubblyCore.prototype.i18n = function()
 {
   return this._i18n
 }
+
+/*
+ * Settings shortcuts
+ *
+ * @return  {object}
+ */
+SubblyCore.prototype.settings = function()
+{
+  return this._settings
+}
+
 
 // CREDENTIALS / LOGIN
 //-------------------------------
@@ -22158,31 +22169,35 @@ SubblyCore.prototype.store = function( model, data, options, context )
   if( !data )
     throw new Error( 'No data pass to Subbly.store' )
 
-  options.json = {}
-
-  options.json[ model.singleResult ] = data 
-
   var _feedback = this.feedback()
   
   _feedback.add().progress()
 
-  model.save( options.json, 
-  {
+  var settings = $.extend({
       success: function( model, response, opts )
       {
+        model.clear()
+        model.set( response.response[ model.singleResult ] )
+
         _feedback.progressEnd( 'success', options.successMsg || response.headers.status.message )
 
-        if( options.success && _.isFunction( options.success ) )
-          options.success( model, response, opts )
+        if( options.onSuccess && _.isFunction( options.onSuccess ) )
+          options.onSuccess( model, response, opts )
       }
     , error: function( model, response, opts )
       {
         _feedback.progressEnd( 'error', options.errorMsg || response.responseJSON.headers.status.message )
 
-        if( options.error && _.isFunction( options.error ) )
-          options.error( model, response, opts  )
+        if( options.onError && _.isFunction( options.onError ) )
+          options.onError( model, response, opts  )
       }
-  })
+  }, options )
+
+  options.json = {}
+
+  options.json[ model.singleResult ] = data 
+
+  model.save( options.json, settings )
 }
 
 /*
@@ -22221,6 +22236,7 @@ SubblyCore.prototype.getSetting = function( key, defaults )
   return this._settings.get( key )
   // return Helpers.getNested( this._settings, key, defaults || false )
 }
+
 
 // COOKIES
 //-------------------------------
@@ -22428,6 +22444,7 @@ Components.Subbly.Model.Product = SubblyModel.extend(
 Components.Subbly.Model.Settings = Backbone.Model.extend(
 {
     serviceName:  'settings'
+  , singleResult: 'settings'
 
   , url: function()
     {
@@ -22442,6 +22459,21 @@ Components.Subbly.Model.Settings = Backbone.Model.extend(
   , parse: function ( response ) 
     {
       return response.response[ this.serviceName ]
+    }
+
+  , getAsObject: function()
+    {
+      var settings = {
+          siteStatusList: subbly.getConfig('siteStatus')
+        , backendLocales: subbly.getConfig('locales')
+      }
+
+      _.each( this.attributes, function( value, key )
+      {
+        Helpers.setNested( settings, key, value )
+      })
+      
+      return settings
     }
 })
 
@@ -23987,7 +24019,7 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       {
         subbly.store( this.model, this.getFormValues(), 
         {
-          success: function( model, response )
+          onSuccess: function( model, response )
           {
             subbly.trigger( 'hash::change', 'products' )
           }
@@ -24219,31 +24251,12 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
 
     , list: function() 
       {
-        var scope    = this
+        var settings = subbly.settings().getAsObject()
 
-        new xhrCall(
-        {
-            url:     'settings'
-          , headers: subbly.apiHeader()
-          , success: function( response )
-            {
-              var settings = {
-                siteStatusList: [ 'offline', 'online' ]
-              }
-
-              _.each( response.response.settings, function( value, key )
-              {
-                Helpers.setNested( settings, key, value )
-              })
-
-              scope.getViewByPath( scope._viewsNames )
-                .setValue( 'settings', settings )
-                .displayTpl( settings )
-            }
-          , error:   function( jqXHR, textStatus, errorThrown )
-            {
-            }
-        })
+        this.getViewByPath( this._viewsNames )
+          .setValue( 'settings', settings )
+          .setValue( 'model', subbly.settings() )
+          .displayTpl( settings )
       }
   }
 
@@ -24268,6 +24281,8 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       {
         this._$tabsLinks = this.$el.find('ul.nav-tabs a')
         this._$tabs      = this.$el.find('.tab-pane')
+
+        subbly.trigger( 'loader::progressEnd' )
       }
 
     , switchTab: function( event )
@@ -24288,24 +24303,28 @@ Components.Subbly.View.MainNav = Backbone.View.extend(
       {
         event.preventDefault()
 
-        var $inputs  = $( event.target ).find(':input')
-          , formData = $inputs.serializeObject( false )
+        var scope      = this
+          , $inputs    = $( event.target ).find(':input')
+          , formData   = $inputs.serializeObject( false )
+          , updateI18n =  ( 
+                            formData['subbly.backend_language'] 
+                            && subbly.getSetting('subbly.backend_language') != formData['subbly.backend_language']
+                          )
 
-        new xhrCall(
+        subbly.store( this.model, formData, 
         {
-            url:     'settings'
-          , type:    'PUT'
-          , data:    JSON.stringify( formData )
-          , headers: subbly.apiHeader()
-          , success: function( response )
+            type: 'PUT'
+          , onSuccess: function( model, response )
             {
-
-            }
-          , error:   function( jqXHR, textStatus, errorThrown )
-            {
+              if( updateI18n )
+              {
+                subbly.i18n().setLocale( formData['subbly.backend_language'], function()
+                {
+                  scope.displayTpl( model.getAsObject() )
+                })
+              }
             }
         })
-
       }
 
     // , addNew: function()

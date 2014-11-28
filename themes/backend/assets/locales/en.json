@@ -3,6 +3,16 @@
     "welcome": "Welcome in your shop",
     "test": "%1$sm%2$s"
   },
+  "settings": {
+    "tabs": {
+      "general": "General",
+      "payment": "Payment",
+      "billing": "Billing",
+      "shippingTaxs": "Shipping & tax",
+      "languageCurrency": "Language & currency",
+      "users": "Users"
+    }
+  },
   "labels": {
       "item": {
         "single": "%1$s item",
