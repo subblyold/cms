@@ -1,0 +1,11 @@
+{
+  "dashboard": {
+    "welcome": "Bienvenue dans votre boutique"
+  },
+  "labels": {
+      "item": {
+        "single": "%1$s article",
+        "plural": "%1$s articles"
+      }
+  }
+}

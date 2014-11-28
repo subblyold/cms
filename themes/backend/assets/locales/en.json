@@ -1,0 +1,12 @@
+{
+  "dashboard": {
+    "welcome": "Welcome in your shop",
+    "test": "%1$sm%2$s"
+  },
+  "labels": {
+      "item": {
+        "single": "%1$s item",
+        "plural": "%1$s items"
+      }
+  }
+}

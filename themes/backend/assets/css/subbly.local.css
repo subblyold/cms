@@ -384,7 +384,7 @@ ol {
 }
 .main-nav hr {
   border: 0;
-  border-top: 1px solid #323336;
+  border-top: 1px solid #404143;
   height: 0;
   float: left;
   margin: 15px 0 20px 40px;
@@ -422,6 +422,13 @@ ol {
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 170px;
+}
+.user-nav-container li a {
+  color: #bbbbbb;
+  font-size: 16px;
+}
+.user-nav-container li a:hover {
+  color: #ffffff;
 }
 .user-nav-container .caret {
   position: absolute;
@@ -1519,6 +1526,55 @@ input[type="search"] {
   color: #878787;
   display: block;
   font-size: 12px;
+}
+.settings {
+  background: #ffffff;
+  height: 100%;
+}
+.settings .nav-tabs {
+  display: block;
+  margin-top: 35px;
+  position: relative;
+}
+.settings .nav-tabs:after {
+  border-bottom: 1px solid #e1e1e1;
+  bottom: 0;
+  content: '';
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+.settings .nav-tabs li {
+  display: inline-block;
+  margin-right: 20px;
+  position: relative;
+  z-index: 10;
+}
+.settings .nav-tabs li + li {
+  margin-left: 20px;
+}
+.settings .nav-tabs a {
+  border-bottom: 1px solid transparent;
+  color: #a6a6a7;
+  display: block;
+  font-size: 16px;
+  padding-bottom: 25px;
+}
+.settings .nav-tabs a.active,
+.settings .nav-tabs a:hover {
+  border-color: #202124;
+  color: #202124;
+}
+.settings .content-tabs {
+  width: 620px;
+}
+.settings .tab-pane {
+  display: none;
+  padding: 40px 0;
+}
+.settings .tab-pane.active {
+  display: block;
 }
 .ordr-sts {
   text-align: center;
