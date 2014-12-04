@@ -44,11 +44,13 @@
         [
             "php artisan clear-compiled"
           , "php artisan optimize"
+          , "php artisan backend:assets"
         ]
       , "post-update-cmd":
         [
             "php artisan clear-compiled"
           , "php artisan optimize"
+          , "php artisan backend:assets"
         ]
       , "post-create-project-cmd":
         [

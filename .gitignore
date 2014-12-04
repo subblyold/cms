@@ -12,6 +12,7 @@ Thumbs.db
 composer.phar
 composer.lock
 node_modules/
+themes/backend/*
 !.gitkeep
 !*.example
 *.bak
