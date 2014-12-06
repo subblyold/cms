@@ -78,3 +78,14 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+/*
+|--------------------------------------------------------------------------
+| Require The Events File
+|--------------------------------------------------------------------------
+|
+| Load the Subbly events file. Global hooks arer register inside
+|
+*/
+
+require app_path().'/events.php';
