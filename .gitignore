@@ -3,6 +3,7 @@
 /app/storage/debugbar
 /bootstrap/compiled.php
 /vendor
+/uploads
 sami.phar
 composer.phar
 composer.lock

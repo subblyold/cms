@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * the ugliest way... but it works
+ * http://stackoverflow.com/a/17091089
+ */
+include('tools.php');
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
