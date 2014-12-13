@@ -126,6 +126,8 @@ return array(
         'Spatie\\EloquentSortable\\SortableServiceProvider',
         'Subbly\\Framework\\SubblyFrameworkServiceProvider',
         'Subbly\\Backend\\SubblyBackendServiceProvider',
+
+        'Rutorika\Sortable\SortableServiceProvider',
     ),
 
     /*
