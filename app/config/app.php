@@ -123,7 +123,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
 
         'Cartalyst\\Sentry\\SentryServiceProvider',
-        'Spatie\\EloquentSortable\\SortableServiceProvider',
+        // 'Spatie\\EloquentSortable\\SortableServiceProvider',
         'Subbly\\Framework\\SubblyFrameworkServiceProvider',
         'Subbly\\Backend\\SubblyBackendServiceProvider',
 
