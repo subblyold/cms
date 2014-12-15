@@ -29,8 +29,7 @@
   , "require": {
         "php":                         ">=5.4"
       , "subbly/framework":            "@dev"
-      , "subbly/backend":              "@dev",
-        "rutorika/sortable": "dev-master"
+      , "subbly/backend":              "@dev"
     }
   , "autoload":
     {
