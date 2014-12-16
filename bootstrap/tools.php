@@ -24,7 +24,7 @@ if ( ! function_exists('public_upload'))
    */
   function public_upload($path = '')
   {
-    return URL::to( 'upload' . $path );
+    return URL::to( 'uploads/' . $path );
     // return app()->make('path.upload').($path ? '/'.$path : $path);
   }
 }
