@@ -48,3 +48,19 @@ Subbly::events()->listen('subbly.upload:created', function( $file )
     }
   }
 });
+
+// Attach file to model on upload
+Subbly::events()->listen('subbly.product:created', function( $product ) 
+{
+  if (Input::has('product_image')) {
+      $files = Input::get('product_image');
+
+      foreach ($files as $file)
+      {
+        $productImage = Subbly::api('subbly.product_image')->create(array(
+          'filename'   => $file['filename'] 
+        , 'product_id' => $product->sku
+        ), $product);
+      }
+  }
+});
