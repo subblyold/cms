@@ -23,13 +23,15 @@
         }
     ]
   , "config": {
-        "vendor-dir":      "vendor"
-      , "discard-changes": true
+        "vendor-dir":        "vendor"
+      , "discard-changes":   true
+      , "preferred-install": "dist"
     }
   , "require": {
         "php":                         ">=5.4"
       , "subbly/framework":            "@dev"
       , "subbly/backend":              "@dev"
+      , "subbly/frontend":             "@dev"
     }
   , "autoload":
     {

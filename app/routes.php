@@ -6,7 +6,7 @@
  * your own controller
  */
 
-Route::any('{url}', 'AutoController@run')->where('url', '.*');
+//Route::any('{url}', 'AutoController@run')->where('url', '.*');
 
 /*
  * You can set you own route bellow
@@ -15,3 +15,6 @@ Route::any('{url}', 'AutoController@run')->where('url', '.*');
  */
 
 // Route::get('/your-route', 'YourRoute@yourMethod');
+
+// $test = new AutoController;
+// dd( $test );

@@ -88,3 +88,31 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| DEV mode
+|--------------------------------------------------------------------------
+|
+| Sometimes you don’t want to allow any content coming out of 
+| Laravel to be cached. 
+|
+*/
+App::before(function($request)
+{
+  // Clear view cache in local (only) with every request
+  if( App::environment() == 'local' ) 
+  {
+    $cachedViewsDirectory = app( 'path.storage' ) . '/views/';
+    $files = glob( $cachedViewsDirectory . '*' );
+
+    foreach($files as $file) 
+    {
+      if( is_file( $file ) )
+      {
+        @unlink($file);
+      }
+    }
+  }
+});
