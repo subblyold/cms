@@ -32,6 +32,7 @@
       , "subbly/framework":            "@dev"
       , "subbly/backend":              "@dev"
       , "subbly/frontend":             "@dev"
+      , "xamin/handlebars.php": "dev-master" 
     }
   , "autoload":
     {

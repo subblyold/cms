@@ -1,0 +1,19 @@
+{{#products with {
+    "category": "men",
+    "limit": 10,
+    "page": "@@inputs.page",
+    "includes": [
+        "images"
+    ],
+    "order_by": [
+        ["created_at", "desc"]
+    ]}
+}}
+  <li>
+    <a href="/product/{{id}}">{{name}}</a>
+    {{created_at}}
+  </li>
+{{else}}
+    <li>no matching product</li>
+{{/products}}
+</ul>
