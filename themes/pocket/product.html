@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="fr" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>SUBBLY ®</title>
+  <link href="{{assets 'css/main.css?v=1'}}" rel="stylesheet" media="screen" />
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+</head>
+<body>
+<div id="wrapper">
+  <header>
+      <h1><a href="{{url 'index'}}">Poket</a></h1>
+      <section class="actions">
+          <div class="cart">Cart <strong>(4)</strong></div>
+          <div class="search">
+          	<form method="" action="">
+          	    <input type="text" name="search" value="" class="textfield" />
+          	    <input type="submit" name="search-ok" value="ok" class="trigger"/>
+          	</form>
+          </div>
+          <div class="account"><em>Welcome</em>, Sign in</div>
+      </section>
+  </header>
+  
+  <nav id="main">
+    <section class="menu">
+      <h3>Menu</h3>
+      <ul>
+          <li><a href="{{url 'index'}}">Home</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">About us</a></li>
+          <li><a href="#">Contact</a></li>
+      </ul>
+    </section>
+    
+    <section class="search">
+      <h3>Search</h3>
+      <form method="" action="">
+          <input type="text" name="search" value="" class="textfield" />
+          <input type="submit" name="search-ok" value="ok" class="trigger"/>
+      </form>
+    </section>
+  </nav>
+  
+  <div id="content">
+      <h2>Latest Products</h2>
+      <ul id="product" class="grid group">
+          {{#product}}
+          <li>
+              <a href="{{url 'product' this}}"><img src="{{image this}}" alt="" /></a>
+              <h3><a href="#">{{name}}</a></h3>
+              <span class="price">{{price this 'EUR'}}</span>
+              <ul>
+                {{#each images}}
+                  <li><img src="{{filename}}" alt="" />{{@index}}</li>
+                  {{else}}
+                  <li>no images</li>
+                {{/each}}
+              </ul>
+
+              {{#compare status 'sold_out'}}
+              <p>sould out</p>
+              {{else}}
+              <p>not</p>
+              {{/compare}}
+          </li>
+          {{else}}
+          <li>not found</li>
+          {{/product}}
+      </ul>
+  </div>
+ 
+  <footer>
+      <span class="credits">© 2012 Subbly. All rights reserved. Terms Of Use - Privacy Policy</span>
+      <div class="cards">
+          <ul>
+              <li class="paypal">PayPal</li>
+              <li class="visa">Visa</li>
+              <li class="mastercard">Mastercard</li>
+          </ul>
+      </div>
+  </footer>
+   
+</div>
+</body>
+</html>

@@ -60,7 +60,7 @@ return array(
     */
 
   , 'frontendUri' => array(
-        '/'                                           => 'home'
+        '/'                                           => 'index'
       , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
       , '/products/{id}-{slug}'                       => 'product'
     )

@@ -1,0 +1,81 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {margin: 0;padding: 0;border: 0;font-size: 100%;font: inherit;vertical-align: baseline}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {display: block}
+body {line-height: 1}
+ol, ul {list-style: none}
+blockquote, q {quotes: none}
+blockquote:before, blockquote:after,
+q:before, q:after {content: '';content: none}
+table {border-collapse: collapse;border-spacing: 0}
+.group:before,
+.group:after {content:"";display:table}
+.group:after {clear:both}
+.group {zoom:1}
+
+/* Global */
+body{font: normal 0.9em/1.5em "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif; color: #696969;border-top: 11px solid #282828}
+#limits{width: 980px; margin: 0 auto}
+a{text-decoration: none}
+.fl{float: left}
+.fr{float: right}
+
+h2{color: #000; font-size: 1.3em; letter-spacing:0.1em; text-transform: uppercase; font-weight: 600; margin:0 0 25px 0}
+#content{overflow: hidden}
+
+/* Header */
+header#top{height: 60px; margin: 108px 0 0 0}
+    header#top h1 a{background: url(../images/logo.gif) no-repeat; height: 26px; width: 133px; line-height: 90px; overflow: hidden; float:left}
+    header#top section.member{float:right;width: 500px}
+    header#top section.member div.cart{margin: 0 0 0 15px; padding: 0 0 0 15px; border-left:1px solid #cfcfcf}
+    header#top section.member div.cart strong{color: #24a680; font-weight: bold;letter-spacing: 0.2em}
+    header#top section.member div.account em{font-style: italic; font-weight:300}
+
+/* Nav */
+nav#main{width: 100%; border-top: 1px solid #dedede; border-bottom: 1px solid #dedede; padding: 9px 0; margin: 0 0 40px 0; font-size: 0.9em; letter-spacing:0.15em}
+    nav#main a{color:#666}
+    nav#main a:hover{color:#000}
+    nav#main ul{float:left; height:30px}
+    nav#main ul li{display: inline; margin: 0 40px 0 0; text-transform: uppercase; line-height: 32px;}
+    
+    /* Search */
+    nav#main div.search{float:right}
+    nav#main div.search input.textfield{height: 31px; width:177px; border: none; background: url(../images/textfield.gif) no-repeat; padding:0 0 0 10px; outline: none; margin:0 5px 0 0; font: normal 1em/1.5em "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif; color:#777}
+    nav#main div.search input.trigger{background:url(../images/magnifier.gif) no-repeat; border: none; height: 24px; width: 25px; text-indent: -9999px}
+    
+/* Products */
+ul#product {width: 1000px}
+ul#product li{width:230px; float:left; margin: 0 20px 35px 0}
+    #product li h3{text-transform:uppercase; color: #000; font-size: 1.1em; font-weight:500; letter-spacing:0.1em}
+    #product li h3 a{color:#000}
+    #product li span.description{font-size:0.8em; letter-spacing:0.1em; display:block; line-height:1.6em}
+    #product li span.price{color:#000; font-size:0.8em; font-weight: bold}
+    
+/* Footer */
+footer#footer{padding:30px 0 30px 0; border-top: 1px solid #dedede; margin:40px 0 0 0}
+    footer#footer span.credits{width:180px;display:block;color: #797979; font-size: 0.75em; float: left; line-height:1.5em}
+    footer#footer div.cards{float: right; width: 112px}
+    footer#footer div.cards ul li{border: 1px solid #d6d0c4; background: #f5f5f5 url('../images/cards.jpg') no-repeat; text-indent: -9999px; float: left; width:32px; height:20px; margin:0 5px 0 0}
+    footer#footer div.cards ul li.paypal{background-position:0 0}
+    footer#footer div.cards ul li.visa{background-position: 0 -20px}
+    footer#footer div.cards ul li.mastercard{background-position: 0 -40px; margin:0}
+
+
+
+
+
+
+
+
