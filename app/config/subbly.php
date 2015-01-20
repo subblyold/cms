@@ -63,6 +63,8 @@ return array(
         '/'                                           => 'index'
       , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
       , '/products/{id}-{slug}'                       => 'product'
+      , '/test'                                       => 'test'
+      , '/signin'                                     => 'signin'
     )
   
     /*

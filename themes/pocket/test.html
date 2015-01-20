@@ -1,0 +1,84 @@
+{{#extends "layout"}}
+  {{#override "content"}}
+    <h1>#if</h1>
+{{#if isActive}}
+  <p>This part will be shown if it is active</p>
+{{else}}
+  <p>This part will not show if isActive is true</p>
+{{/if}}
+<hr>
+  <h1>#unless</h1>
+{{#unless isActive}}
+  <p>This part will not show if isActive is true</p>
+{{/unless}}
+<hr>
+  <h1>#each</h1>
+<h2>All genres:</h2>
+{{#each genres}}
+    {{.}}
+{{/each}}
+
+{{#each cars}}
+    <h3>{{category}}</h3>
+    Total: {{count}}
+    <ul>
+        {{#each list}}
+            {{.}}
+        {{/each}}
+    </ul>
+{{/each}}
+<hr>
+<h1>#eah/else</h1>
+<h2>All genres:</h2>
+{{#each genres}}
+    {{.}}
+{{else}}
+  No genres found!
+{{/each}}
+<hr>
+<h1>Change Context: WITH</h1>
+<h2>All genres:</h2>
+{{#with other_genres}}
+    {{#each genres}}
+        {{.}}
+    {{/each}}
+{{/with}}
+<hr>
+{{#each genres}}
+  {{@index}}: {{this}}
+{{/each}}
+<hr>
+{{#each object}}
+  {{@key}}: {{this}}
+{{/each}}
+<hr>
+<h1>Upper</h1>
+{{upper 'Mon Titre'}}<br>
+{{upper name}}
+<hr>
+<h1>Lower</h1>
+{{lower 'Mon Titre'}}<br>
+{{lower name}}
+<hr>
+<h1>Capitalize</h1>
+{{capitalize 'mon Title'}}<br>
+{{capitalize name}}
+<hr>
+<h1>Capitalize_All</h1>
+{{capitalizeAll 'mon Title'}}<br>
+{{capitalizeAll name}}
+<hr>
+<h1>Format_Date</h1>
+{{formatDate '2014-11-18T20:10:54+0000' 'Y-m-d'}}
+<hr>
+<h1>Truncate</h1>
+{{truncate 'this is a long string you know!!' 10 }}<br>
+{{truncate 'this is a long string you know!!' 15 '++++'}}<br>
+<hr>
+<h1>Default</h1>
+{{default name 'pas de nom'}}<br>
+{{default title 'pas de titre'}}
+
+{{!-- only output this author names if an author exists --}}
+  {{/override}}
+{{/extends}}
