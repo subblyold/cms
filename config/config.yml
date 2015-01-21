@@ -6,7 +6,7 @@ app:
 database:
     driver: mysql
     host: localhost
-    database: subbly
+    name: subbly
     username: subbly
     password:
     prefix: subbly_
