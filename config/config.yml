@@ -1,0 +1,19 @@
+app:
+    timezone: UTC
+    locale: en
+    key: !Random_secure_key!
+
+database:
+    driver: mysql
+    host: localhost
+    database: subbly
+    username: subbly
+    password:
+    prefix: subbly_
+
+cache:
+    driver: file # auto, file, apc, memcached, redis, array
+    prefix: subbly
+
+mail:
+    # mail configuration
