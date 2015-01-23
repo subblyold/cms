@@ -125,7 +125,7 @@ return array(
         'Cartalyst\Sentry\SentryServiceProvider',
         'Subbly\Framework\SubblyFrameworkServiceProvider',
         'Subbly\Backend\SubblyBackendServiceProvider',
-        'Subbly\Frontend\SubblyFrontendServiceProvider',
+        'Subbly\Frontage\SubblyFrontageServiceProvider',
     ),
 
     /*
@@ -193,7 +193,6 @@ return array(
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
         'Sentry'            => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
-        'Debugbar'          => 'Barryvdh\Debugbar\Facade',
     ),
 
 );

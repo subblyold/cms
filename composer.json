@@ -31,8 +31,7 @@
         "php":                         ">=5.4"
       , "subbly/framework":            "@dev"
       , "subbly/backend":              "@dev"
-      , "subbly/frontend":             "@dev"
-      , "xamin/handlebars.php": "dev-master" 
+      , "subbly/frontage":             "@dev"
     }
   , "autoload":
     {
