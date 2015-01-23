@@ -59,7 +59,7 @@ return array(
     |
     */
 
-  , 'frontendUri' => array(
+  , 'frontageUri' => array(
         '/'                                           => 'index'
       , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
       , '/products/{id}-{slug}'                       => 'product'
