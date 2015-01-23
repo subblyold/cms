@@ -34,7 +34,7 @@
           </div>
           {{else}}
           <div class="account">
-            hello {{user.email}}
+            hello <a href="{{url 'account'}}">{{user.email}}</a>
           </div>
           {{/isUserLogin}}
       </section>
