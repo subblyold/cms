@@ -61,10 +61,15 @@ return array(
 
   , 'frontageUri' => array(
         '/'                                           => 'index'
-      , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
-      , '/products/{id}-{slug}'                       => 'product'
+      , '/products'                                   => 'catalog'
+      // , '/products/{page?}'                           => 'catalog'
+      // , '/products/{page?}/{category}'                => 'catalog'
+      // , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
+      , '/products/{productId}-{slug}'                => 'product'
       , '/test'                                       => 'test'
       , '/signin'                                     => 'signin'
+      , '/account'                                    => 'account@signin'
+      , '/account/address/{addressId}'                => 'account.address@signin'
     )
   
     /*
