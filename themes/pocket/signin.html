@@ -2,18 +2,18 @@
   {{#override "content"}}
     <section class="sign-in group">
       <h1>Sign In</h1>
-      {{{loginFrom with {
+      {{{loginFrom 'account' with {
           "class": "already-member"
         , "id": "my-login-form"
       } }}}
         <h2>REGISTERED CUSTOMERS</h2>
-        {{#formErrors}}
+        {{#formErrors login}}
           <p>ERROR</p>
         {{/formErrors}}
         <ul>
           <li>
             <label>Email :</label>
-            <input type="text" name="email">
+            <input type="text" name="email"value="mike">
           </li>
           <li>
             <label>Password :</label>

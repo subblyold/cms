@@ -15,50 +15,39 @@
   <h1>#each</h1>
 <h2>All genres:</h2>
 {{#each genres}}
-    {{.}}
+    {{.}}<br>
 {{/each}}
-
 {{#each cars}}
     <h3>{{category}}</h3>
-    Total: {{count}}
+    Total: {{count this}}
     <ul>
         {{#each list}}
-            {{.}}
+            {{.}}<br>
         {{/each}}
     </ul>
 {{/each}}
 <hr>
-<h1>#eah/else</h1>
-<h2>All genres:</h2>
-{{#each genres}}
-    {{.}}
-{{else}}
-  No genres found!
-{{/each}}
+<h1>First</h1>
+{{first genres}}
 <hr>
-<h1>Change Context: WITH</h1>
-<h2>All genres:</h2>
-{{#with other_genres}}
-    {{#each genres}}
-        {{.}}
-    {{/each}}
-{{/with}}
+<h1>Last</h1>
+{{last genres}}
 <hr>
 {{#each genres}}
-  {{@index}}: {{this}}
+  {{@index}}: {{this}}<br>
 {{/each}}
 <hr>
 {{#each object}}
-  {{@key}}: {{this}}
+  {{@key}}: {{this}}<br>
 {{/each}}
 <hr>
 <h1>Upper</h1>
-{{upper 'Mon Titre'}}<br>
-{{upper name}}
+{{uppercase 'mon titre chaine'}}<br>
+{{uppercase name}}
 <hr>
 <h1>Lower</h1>
-{{lower 'Mon Titre'}}<br>
-{{lower name}}
+{{lowercase 'Mon Titre'}}<br>
+{{lowercase name}}
 <hr>
 <h1>Capitalize</h1>
 {{capitalize 'mon Title'}}<br>
@@ -69,7 +58,8 @@
 {{capitalizeAll name}}
 <hr>
 <h1>Format_Date</h1>
-{{formatDate '2014-11-18T20:10:54+0000' 'Y-m-d'}}
+{{formatDate '2014-11-18T20:10:54+0000' 'Y-m-d'}}<br>
+{{formatDate '2014-11-18T20:10:54+0000' 'd M'}}
 <hr>
 <h1>Truncate</h1>
 {{truncate 'this is a long string you know!!' 10 }}<br>
@@ -78,6 +68,28 @@
 <h1>Default</h1>
 {{default name 'pas de nom'}}<br>
 {{default title 'pas de titre'}}
+<hr>
+<h1>Repeat</h1>
+{{#repeat 2}}content to repeat, {{/repeat}}
+<hr>
+<h1>Replace</h1>
+{{#replace 'string' 'chaine'}}Target string to search in.{{/replace}}<br>
+{{#replace 'string' name}}Target string to search in.{{/replace}}<br>
+{{#replace name 'chaine'}}Target Test PAGE to search in.{{/replace}}
+<hr>
+<h1>ifAny</h1>
+{{#ifAny first second third}}
+  At least one of argument can be threated as "true".
+{{else}}
+  All values are "falsy"
+{{/ifAny}}
+<hr>
+<h1>ifEqual</h1>
+ {{#ifEqual first second}}
+   The first argument is equal to the second one.
+ {{else}}
+   The arguments are not equal.
+ {{/ifEqual}}
 
 {{!-- only output this author names if an author exists --}}
   {{/override}}

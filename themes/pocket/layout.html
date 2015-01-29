@@ -27,16 +27,16 @@
           	    <input type="submit" name="search-ok" value="ok" class="trigger"/>
           	</form>
           </div>
-          {{#isUserLogin}}
+          {{#if ../user}}
+          <div class="account">
+            hello <a href="{{url 'account'}}">{{../../user.email}}</a>
+          </div>
+          {{else}}
           <div class="account">
             <em>Welcome</em>, 
             <a href="{{url 'signin'}}">Sign in</a>
           </div>
-          {{else}}
-          <div class="account">
-            hello <a href="{{url 'account'}}">{{user.email}}</a>
-          </div>
-          {{/isUserLogin}}
+          {{/if}}
       </section>
   </header>
   
@@ -48,6 +48,7 @@
           <li><a href="#">Products</a></li>
           <li><a href="{{url 'test'}}">About us</a></li>
           <li><a href="#">Contact</a></li>
+          <li>{{../user.email}}</li>
       </ul>
     </section>
     
