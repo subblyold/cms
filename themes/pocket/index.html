@@ -3,13 +3,13 @@
     <h2>Latest Products</h2>
     <ul id="product" class="grid group">
       {{#products with {
-          "includes": [ "images" ]
+          "includes": [ "images", "translations" ]
         , "order_by": [
               ["position", "asc"]
           ]}
       }}
       <li>
-        <a href="{{url 'product' this}}"><img src="{{image this}}" alt="" /></a>
+        <a href="{{url 'product' with { "productId": "@id", "slug": "my-slug"} }}"><img src="{{image this}}" alt="" /></a>
         <h3><a href="#">{{name}}</a></h3>
         <span class="price">{{price this 'EUR'}}</span>
         {{formatDate created_at 'd M'}}

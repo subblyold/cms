@@ -1,6 +1,21 @@
 {{#extends "layout"}}
   {{#override "content"}}
-    {{#userAccount}}
-    {{/userAccount}}
+    {{#user}}
+      {{email}}<br>
+      {{firstname}}<br>
+      {{lastname}}<br>
+    {{/user}}
+    <h1>Addresses</h1>
+    <ul>
+    {{#userAddresses}}
+      <li>
+        <a href="{{url 'account.address' with {"addressId":"@id"} }}">
+          {{name}}
+        </a>
+      </li>
+    {{else}}
+      <li>no addresses</li>
+    {{/userAddresses}}
+    </ul>
   {{/override}}
 {{/extends}}
