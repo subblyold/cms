@@ -65,7 +65,7 @@ return array(
       // , '/products/{page?}'                           => 'catalog'
       // , '/products/{page?}/{category}'                => 'catalog'
       // , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
-      , '/products/{productId}-{slug}'                => 'product'
+      , '/products/{productSku}-{productSlug}'        => 'product'
       , '/test'                                       => 'test'
       , '/signin'                                     => 'signin'
       , '/account'                                    => 'account@signin'
