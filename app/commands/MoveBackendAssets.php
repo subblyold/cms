@@ -43,6 +43,8 @@ class MoveBackendAssets extends Command {
 		if( !File::exists( $sourceDir ) )
 			return;
 
+		$success = File::deleteDirectory($destinationDir, true);
+
 		$success = File::copyDirectory($sourceDir, $destinationDir);
 
 		if( $success )
