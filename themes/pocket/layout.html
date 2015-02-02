@@ -27,9 +27,9 @@
           	    <input type="submit" name="search-ok" value="ok" class="trigger"/>
           	</form>
           </div>
-          {{#if ../user}}
+          {{#if user}}
           <div class="account">
-            hello <a href="{{url 'account'}}">{{../../user.email}}</a>
+            hello <a href="{{url 'account'}}">{{user.email}}</a>
           </div>
           {{else}}
           <div class="account">
