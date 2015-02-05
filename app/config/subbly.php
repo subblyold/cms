@@ -71,16 +71,13 @@ return array(
     */
 
   , 'frontageUri' => array(
-        '/'                                           => 'index'
-      , '/products'                                   => 'catalog'
-      // , '/products/{page?}'                           => 'catalog'
-      // , '/products/{page?}/{category}'                => 'catalog'
-      // , '/products/{page?}/{category}/{subcategory}'  => 'catalog'
-      , '/products/{productSku}-{productSlug}'        => 'product'
-      , '/test'                                       => 'test'
-      , '/signin'                                     => 'signin'
-      , '/account'                                    => 'account@signin'
-      , '/account/address/{addressId}'                => 'account.address@signin'
+        '/'                                            => 'index'
+      , '/products/{productSku}-{productSlug}'         => 'product'
+      , '/products/{page?}/{category?}/{subcategory?}' => 'catalog'
+      , '/test'                                        => 'test'
+      , '/signin'                                      => 'signin'
+      , '/account/address/{addressId?}'                => 'account.address@signin'
+      , '/account'                                     => 'account@signin'
     )
   
     /*
