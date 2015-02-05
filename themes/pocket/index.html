@@ -1,6 +1,8 @@
 {{#extends "layout"}}
   {{#override "content"}}
     <h2>Latest Products</h2>
+    <a href="{{url 'product' with {"productSku":"fat","productSlug":"test"} }}">Products</a>
+    <a href="{{url 'catalog' with { "category": "men" } }}">Products</a>
     <ul id="product" class="grid group">
       {{#products with {
           "includes": [ "images", "translations" ]
@@ -9,7 +11,7 @@
           ]}
       }}
       <li>
-        <a href="{{url 'product' with { "productSku": "@sku", "slug": "@slug"} }}"><img src="{{image this}}" alt="" /></a>
+        <a href="{{url 'product' with { "productSku": "@sku", "productSlug": "@slug"} }}"><img src="{{image this}}" alt="" /></a>
         <h3><a href="#">{{name}}</a></h3>
         <span class="price">{{formatPrice this 'EUR'}}</span>
         {{formatDate created_at 'd M'}}

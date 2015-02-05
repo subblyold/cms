@@ -45,7 +45,7 @@
       <h3>Menu</h3>
       <ul>
           <li><a href="{{url 'index'}}">Home</a></li>
-          <li><a href="#">Products</a></li>
+          <li><a href="{{url 'catalog' with {"page":1} }}">Products</a></li>
           <li><a href="{{url 'test'}}">About us</a></li>
           <li><a href="#">Contact</a></li>
           <li>{{../user.email}}</li>

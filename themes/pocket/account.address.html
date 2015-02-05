@@ -5,17 +5,73 @@
       {{firstname}}<br>
       {{lastname}}<br>
     {{/user}}
-    <h1>Addresses</h1>
-    <ul>
-    {{#userAddresses}}
-      <li>
-        <a href="{{url 'account.address' with {"addressId":12} }}">
-          {{name}}
-        </a>
-      </li>
-    {{else}}
-      <li>no addresses</li>
-    {{/userAddresses}}
-    </ul>
+    <h1>Address</h1>
+      {{{addressFrom with {
+          "id": "address-form"
+      } }}}
+        {{#formErrors address}}
+          <ul>
+            {{#each errors}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        {{/formErrors}}
+      <ul>
+        {{#userAddress}}
+          <li>
+            <label>address name:</label>
+            <input type="text" name="name" value="{{getInput 'name'}}">
+          </li>
+          <li>
+            <label>firstname:</label>
+            <input type="text" name="firstname" value="{{getInput 'firstname'}}">
+          </li>
+          <li>
+            <label>lastname:</label>
+            <input type="text" name="lastname" value="{{getInput 'lastname'}}">
+          </li>
+          <li>
+            <label>address1:</label>
+            <input type="text" name="address1" value="{{getInput 'address1'}}">
+          </li>
+          <li>
+            <label>address2:</label>
+            <input type="text" name="address2" value="{{getInput 'address2'}}">
+          </li>
+          <li>
+            <label>zipcode:</label>
+            <input type="text" name="zipcode" value="{{getInput 'zipcode'}}">
+          </li>
+          <li>
+            <label>city:</label>
+            <input type="text" name="city" value="{{getInput 'city'}}">
+          </li>
+          <li>
+            <label>country:</label>
+            <input type="text" name="country" value="{{getInput 'country'}}">
+          </li>
+          <li>
+            <label>phone_work:</label>
+            <input type="text" name="phone_work" value="{{getInput 'phone_work'}}">
+          </li>
+          <li>
+            <label>phone_home:</label>
+            <input type="text" name="phone_home" value="{{getInput 'phone_home'}}">
+          </li>
+          <li>
+            <label>phone_mobile:</label>
+            <input type="text" name="phone_mobile" value="{{getInput 'phone_mobile'}}">
+          </li>
+          <li>
+            <label>others_informations:</label>
+            <input type="text" name="others_informations" value="{{getInput 'others_informations'}}">
+          </li>
+            <li>
+              <input name="submit" type="submit" value="Sauvegarder">
+              <input type="text" name="id" value="{{id}}">
+            </li>
+        {{/userAddress}}
+        </ul>
+      <form>
   {{/override}}
 {{/extends}}
