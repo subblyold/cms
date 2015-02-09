@@ -1,6 +1,7 @@
 {{#extends "layout"}}
   {{#override "content"}}
     <h2>Checkout</h2>
+    {{#hasCart}}
       <table>
         <thead>
           <tr>
@@ -34,9 +35,11 @@
         {{/cart}}
         </tbody>
       </table>
-
       {{#cartEmpty 'index'}}
       <button type="submit">Empty cart</button>
       {{/cartEmpty}}
+    {{else}}
+      <p>cart empty</p>
+    {{/hasCart}}
   {{/override}}
 {{/extends}}

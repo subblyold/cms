@@ -9,7 +9,7 @@
           ]}
       }}
       <li>
-        <a href="{{url 'product' this}}"><img src="{{image this}}" alt="" /></a>
+        <a href="{{url 'product' with { "productSku": "@sku", "productSlug": "@slug"} }}"><img src="{{image this}}" alt="" /></a>
         <h3><a href="#">{{name}}</a></h3>
         <span class="price">{{formatPrice this 'EUR'}}</span>
         {{formatDate created_at 'd M'}}
