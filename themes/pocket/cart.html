@@ -1,0 +1,42 @@
+{{#extends "layout"}}
+  {{#override "content"}}
+    <h2>Checkout</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Item Price</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#cart}}
+          <tr>
+            <td>
+              <p><strong>{{name}}</strong></p>
+            </td>
+            <td>
+              {{#carUpdateQty}}
+              <input type="text" name="qty" value="{{qty}}">
+              <button type="submit">update</button>
+              {{/carUpdateQty}}
+            </td>
+            <td>${{price}}</td>
+            <td>${{subtotal}}</td>
+            <td>
+              {{#cartRemove}}
+              <button type="submit">Remove</button>
+              {{/cartRemove}}
+            </td>
+         </tr>
+        {{/cart}}
+        </tbody>
+      </table>
+
+      {{#cartEmpty 'index'}}
+      <button type="submit">Empty cart</button>
+      {{/cartEmpty}}
+  {{/override}}
+{{/extends}}

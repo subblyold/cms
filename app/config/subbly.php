@@ -78,6 +78,8 @@ return array(
       , '/signin'                                      => 'signin'
       , '/account/address/{addressId?}'                => 'account.address@signin'
       , '/account'                                     => 'account@signin'
+      , '/cart'                                        => 'cart'
+      , '/checkout'                                    => 'checkout'
     )
   
     /*

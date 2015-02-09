@@ -126,6 +126,7 @@ return array(
         'Subbly\Framework\SubblyFrameworkServiceProvider',
         'Subbly\Backend\SubblyBackendServiceProvider',
         'Subbly\Frontage\SubblyFrontageServiceProvider',
+        'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
     ),
 
     /*
@@ -193,6 +194,7 @@ return array(
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
         'Sentry'            => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+        'Cart'              => 'Gloudemans\Shoppingcart\Facades\Cart',
     ),
 
 );
