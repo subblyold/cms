@@ -2,10 +2,10 @@
   {{#override "content"}}
     <section class="sign-in group">
       <h1>Sign In</h1>
-      {{{loginFrom 'account' with {
+      {{#loginFrom 'account' with {
           "class": "already-member"
         , "id": "my-login-form"
-      } }}}
+      } }}
         <h2>REGISTERED CUSTOMERS</h2>
         {{#formErrors login}}
           <ul>
@@ -28,7 +28,7 @@
             <input name="submit" type="submit" value="Connexion">
           </li>
         </ul>
-      </form>
+      {{/loginFrom}}
       <form class="not-member">
         <h2>NOT REGISTERED?</h2>
         {{#formErrors register}}

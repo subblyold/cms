@@ -29,7 +29,10 @@
           </div>
           {{#if user}}
           <div class="account">
-            hello <a href="{{url 'account'}}">{{user.email}}</a>
+            hello <a href="{{url 'account'}}">{{user.email}}</a>,
+            {{#logoutFrom 'cart'}}
+            <button type="submit">logout</button>
+            {{/logoutFrom}}
           </div>
           {{else}}
           <div class="account">
