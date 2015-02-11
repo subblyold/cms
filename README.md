@@ -15,7 +15,7 @@ cms
 
 ## Setup database
 
-Copy `app/config/database.php` into `app/config/locale/database.php` then edit it with your DB settings.
+Copy `app/config/database.php` into `app/config/local/database.php` then edit it with your DB settings.
 You can now import MySQL's schemas.
 
     $ php artisan migrate --package=cartalyst/sentry
