@@ -8,7 +8,19 @@ cms
 [![License](https://poser.pugx.org/subbly/cms/license.svg)](https://packagist.org/packages/subbly/cms)
 
 
-## Create a new project
+## Install
 
-* Download archive
-* Composer: `composer create-project subbly/cms my-subbly-project`
+    $ git clone https://github.com/subbly/cms.git
+    $ composer install
+
+## Setup database
+
+Copy `app/config/database.php` into `app/config/locale/database.php` then edit it with your DB settings.
+You can now import MySQL's schemas.
+
+    $ php artisan migrate --package=cartalyst/sentry
+    $ php artisan migrate --path vendor/subbly/framework/src/migrations
+
+Done!
+
+Comming soon, dataseeders.
