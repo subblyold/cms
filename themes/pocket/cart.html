@@ -35,9 +35,12 @@
         {{/cart}}
         </tbody>
       </table>
-      {{#cartEmpty 'index'}}
-      <button type="submit">Empty cart</button>
-      {{/cartEmpty}}
+      <p>
+        {{#cartEmpty 'index'}}
+        <button type="submit">Empty cart</button>
+        <a href="{{url 'checkout'}}">checkout</a>
+        {{/cartEmpty}}
+      </p>
     {{else}}
       <p>cart empty</p>
     {{/hasCart}}

@@ -33,7 +33,30 @@ return array(
     |
     */
 
-  , 'frontagePostUri' => 'subbly-post'
+  , 'frontagePosttUri' => 'subbly-post'
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment URI prefix
+    |--------------------------------------------------------------------------
+    |
+    | Specifies the URI prefix used for accessing payment's gateway.
+    |
+    */
+
+  , 'paymenttUri' => 'subbly-payment'
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | POST URI prefix
+    |--------------------------------------------------------------------------
+    |
+    | Specifies the URI prefix used for accessing to generic post controllers
+    |
+    */
+
+  , 'actionControllerUri' => 'subbly-action'
 
     /*
     |--------------------------------------------------------------------------
@@ -80,6 +103,7 @@ return array(
       , '/account'                                     => 'account@signin'
       , '/cart'                                        => 'cart'
       , '/checkout'                                    => 'checkout'
+      , '/order-confirm'                               => 'order-confirm'
     )
   
     /*
@@ -92,4 +116,20 @@ return array(
     */
 
   , 'theme' => 'pocket'
+
+  
+    /*
+    |--------------------------------------------------------------------------
+    | Checkout
+    |--------------------------------------------------------------------------
+    |
+    | Checkout configuration
+    |
+    */
+
+  , 'checkout' => array(
+        'account' => array(
+            'autolog' => true // if new account, auto login user
+        )
+    )
 );

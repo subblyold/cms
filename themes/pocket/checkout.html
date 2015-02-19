@@ -1,42 +1,195 @@
 {{#extends "layout"}}
   {{#override "content"}}
     <h2>Checkout</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Item Price</th>
-            <th>Subtotal</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-        {{#cart}}
-          <tr>
-            <td>
-              <p><strong>{{name}}</strong></p>
-            </td>
-            <td>
-              {{#carUpdateQty}}
-              <input type="text" name="qty" value="{{qty}}">
-              <button type="submit">update</button>
-              {{/carUpdateQty}}
-            </td>
-            <td>${{price}}</td>
-            <td>${{subtotal}}</td>
-            <td>
-              {{#cartRemove}}
-              <button type="submit">Remove</button>
-              {{/cartRemove}}
-            </td>
-         </tr>
-        {{/cart}}
-        </tbody>
-      </table>
+    <table width="50%">
+      <thead>
+        <tr>
+          <th width="50%">Product</th>
+          <th>Qty</th>
+          <th>Item Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#cart}}
+        <tr>
+          <td><strong>{{name}}</strong></td>
+          <td>{{qty}}</td>
+          <td>${{price}}</td>
+          <td>${{subtotal}}</td>
+       </tr>
+      {{/cart}}
+      </tbody>
+    </table>
 
-      {{#cartEmpty 'index'}}
-      <button type="submit">Empty cart</button>
-      {{/cartEmpty}}
+    <hr>
+
+    {{#unless user}}
+    {{#loginFrom 'checkout'}}
+      {{#formErrors login}}
+        <ul>
+          {{#each errors}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      {{/formErrors}}
+      <ul>
+        <li>
+          <label>e-mail</label>
+          <input type="email" name="email" value="{{getInput 'email'}}">
+        </li>
+        <li>
+          <label>password</label>
+          <input type="password" name="password" value="{{getInput 'password'}}">
+        </li>
+        <li>
+          <input name="submit" type="submit" value="Connexion">
+        </li>
+      </ul>
+      <hr style="display: block; float: none">
+    {{/loginFrom}}
+    {{/unless}}
+    {{#checkout 'order-conrfim'}}
+    <h2>Custommer</h2>
+    {{#formErrors checkout}}
+      <ul>
+        {{#each errors}}
+        <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    {{/formErrors}}
+    {{#unless user}}
+    <ul>
+      <li>
+        <label>e-mail</label>
+        <input type="email" name="customer_email" value="{{getInput 'customer_email'}}">
+      </li>
+      <li>
+        <label>password</label>
+        <input type="password" name="customer_password">
+      </li>
+      <li>
+        <label>confirmation</label>
+        <input type="password" name="customer_password_confirmation">
+      </li>
+      <li>
+        <a href="javascript:;">
+          Already customer ?
+        </a>
+      </li>
+    </ul>
+    {{else}}
+    <ul>
+      <li>
+        {{user.firstname}}
+        {{user.lastname}}
+      </li>
+    </ul>
+    {{/unless}}
+
+    <hr>
+    <h2>Shipping</h2>
+
+    <ul>
+      <li>
+        <label>first name</label>
+        <input type="text" name="shipping_firstname" value="{{getInput 'shipping_firstname'}}">
+      </li>
+      <li>
+        <label>last name</label>
+        <input type="text" name="shipping_lastname" value="{{getInput 'shipping_lastname'}}">
+      </li>
+      <li>
+        <label>address</label>
+        <input type="text" name="shipping_address1" value="{{getInput 'shipping_address1'}}">
+      </li>
+      <li>
+        <input type="text" name="shipping_address2" value="{{getInput 'shipping_address2'}}">
+      </li>
+      <li>
+        <label>city</label>
+        <input type="text" name="shipping_city" value="{{getInput 'shipping_city'}}">
+      </li>
+      <li>
+        <label>zip code</label>
+        <input type="text" name="shipping_zipcode" value="{{getInput 'shipping_zipcode'}}">
+      </li>
+      <li>
+        <label>country</label>
+        <input type="text" name="shipping_country" value="{{getInput 'shipping_country'}}">
+      </li>
+    </ul>
+
+    <p>
+      <label>
+        <input type="checkbox" name="different_billing" value="1">
+        Use a different address
+      </label>
+    </p>
+
+    <hr>
+    <h2>Billing</h2>
+
+    <ul>
+      <li>
+        <label>first name</label>
+        <input type="text" name="billing_firstname" value="{{getInput 'billing_firstname'}}">
+      </li>
+      <li>
+        <label>last name</label>
+        <input type="text" name="billing_lastname" value="{{getInput 'billing_lastname'}}">
+      </li>
+      <li>
+        <label>address</label>
+        <input type="text" name="billing_address1" value="{{getInput 'billing_address1'}}">
+      </li>
+      <li>
+        <input type="text" name="billing_address2" value="{{getInput 'billing_address2'}}">
+      </li>
+      <li>
+        <label>city</label>
+        <input type="text" name="billing_city" value="{{getInput 'billing_city'}}">
+      </li>
+      <li>
+        <label>zip code</label>
+        <input type="text" name="billing_zipcode" value="{{getInput 'billing_zipcode'}}">
+      </li>
+      <li>
+        <label>country</label>
+        <input type="text" name="billing_country" value="{{getInput 'billing_country'}}">
+      </li>
+    </ul>
+
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+
+    <ul>
+      <li>
+        <label>card number</label>
+        <input type="text" name="number" value="4242424242424242">
+      </li>
+      <li>
+        <label>card number</label>
+        <input type="text" name="expiryMonth" value="6">
+      </li>
+      <li>
+        <label>card number</label>
+        <input type="text" name="expiryYear" value="16">
+      </li>
+      <li>
+        <label>card number</label>
+        <input type="text" name="cvv" value="123">
+      </li>
+    </ul>
+
+    {{/checkout}}
+
+
+<!--form action="/test-stripe" method="post">
+  <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="pk_test_Qy0SNFepAl0r4nLemFZY8UGu"
+          data-amount="5000" data-description="One year's subscription"></script>
+</form-->
   {{/override}}
 {{/extends}}

@@ -1,0 +1,29 @@
+{{#extends "layout"}}
+  {{#override "content"}}
+    <h2>Your Order</h2>
+    <table width="50%">
+      <thead>
+        <tr>
+          <th width="50%">Product</th>
+          <th>Qty</th>
+          <th>Item Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#cart}}
+        <tr>
+          <td><strong>{{name}}</strong></td>
+          <td>{{qty}}</td>
+          <td>${{price}}</td>
+          <td>${{subtotal}}</td>
+       </tr>
+      {{/cart}}
+      </tbody>
+    </table>
+
+    <ul>
+      <li>total</li>
+    </ul>
+  {{/override}}
+{{/extends}}
