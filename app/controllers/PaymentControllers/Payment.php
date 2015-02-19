@@ -10,8 +10,18 @@ class Payment
 {
   public function confirm()
   {
-    $order = Subbly::api('subbly.ordertoken')->find(Input::get('token'));
-    dd($order->order);
+    if( Input::has('token') )
+    {
+      $orderToken = Subbly::api('subbly.ordertoken')
+                    ->find( Input::get('token') );
+
+      $orderInst  = Subbly::api('subbly.order')
+                    ->update( $orderToken->order_id, ['status' => 'confirm'] );
+
+      Subbly::api('subbly.cart')->destroy();
+    }
+
+    echo 'ok';
   }
 
   public function cancel()

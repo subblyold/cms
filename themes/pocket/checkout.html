@@ -160,28 +160,38 @@
       </li>
     </ul>
 
+    <hr>
+    <h2>Payment</h2>
+
     <p>
-      <button type="submit">Submit</button>
+      <select name="payment_gateway">
+        <option value="stripe">Stripe</option>
+        <option value="paypal_express">Paypal Express</option>
+      </select>
     </p>
 
     <ul>
       <li>
         <label>card number</label>
-        <input type="text" name="number" value="4242424242424242">
+        <input type="text" name="card_number" value="4242424242424242">
       </li>
       <li>
         <label>card number</label>
-        <input type="text" name="expiryMonth" value="6">
+        <input type="text" name="card_expiryMonth" value="6">
       </li>
       <li>
         <label>card number</label>
-        <input type="text" name="expiryYear" value="16">
+        <input type="text" name="card_expiryYear" value="16">
       </li>
       <li>
         <label>card number</label>
-        <input type="text" name="cvv" value="123">
+        <input type="text" name="card_cvv" value="123">
       </li>
     </ul>
+
+    <p>
+      <button type="submit">Submit</button>
+    </p>
 
     {{/checkout}}
 

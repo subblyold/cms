@@ -58,6 +58,16 @@ class Checkout
     , 'billing_country'   => 'required'
   );
 
+  /**
+   * Stripe validation
+   */
+  protected $stripe_rules = array(
+      'card_number'      => 'required'
+    , 'card_expiryMonth' => 'required'
+    , 'card_expiryYear'  => 'required'
+    , 'card_cvv'         => 'required'
+  );
+
   private function validate( $rules )
   {
     // Validate inputs
@@ -69,6 +79,14 @@ class Checkout
     return false;
   }
 
+  private function validationMsg( $msg )
+  {
+    $messages = new \Illuminate\Support\MessageBag;
+    $messages->add('message', $msg );
+
+    return $this->validationFails( $message );
+  }
+
   private function validationFails( $validator )
   {
     return Redirect::back()
@@ -78,7 +96,6 @@ class Checkout
 
   public function run()
   {
-    $messages = new \Illuminate\Support\MessageBag;
     $newUser  = false;
     $config   = \Config::get('subbly.checkout');
 
@@ -141,10 +158,73 @@ class Checkout
         , 'phone_mobile'       => Input::get('billing_phone_mobile', '')
         , 'other_informations' => Input::get('billing_other_informations', '')
       );
-
     }
 
-    // After all test 
+    // #4 Payment Gateway
+
+    if( !Input::has('payment_gateway') )
+    {
+dd('missing payment gateway');
+    }
+
+    $payment_gateway = Input::get('payment_gateway');
+
+      // get Payment settings
+    $settings = Subbly::api('subbly.setting')->all()->toArray();
+
+      // validate Stripe
+    if( $payment_gateway == 'stripe' )
+    {
+      if( !$settings['subbly.payment.stripe.active'] )
+        dd( 'Stripe not active');
+
+      if( $validate = $this->validate( $this->stripe_rules ) )
+        return $this->validationFails( $validate );
+    }
+
+      // validate Paypal Express
+    if( $payment_gateway == 'paypal_express' )
+    {
+      if( !$settings['subbly.payment.paypal_express.active'] )
+        dd( 'paypal_express not active');
+    }
+
+    // #5 Setup Order/Payment
+
+      // Cart
+    $cart    = Subbly::api('subbly.cart');
+    $payment = Subbly::api('subbly.payment');
+    $order   = Subbly::api('subbly.order');
+
+    $cartContent = $cart->content()->toArray();
+    $cartTotal   = $cart->total();
+    $cardData    = null; // Stripe only
+
+    // Setup payment gateway
+    if( $payment_gateway == 'stripe' )
+    {
+      $cardData = [
+          'number'      => Input::get('card_number')
+        , 'expiryMonth' => Input::get('card_expiryMonth')
+        , 'expiryYear'  => Input::get('card_expiryYear')
+        , 'cvv'         => Input::get('card_cvv')
+      ];
+
+      $gateway = $payment->setProvider('Stripe');
+      $gateway->setApiKey( $settings['subbly.payment.stripe.key'] );
+    }
+    else
+    {
+      $gateway = $payment->setProvider('PayPal_Express');
+      $gateway->setUsername( $settings['subbly.payment.paypal_express.username'] );
+      $gateway->setPassword( $settings['subbly.payment.paypal_express.password'] );
+      $gateway->setSignature( $settings['subbly.payment.paypal_express.signature'] );
+      $gateway->setTestMode( $settings['subbly.payment.paypal_express.testmode'] );
+    }
+
+    // After all test, 
+    // if needed,
+    // create a new user
     if( $newUser )
     {
       try
@@ -165,11 +245,7 @@ class Checkout
       }
       catch( \Subbly\Api\Service\Exception $e )
       {
-        $messages->add('message', $e->getMessage() );
-
-        return Redirect::back()
-                ->withErrors( $messages, 'checkout' )
-                ->withInput( Input::except('password') );
+        return $this->validationMsg( $e->getMessage() );
       }
 
       // TODO: allow aulogin on create account
@@ -191,50 +267,66 @@ class Checkout
       // }
     }
 
-    $cardData = [
-        'number'      => '4242424242424242'
-      , 'expiryMonth' => '6'
-      , 'expiryYear'  => '2016'
-      , 'cvv'         => '123'
-    ];
+      // Payment
+    try
+    {
+      $paymentResponse = $gateway->purchase([
+          'amount'    => $cartTotal
+        , 'currency'  => 'USD'
+        , 'card'      => $cardData
+        , 'returnUrl' => \URL::route('subbly.paymentcontroller.confirm')
+        , 'cancelUrl' => \URL::route('subbly.paymentcontroller.cancel')
+      ])->send();
+    }
+    catch( \Omnipay\Common\Exception\InvalidRequestException $e )
+    {
+dd( $e->getMessage());
+    }
 
-    $payment = Subbly::api('subbly.payment');
-    $cart    = Subbly::api('subbly.cart')->content()->toArray();
-    $order   = array(
+      // Transaction return
+    $transactionRef = $paymentResponse->getTransactionReference();
+
+      // Transaction fail
+    if( is_null( $transactionRef ) )
+    {
+      dd( 'error paymant', $paymentResponse->getMessage() );
+    }
+
+    $orderData = array(
         'user_id'     => $user->id
-      , 'total_price' => Subbly::api('subbly.cart')->total()
+      , 'total_price' => $cartTotal
+      , 'gateway'     => $payment_gateway
     );
 
-    $ret = Subbly::api('subbly.order')->create( $order, $cart, $shipping, $billing );
+    $orderInst = $order->create( $orderData, $cartContent, $shipping, $billing );
 
-    if( $ret )
+    if( $orderInst )
     {
-      $gateway = $payment->setProvider('Stripe');
-      $gateway->setApiKey('sk_test_T4ENZyAcLQ8oDlgSl1Cq6HVf');
-
-      $response = $gateway->purchase([
-          'amount'   => Subbly::api('subbly.cart')->total()
-        , 'currency' => 'USD'
-        , 'card'     => $cardData
-      ])->send();
-
-      if( $response->isSuccessful() )
+      // payment was successful: update database
+      if( $paymentResponse->isSuccessful() )
       {
-        // payment was successful: update database
-        dd($response);
+        $order->update( $orderInst->id, ['status' => 'confirm'] );
+        $cart->destroy();
+        
+        return Redirect::route('subbly.paymentcontroller.confirm');
       }
-      elseif( $response->isRedirect() )
+
+      if( $paymentResponse->isRedirect() )
       {
+        // Save transaction token
+        Subbly::api('subbly.ordertoken')->create( array(
+            'order_id' => $orderInst->id
+          , 'token'    => $paymentResponse->getTransactionReference()
+        ));
+
         // redirect to offsite payment gateway
-        dd($response);
-        $response->redirect();
-      }
-      else 
-      {
-        // payment failed: display message to customer
-        echo $response->getMessage();
+        $paymentResponse->redirect();
       }
     }
-dd( $ret );
+    else
+    {
+      dd('save order fail');
+    }
+// dd( $order );
   }
 }
