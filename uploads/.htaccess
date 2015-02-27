@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+    RewriteRule \.(gif|jpe?g|png|bmp) /uploads/no-image.png [NC,L]
+
+</IfModule>
