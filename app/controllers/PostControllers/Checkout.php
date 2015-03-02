@@ -305,7 +305,7 @@ dd( $e->getMessage());
       // payment was successful: update database
       if( $paymentResponse->isSuccessful() )
       {
-        $order->update( $orderInst->uid, ['status' => 'confirm'] );
+        $order->update( $orderInst->uid, ['status' => 'confirmed'] );
         $cart->destroy();
         
         return Redirect::route('subbly.paymentcontroller.confirm');

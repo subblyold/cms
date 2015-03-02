@@ -16,7 +16,7 @@ class Payment
                     ->find( Input::get('token') );
 
       $orderInst  = Subbly::api('subbly.order')
-                    ->update( $orderToken->order_id, ['status' => 'confirm'] );
+                    ->update( $orderToken->order_id, ['status' => 'confirmed'] );
 
       Subbly::api('subbly.cart')->destroy();
     }
