@@ -57,13 +57,10 @@ class Cart
 
     // TODO: add $options check
     // TODO: add $product['sales'] check
-    
     $cart = $this->getCartInst()
             ->add( 
-                  $product['id']
-                , $product['name']
+                  $product
                 , $inputQty
-                , $product['price']
                 , $option 
               );
 
