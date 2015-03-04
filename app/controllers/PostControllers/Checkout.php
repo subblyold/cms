@@ -293,9 +293,11 @@ dd( $e->getMessage());
     }
 
     $orderData = array(
-        'user_id'     => $user->id
-      , 'total_price' => $cartTotal
-      , 'gateway'     => $payment_gateway
+        'user_id'       => $user->id
+      , 'total_price'   => $cartTotal
+      , 'total_items'   => $cart->count()
+      , 'shipping_cost' => 3.00
+      , 'gateway'       => $payment_gateway
     );
 
     $orderInst = $order->create( $orderData, $cartContent, $shipping, $billing );
