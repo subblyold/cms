@@ -25,6 +25,8 @@
 
     "require": {
         "php": ">=5.4.0",
-        "subbly/framework": "~0.1@dev"
+        "subbly/framework": "~0.1@dev",
+        "subbly/backend": "~0.1@dev",
+        "subbly/frontage": "@dev"
     }
 }
