@@ -17,3 +17,10 @@ $app->setRootDirectory(__DIR__);
 $app->setConfigDirectory(__DIR__ . '/config/');
 $app->start();
 $app->run();
+
+// $dir = __DIR__.'/vendor/subbly/framework/bootstrap';
+//
+// require $dir . '/autoload.php';
+//
+// $app = require_once $dir . '/start.php';
+// $app->run();
